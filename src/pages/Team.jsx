@@ -5,7 +5,7 @@ const TEAM = [
   {
     role: 'Head', width: '300px', members: [
       { name: 'Amit Verma', title: 'President', img: '/amit.jpg', social: { github: '#', linkedin: '#' } },
-      { name: 'Aviral Pandey', title: 'Vice President', img: '/aviral.jpg', social: { twitter: '#', linkedin: '#' } }
+      { name: 'Aviral Pandey', title: 'Vice President', img: '/aviral.png', social: { twitter: '#', linkedin: '#' } }
     ]
   },
   {
