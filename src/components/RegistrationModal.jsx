@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle } from 'lucide-react';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const RegistrationModal = ({ event, onClose }) => {
     const [formData, setFormData] = useState({
@@ -29,17 +31,30 @@ const RegistrationModal = ({ event, onClose }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
 
         setIsSubmitting(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            await addDoc(collection(db, "registrations"), {
+                eventId: event.id,
+                eventTitle: event.title,
+                name: formData.name,
+                email: formData.email,
+                enrollmentId: formData.enrollmentId,
+                department: formData.department,
+                teamName: formData.teamName || '',
+                createdAt: new Date()
+            });
             setIsSubmitting(false);
             setIsSuccess(true);
-        }, 1500);
+        } catch (error) {
+            console.error("Error registering: ", error);
+            alert("Registration failed. Please try again.");
+            setIsSubmitting(false);
+        }
     };
 
     const handleChange = (e) => {

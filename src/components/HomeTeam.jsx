@@ -1,16 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const TEAM_PREVIEW = [
-    { name: 'Amit', role: 'Club Lead', color: 'var(--neon-cyan)', img: '/amit.jpg' },
-    { name: 'Vijay Singh', role: 'Tech Lead', color: 'var(--neon-violet)', img: '/vijay.png' },
-    { name: 'Jhanak', role: 'Marketing Lead', color: '#ff0055', img: '/jhanak.jpg' },
-    { name: 'Arpita', role: 'Event Lead', color: 'var(--neon-green)', img: '/arpita.jpg' },
-];
+import { db } from '../firebase';
+import { collection, query, onSnapshot, orderBy, limit } from 'firebase/firestore';
 
 const HomeTeam = () => {
+    const [teamPreview, setTeamPreview] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+        // Maybe fetch top pointed members or just Heads?
+        // Let's fetch all and filter/sort to catch "Heads" first.
+        const q = query(collection(db, "members"), orderBy("name"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const allMembers = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            // Filter for Core/Leadership roles first
+            const leadership = allMembers.filter(m =>
+                ['Head', 'President', 'Vice President', 'Lead'].some(role => m.role.includes(role))
+            );
+
+            // Fallback: if no leadership, take top 4 sorted by points (already sorted by query)
+            let preview = leadership.slice(0, 4);
+            if (preview.length < 4) {
+                const others = allMembers.filter(m => !leadership.includes(m)).slice(0, 4 - preview.length);
+                preview = [...preview, ...others];
+            }
+
+            // Assign colors dynamically if needed or random neon colors?
+            // The original had specific colors. Let's just cycle through neon colors.
+            const neonColors = ['var(--neon-cyan)', 'var(--neon-violet)', '#ff0055', 'var(--neon-green)'];
+
+            const previewWithColors = preview.map((member, index) => ({
+                ...member,
+                color: neonColors[index % neonColors.length]
+            }));
+
+            setTeamPreview(previewWithColors);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching team preview:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     return (
         <div style={{ padding: '6rem 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, #050505 100%)' }}>
             <div className="container" style={{ textAlign: 'center' }}>
@@ -23,9 +63,11 @@ const HomeTeam = () => {
                     gap: '2rem',
                     margin: '3rem 0'
                 }}>
-                    {TEAM_PREVIEW.map((member, i) => (
+                    {!loading && teamPreview.length === 0 && <p style={{ color: '#71717a' }}>Loading core team...</p>}
+
+                    {teamPreview.map((member, i) => (
                         <motion.div
-                            key={i}
+                            key={member.id}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -60,7 +102,7 @@ const HomeTeam = () => {
                                 {member.img ? (
                                     <img src={member.img} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
-                                    member.name.charAt(0)
+                                    <span style={{ fontSize: '2rem' }}>{member.name.charAt(0)}</span>
                                 )}
                             </div>
                             <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{member.name}</h3>

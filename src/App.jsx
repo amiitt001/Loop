@@ -14,6 +14,12 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminMembers from './pages/admin/AdminMembers';
+import AdminCreateMember from './pages/admin/AdminCreateMember';
+import AdminCreateEvent from './pages/admin/AdminCreateEvent';
+import AdminLeaderboard from './pages/admin/AdminLeaderboard';
+import AdminCreateContestant from './pages/admin/AdminCreateContestant';
+import AdminApplications from './pages/admin/AdminApplications';
+
 import AdminEvents from './pages/admin/AdminEvents';
 
 // Layout for public pages that includes Navbar and Footer
@@ -40,7 +46,12 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="members" element={<AdminMembers />} />
+            <Route path="members/new" element={<AdminCreateMember />} />
+            <Route path="contestants" element={<AdminLeaderboard />} />
+            <Route path="contestants/new" element={<AdminCreateContestant />} />
+            <Route path="applications" element={<AdminApplications />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="events/new" element={<AdminCreateEvent />} />
           </Route>
 
           {/* Public Routes */}

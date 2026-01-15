@@ -1,40 +1,90 @@
-import React from 'react';
-import { Github, Linkedin, Twitter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Twitter, RefreshCw } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { db } from '../firebase';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 
-const TEAM = [
-  {
-    role: 'Head', width: '300px', members: [
-      { name: 'Amit Verma', title: 'President', img: '/amit.jpg', social: { github: '#', linkedin: '#' } },
-      { name: 'Aviral Pandey', title: 'Vice President', img: '/aviral.png', social: { twitter: '#', linkedin: '#' } }
-    ]
-  },
-  {
-    role: 'Coordinator', width: '250px', members: [
-      { name: 'Vijay Singh', title: 'Tech Lead', img: '/vijay.png', social: { github: '#' } },
-      { name: 'Arpita', title: 'Event Lead', img: '/arpita.jpg', social: { linkedin: '#' } },
-      { name: 'Jhanak', title: 'Marketing Lead', img: '/jhanak.jpg', social: { twitter: '#' } },
-    ]
-  },
-  {
-    role: 'Member', width: '220px', members: [
-      { name: 'Mike Ross', title: 'Developer', img: '', social: { github: '#' } },
-      { name: 'Emily Blunt', title: 'Designer', img: '', social: { linkedin: '#' } },
-      { name: 'Jessica Day', title: 'Content', img: '', social: { twitter: '#' } },
-      { name: 'Cece Parekh', title: 'Developer', img: '', social: { github: '#' } },
-    ]
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
   }
-];
+};
+
+const itemVariants = {
+  hidden: { y: 50, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
 
 const Team = () => {
+  const [teamGroups, setTeamGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const q = query(collection(db, "members"), orderBy("name"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const allMembers = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        // Ensure social exists to avoid crashes if missing in DB
+        social: doc.data().social || {}
+      }));
+
+      // Group by role
+      const heads = allMembers.filter(m => m.role === 'Head' || m.role === 'President' || m.role === 'Vice President'); // Adjust based on exact role strings used in Admin
+      // In AdminMembers we saw "Head/Coordinator/Member" suggested.
+      // Let's broaden 'Head' to include President/VP if they exist, or just filter by 'Head'.
+      // Actually, let's look at the hardcoded data: 'President', 'Vice President', 'Head'. 
+      // Admin prompt suggests "Head/Coordinator/Member".
+      // Let's assume 'Head' covers the leadership for now, or users input 'President' manually.
+      // To be safe, let's group anything NOT Coordinator/Member as Leadership/Head?
+      // Or just explicit match.
+
+      const leadership = allMembers.filter(m => ['Head', 'President', 'Vice President'].includes(m.role));
+      const coordinators = allMembers.filter(m => m.role === 'Coordinator');
+      const members = allMembers.filter(m => m.role === 'Member');
+
+      const groups = [];
+      if (leadership.length > 0) groups.push({ role: 'Head', width: '300px', members: leadership });
+      if (coordinators.length > 0) groups.push({ role: 'Coordinator', width: '250px', members: coordinators });
+      if (members.length > 0) groups.push({ role: 'Member', width: '200px', members: members });
+
+      setTeamGroups(groups);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching team:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="container" style={{ padding: '8rem 0 4rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
         <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>MEET THE SQUAD</h1>
         <p style={{ color: 'var(--text-dim)' }}>The minds behind the machines.</p>
+        {loading && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}><RefreshCw className="spin" /></div>}
       </div>
 
-      {TEAM.map((group, groupIndex) => (
-        <div key={group.role} style={{ marginBottom: '5rem' }} className="animate-fade-in">
+      {!loading && teamGroups.length === 0 && (
+        <p style={{ textAlign: 'center', color: '#71717a' }}>No team members found.</p>
+      )}
+
+      {teamGroups.map((group, groupIndex) => (
+        <div key={group.role} style={{ marginBottom: '5rem' }}>
           <h2 style={{
             textAlign: 'center',
             marginBottom: '2rem',
@@ -45,15 +95,21 @@ const Team = () => {
             left: '50%',
             transform: 'translateX(-50%)'
           }}>
-            {group.role}s
+            {group.role === 'Head' ? 'Leadership' : group.role + 's'}
             <span style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%', height: '2px', background: 'var(--neon-violet)', opacity: 0.5 }}></span>
           </h2>
 
-          <div className="team-grid">
+          <motion.div
+            className="team-grid"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             {group.members.map((member, i) => (
-              <TeamCard key={member.name} member={member} width={group.width} delay={`${i * 0.1}s`} />
+              <TeamCard key={member.id || i} member={member} width={group.width} />
             ))}
-          </div>
+          </motion.div>
         </div>
       ))}
 
@@ -64,19 +120,24 @@ const Team = () => {
           justify-content: center;
           gap: 2rem;
         }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
       `}</style>
     </div>
   );
 };
 
-const TeamCard = ({ member, width, delay }) => {
+const TeamCard = ({ member, width }) => {
   return (
-    <div className="team-card animate-fade-in" style={{
-      width: width,
-      animationDelay: delay,
-      height: '350px',
-      position: 'relative' // For hover overlay
-    }}>
+    <motion.div
+      className="team-card"
+      variants={itemVariants}
+      style={{
+        width: width,
+        height: '350px',
+        position: 'relative' // For hover overlay
+      }}
+    >
       <div className="card-inner">
         {member.img ? (
           <img
@@ -93,18 +154,23 @@ const TeamCard = ({ member, width, delay }) => {
             className="member-avatar"
           />
         ) : (
-          <div className="avatar-placeholder"></div>
+          <div className="avatar-placeholder" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: '#555'
+          }}>
+            {member.name.charAt(0)}
+          </div>
         )}
         <h3 style={{ fontSize: '1.2rem', marginTop: '1rem' }}>{member.name}</h3>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>{member.title}</p>
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>{member.role === 'Head' ? 'Lead' : member.role}</p>
+
       </div>
 
       {/* Hover Overlay */}
       <div className="social-overlay">
         <div style={{ display: 'flex', gap: '1rem' }}>
-          {member.social.github && <Github className="social-icon" />}
-          {member.social.linkedin && <Linkedin className="social-icon" />}
-          {member.social.twitter && <Twitter className="social-icon" />}
+          {member.social?.github && <Github className="social-icon" />}
+          {member.social?.linkedin && <Linkedin className="social-icon" />}
+          {member.social?.twitter && <Twitter className="social-icon" />}
         </div>
       </div>
 
@@ -187,7 +253,7 @@ const TeamCard = ({ member, width, delay }) => {
           transform: scale(1.2);
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 };
 

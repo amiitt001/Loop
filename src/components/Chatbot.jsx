@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { db } from '../firebase';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +12,34 @@ const Chatbot = () => {
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef(null);
 
+    // Cache data to avoid fetching on every message
+    const [dataCache, setDataCache] = useState({ events: [], members: [], contestants: [] });
+
+    useEffect(() => {
+        // Fetch data once on mount (or when chat opens)
+        const fetchData = async () => {
+            try {
+                // Events
+                const eventsSnap = await getDocs(query(collection(db, "events")));
+                const events = eventsSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+                // Members (Top 5 for context)
+                const membersSnap = await getDocs(query(collection(db, "members"), orderBy("name"), limit(5)));
+                const members = membersSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+                // Contestants (Leaderboard)
+                const contestantsSnap = await getDocs(query(collection(db, "contestants"), orderBy("points", "desc"), limit(5)));
+                const contestants = contestantsSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+                setDataCache({ events, members, contestants });
+            } catch (error) {
+                console.error("Chatbot data fetch error:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -18,27 +48,43 @@ const Chatbot = () => {
         scrollToBottom();
     }, [messages]);
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!inputText.trim()) return;
 
-        const userMessage = { id: Date.now(), text: inputText, sender: 'user' };
+        const userText = inputText.trim();
+        const userMessage = { id: Date.now(), text: userText, sender: 'user' };
         setMessages(prev => [...prev, userMessage]);
+        setInputText('');
 
-        // Process input (Simulated AI)
-        const lowerInput = inputText.toLowerCase();
+        // Process input (Simulated AI with Real Data Context)
+        const lowerInput = userText.toLowerCase();
         let botResponseText = "";
 
         if (lowerInput.includes('join') || lowerInput.includes('member') || lowerInput.includes('recruit')) {
             botResponseText = "To join Tech Nova, fill out the application form on the 'Join Us' page. We recruit new members at the start of every semester based on technical skills and passion.";
-        } else if (lowerInput.includes('leaderboard') || lowerInput.includes('rank') || lowerInput.includes('points')) {
-            botResponseText = "Our Leaderboard tracks member contributions. You earn points by committing code, organizing events, and completing challenges. Top 3 members get special recognition!";
+        } else if (lowerInput.includes('leaderboard') || lowerInput.includes('rank') || lowerInput.includes('points') || lowerInput.includes('top')) {
+            if (dataCache.contestants.length > 0) {
+                const top = dataCache.contestants[0];
+                botResponseText = `Our current top contestant is ${top.name} (@${top.platformHandle}) with ${top.points} points! The leaderboard tracks external competition performance.`;
+            } else {
+                botResponseText = "Our Leaderboard tracks contestant performance in our open hackathons and challenges.";
+            }
         } else if (lowerInput.includes('project') || lowerInput.includes('work') || lowerInput.includes('tech')) {
-            botResponseText = "We work on cutting-edge projects in AI, Web3, and Mobile Dev. Check out the 'Projects' page to see our latest work like the Neon AI Assistant and Quantum Ledger.";
-        } else if (lowerInput.includes('event') || lowerInput.includes('hackathon') || lowerInput.includes('workshop')) {
-            botResponseText = "We host monthly hackathons and weekly workshops. The next big event is the 'Technova Hackathon 2026' on March 15th. Check the Events tab for details.";
+            botResponseText = "We work on cutting-edge projects in AI, Web3, and Mobile Dev. Check out the 'Projects' page to see our latest work.";
+        } else if (lowerInput.includes('event') || lowerInput.includes('hackathon') || lowerInput.includes('workshop') || lowerInput.includes('next')) {
+            const nextEvent = dataCache.events
+                .filter(e => e.status !== 'Past')
+                .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+            if (nextEvent) {
+                const dateStr = new Date(nextEvent.date).toLocaleDateString();
+                botResponseText = `The next big event is '${nextEvent.title}' on ${dateStr}. Don't miss it!`;
+            } else {
+                botResponseText = "We host monthly hackathons and weekly workshops. Check the Events tab for future updates.";
+            }
         } else if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-            botResponseText = "System online. accessing protocol... Hello! How can I assist you with Tech Nova today?";
+            botResponseText = "System online. Accessing protocol... Hello! How can I assist you with Tech Nova today?";
         } else {
             botResponseText = "Command not recognized. I can provide info on: Projects, Events, The Leaderboard, or How to Join.";
         }
@@ -47,8 +93,6 @@ const Chatbot = () => {
         setTimeout(() => {
             setMessages(prev => [...prev, { id: Date.now() + 1, text: botResponseText, sender: 'bot' }]);
         }, 600);
-
-        setInputText('');
     };
 
     return (

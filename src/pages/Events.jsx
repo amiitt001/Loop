@@ -1,50 +1,70 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, MapPin, RefreshCw } from 'lucide-react';
 import RegistrationModal from '../components/RegistrationModal';
-
-const EVENTS = [
-  {
-    id: 1,
-    title: 'Technova Hackathon 2026',
-    date: 'March 15, 2026',
-    time: '10:00 AM - 10:00 PM',
-    location: 'Main Auditorium',
-    type: 'upcoming',
-    description: '24-hour coding marathon. Build, innovate, and win prizes worth $5k.'
-  },
-  {
-    id: 2,
-    title: 'AI Workshop: Neons & Neurons',
-    date: 'February 28, 2026',
-    time: '2:00 PM',
-    location: 'Lab 304',
-    type: 'upcoming',
-    description: 'Hands-on session on building neural networks from scratch.'
-  },
-  {
-    id: 3,
-    title: 'Intro to Web3',
-    date: 'January 10, 2026',
-    time: '4:00 PM',
-    location: 'Online',
-    type: 'past',
-    description: 'Deep dive into smart contracts and decentralized apps.'
-  }
-];
+import { db } from '../firebase';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 
 const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const q = query(collection(db, "events"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const eventsList = snapshot.docs.map(doc => {
+        const data = doc.data();
+        // Determine type based on status or date
+        // Mapping Admin 'Active'/'Upcoming' -> 'upcoming', 'Past' -> 'past'
+        // If status is missing, infer from date? Let's rely on status for now as per admin panel.
+        let type = 'upcoming';
+        if (data.status === 'Past') type = 'past';
+
+        const dateDisplay = data.date?.toDate ? data.date.toDate().toLocaleDateString() : data.date;
+
+        return {
+          id: doc.id,
+          ...data,
+          dateDisplay,
+          type
+        };
+      });
+
+      // Sort: Upcoming/Active first, then Past. Within groups, sort by date?
+      // Simple sort: Newest dates first usually.
+      eventsList.sort((a, b) => {
+        // Custom sort: Active/Upcoming first
+        if (a.type !== b.type) {
+          return a.type === 'upcoming' ? -1 : 1;
+        }
+        // Then by date
+        return new Date(b.date) - new Date(a.date);
+      });
+
+      setEvents(eventsList);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching events:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="container" style={{ padding: '8rem 0 4rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
         <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>EVENTS TIMELINE</h1>
         <p style={{ color: 'var(--text-dim)' }}>Where ideas come to life.</p>
+        {loading && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}><RefreshCw className="spin" /></div>}
       </div>
 
       <div className="timeline">
-        {EVENTS.map((event, index) => (
-          <div key={event.id} className={`timeline-item ${event.type} animate-fade-in`} style={{ animationDelay: `${index * 0.2}s` }}>
+        {!loading && events.length === 0 && <p style={{ textAlign: 'center', color: '#71717a' }}>No events announced yet.</p>}
+
+        {events.map((event, index) => (
+          <div key={event.id} className={`timeline-item ${event.type} animate-fade-in`} style={{ animationDelay: `${index * 0.1}s` }}>
             <div className="timeline-dot"></div>
             <div className="timeline-content">
               <div style={{
@@ -59,27 +79,25 @@ const Events = () => {
                 fontWeight: 'bold',
                 textTransform: 'uppercase'
               }}>
-                {event.type}
+                {event.status || event.type}
               </div>
 
               <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>{event.title}</h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Calendar size={14} color="var(--neon-violet)" /> {event.date}
+                  <Calendar size={14} color="var(--neon-violet)" /> {event.dateDisplay}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Clock size={14} color="var(--neon-violet)" /> {event.time}
+                  <Clock size={14} color="var(--neon-violet)" /> {event.location || 'TBD'}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <MapPin size={14} color="var(--neon-violet)" /> {event.location}
-                </div>
+                {/*  Time isn't always in DB separately, maybe add if needed or rely on string date? Keeping simple for now using location/time field reuse if any */}
               </div>
 
-              <p style={{ marginTop: '1rem', lineHeight: '1.4' }}>{event.description}</p>
+              <p style={{ marginTop: '1rem', lineHeight: '1.4' }}>{event.description || "No description available."}</p>
 
-              {/* Register Button for Upcoming Events */}
-              {event.type === 'upcoming' && (
+              {/* Register Button for Upcoming/Active Events where registration is OPEN */}
+              {event.type === 'upcoming' && event.registrationOpen && (
                 <button
                   onClick={() => setSelectedEvent(event)}
                   className="register-btn"
@@ -188,6 +206,9 @@ const Events = () => {
           box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
           transform: translateY(-2px);
         }
+
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {

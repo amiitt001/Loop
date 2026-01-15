@@ -1,88 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, RefreshCw } from 'lucide-react';
+import { Plus, Search, Trophy, Trash2, RefreshCw } from 'lucide-react';
 import { db } from '../../firebase';
 import { collection, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-const AdminMembers = () => {
+const AdminLeaderboard = () => {
     const navigate = useNavigate();
-    const [members, setMembers] = useState([]);
+    const [contestants, setContestants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Real-time Members Listener
+    // Real-time Contestants Listener
     useEffect(() => {
         setLoading(true);
-        const q = query(collection(db, "members"), orderBy("name", "asc"));
+        const q = query(collection(db, "contestants"), orderBy("points", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const membersList = snapshot.docs.map(doc => ({
+            const list = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-            setMembers(membersList);
+            setContestants(list);
             setLoading(false);
         }, (error) => {
-            console.error("Error fetching members: ", error);
+            console.error("Error fetching contestants: ", error);
             setLoading(false);
         });
 
         return () => unsubscribe();
     }, []);
 
-    // Edit Member
-    const handleEdit = async (member) => {
-        const name = prompt("Edit Name:", member.name);
+    // Edit Contestant
+    const handleEdit = async (contestant) => {
+        const name = prompt("Edit Name:", contestant.name);
         if (name === null) return;
-        const role = prompt("Edit Role:", member.role);
-        if (role === null) return;
-        const img = prompt("Edit Photo URL:", member.img || '');
-        if (img === null) return;
-        const linkedin = prompt("Edit LinkedIn URL:", member.social?.linkedin || '');
-        if (linkedin === null) return;
-        const github = prompt("Edit GitHub URL:", member.social?.github || '');
-        if (github === null) return;
+        const handle = prompt("Edit Handle:", contestant.platformHandle);
+        const points = prompt("Edit Points:", contestant.points);
 
         try {
-            await updateDoc(doc(db, "members", member.id), {
-                name: name || member.name,
-                role: role || member.role,
-                img: img,
-                social: {
-                    linkedin: linkedin,
-                    github: github
-                }
+            await updateDoc(doc(db, "contestants", contestant.id), {
+                name: name || contestant.name,
+                platformHandle: handle || contestant.platformHandle,
+                points: points ? Number(points) : contestant.points
             });
         } catch (error) {
-            console.error("Error updating member: ", error);
-            alert("Error updating member.");
+            console.error("Error updating contestant: ", error);
+            alert("Error updating contestant.");
         }
     };
 
-    // Delete Member
+    // Delete Contestant
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this member?")) return;
+        if (!window.confirm("Are you sure you want to delete this contestant?")) return;
         try {
-            await deleteDoc(doc(db, "members", id));
+            await deleteDoc(doc(db, "contestants", id));
         } catch (error) {
-            console.error("Error deleting member: ", error);
-            alert("Error deleting member.");
+            console.error("Error deleting contestant: ", error);
+            alert("Error deleting contestant.");
         }
     };
 
-    const filteredMembers = members.filter(m =>
-        m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.role.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredContestants = contestants.filter(c =>
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (c.platformHandle && c.platformHandle.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Members</h1>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Contestants</h1>
                     {loading && <RefreshCw className="spin" size={20} color="var(--neon-cyan)" />}
                 </div>
                 <button
-                    onClick={() => navigate('/admin/members/new')}
+                    onClick={() => navigate('/admin/contestants/new')}
                     style={{
                         background: 'var(--neon-cyan)',
                         color: '#000',
@@ -95,7 +85,7 @@ const AdminMembers = () => {
                         cursor: 'pointer',
                         fontWeight: '600'
                     }}>
-                    <Plus size={18} /> Add Member
+                    <Plus size={18} /> Add Contestant
                 </button>
             </div>
 
@@ -104,7 +94,7 @@ const AdminMembers = () => {
                 <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
                 <input
                     type="text"
-                    placeholder="Search members..."
+                    placeholder="Search contestants..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -129,33 +119,30 @@ const AdminMembers = () => {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead>
                         <tr style={{ background: '#27272a', color: '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase' }}>
+                            <th style={{ padding: '1rem' }}>Rank</th>
                             <th style={{ padding: '1rem' }}>Name</th>
-                            <th style={{ padding: '1rem' }}>Role</th>
-
+                            <th style={{ padding: '1rem' }}>Handle</th>
+                            <th style={{ padding: '1rem' }}>Points</th>
                             <th style={{ padding: '1rem', textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredMembers.length === 0 ? (
+                        {filteredContestants.length === 0 ? (
                             <tr>
-                                <td colSpan="3" style={{ padding: '2rem', textAlign: 'center', color: '#71717a' }}>
-                                    {loading ? "Loading members..." : "No members found."}
+                                <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: '#71717a' }}>
+                                    {loading ? "Loading contestants..." : "No contestants found."}
                                 </td>
                             </tr>
                         ) : (
-                            filteredMembers.map((member) => (
-                                <tr key={member.id} style={{ borderBottom: '1px solid #27272a' }}>
-                                    <td style={{ padding: '1rem', fontWeight: '500' }}>{member.name}</td>
-                                    <td style={{ padding: '1rem', color: '#a1a1aa' }}>{member.role}</td>
-
+                            filteredContestants.map((contestant, index) => (
+                                <tr key={contestant.id} style={{ borderBottom: '1px solid #27272a' }}>
+                                    <td style={{ padding: '1rem', color: '#a1a1aa' }}>#{index + 1}</td>
+                                    <td style={{ padding: '1rem', fontWeight: '500' }}>{contestant.name}</td>
+                                    <td style={{ padding: '1rem', color: '#a1a1aa' }}>@{contestant.platformHandle}</td>
+                                    <td style={{ padding: '1rem', color: 'var(--neon-cyan)' }}>{contestant.points}</td>
                                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                                         <button
-                                            onClick={() => handleEdit(member)}
-                                            style={{ background: 'transparent', border: 'none', color: '#a1a1aa', cursor: 'pointer', marginRight: '0.5rem' }}>
-                                            <Edit2 size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(member.id)}
+                                            onClick={() => handleDelete(contestant.id)}
                                             style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
                                             <Trash2 size={16} />
                                         </button>
@@ -174,4 +161,4 @@ const AdminMembers = () => {
     );
 };
 
-export default AdminMembers;
+export default AdminLeaderboard;

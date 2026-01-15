@@ -1,44 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Code, Users, Zap } from 'lucide-react';
+import { Camera, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const GALLERY_ITEMS = [
-    {
-        id: 1,
-        title: 'Hackathon 2025',
-        year: '2025',
-        icon: <Code size={40} color="var(--neon-cyan)" />,
-        color: 'var(--neon-cyan)',
-        desc: '48 hours of non-stop coding.'
-    },
-    {
-        id: 2,
-        title: 'Tech Talk: AI',
-        year: '2025',
-        icon: <Zap size={40} color="var(--neon-violet)" />,
-        color: 'var(--neon-violet)',
-        desc: 'Exploring the future of LLMs.'
-    },
-    {
-        id: 3,
-        title: 'Team Bond',
-        year: '2024',
-        icon: <Users size={40} color="var(--neon-green)" />,
-        color: 'var(--neon-green)',
-        desc: 'Weekend getaway & brainstorming.'
-    },
-    {
-        id: 4,
-        title: 'Robotics Workshop',
-        year: '2024',
-        icon: <Camera size={40} color="#ff0055" />,
-        color: '#ff0055',
-        desc: 'Building autonomous drones.'
-    }
-];
+import { db } from '../firebase';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 
 const HomeGallery = () => {
+    const [galleryItems, setGalleryItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+        const q = query(collection(db, "events"));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const allEvents = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                dateObj: doc.data().date?.toDate ? doc.data().date.toDate() : new Date(doc.data().date)
+            }));
+
+            // Filter for Past events
+            const pastEvents = allEvents.filter(e => e.status === 'Past');
+
+            // Sort by Date Descending (Most recent past first)
+            pastEvents.sort((a, b) => b.dateObj - a.dateObj);
+
+            // Limit to top 4 for gallery
+            const galleryPreview = pastEvents.slice(0, 4);
+
+            // Assign random/cycling colors for variety
+            const colors = ['var(--neon-cyan)', 'var(--neon-violet)', 'var(--neon-green)', '#ff0055'];
+
+            const processedItems = galleryPreview.map((item, index) => ({
+                ...item,
+                color: colors[index % colors.length]
+            }));
+
+            setGalleryItems(processedItems);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching gallery:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     return (
         <div style={{ padding: '6rem 0', background: 'var(--bg-dark)', position: 'relative', zIndex: 2 }}>
             <div className="container">
@@ -50,10 +58,15 @@ const HomeGallery = () => {
                 >
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#fff' }}>MOMENTS WE BUILD</h2>
                     <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>Inside Tech Nova</p>
+                    {loading && <div style={{ marginTop: '1rem' }}><RefreshCw className="spin" size={20} color="var(--text-dim)" /></div>}
                 </motion.div>
 
+                {!loading && galleryItems.length === 0 && (
+                    <p style={{ textAlign: 'center', color: '#71717a' }}>No past events to display yet.</p>
+                )}
+
                 <div className="gallery-grid">
-                    {GALLERY_ITEMS.map((item, index) => (
+                    {galleryItems.map((item, index) => (
                         <motion.div
                             key={item.id}
                             className="gallery-card"
@@ -64,12 +77,14 @@ const HomeGallery = () => {
                             transition={{ delay: index * 0.1, duration: 0.4 }}
                         >
                             <div className="card-icon" style={{ borderColor: item.color }}>
-                                {item.icon}
+                                <Camera size={40} color={item.color} />
                             </div>
                             <div className="card-content">
-                                <span style={{ fontSize: '0.8rem', color: item.color, fontFamily: 'var(--font-mono)' }}>{item.year}</span>
+                                <span style={{ fontSize: '0.8rem', color: item.color, fontFamily: 'var(--font-mono)' }}>{item.dateObj.getFullYear()}</span>
                                 <h3 style={{ fontSize: '1.2rem', margin: '0.5rem 0' }}>{item.title}</h3>
-                                <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>{item.desc}</p>
+                                <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>
+                                    {item.description ? (item.description.length > 50 ? item.description.substring(0, 50) + '...' : item.description) : 'Captured moment.'}
+                                </p>
                             </div>
                         </motion.div>
                     ))}
@@ -145,6 +160,8 @@ const HomeGallery = () => {
           background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
           pointer-events: none;
         }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
       `}</style>
         </div>
     );

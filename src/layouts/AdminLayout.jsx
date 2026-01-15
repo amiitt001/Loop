@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Users, Calendar, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, LogOut, Menu, X, Trophy } from 'lucide-react';
 
 const AdminLayout = () => {
     const { currentUser, logout } = useAuth();
@@ -10,11 +10,7 @@ const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     if (!currentUser) {
-        // In a real app, you might want to redirect to login here
-        // But for better UX, we'll handle this in the protected route wrapper or inside useEffect
-        // For now, let's assume the router protection handles the redirect, 
-        // or we render a simple redirect here.
-        // return <Navigate to="/admin/login" />;
+        return <Navigate to="/admin/login" />;
     }
 
     const handleLogout = async () => {
@@ -29,6 +25,9 @@ const AdminLayout = () => {
     const navItems = [
         { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/admin/members', icon: Users, label: 'Members' },
+
+        { path: '/admin/contestants', icon: Trophy, label: 'Contestants' },
+        { path: '/admin/applications', icon: Calendar, label: 'Applications' },
         { path: '/admin/events', icon: Calendar, label: 'Events' },
     ];
 
