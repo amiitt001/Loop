@@ -34,8 +34,8 @@ dist-ssr
 coverage
 
 # Security
-firebase.js
+
 .firebaserc
 firebase.json
 DATABASE_SCHEMA.md
-firestore.rules
+.firebase/
