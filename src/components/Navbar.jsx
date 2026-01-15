@@ -58,6 +58,17 @@ const Navbar = () => {
                             }}>
                                 <span className="text-neon-cyan">TECH</span>NOVA
                             </span>
+                            <span className="desktop-only" style={{
+                                fontSize: '0.6rem',
+                                color: 'var(--text-dim)',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                maxWidth: '200px',
+                                lineHeight: '1.1',
+                                marginTop: '2px'
+                            }}>
+                                Galgotias College of Engineering and Technology
+                            </span>
                         </div>
                     </div>
                 </Link>
