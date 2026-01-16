@@ -88,8 +88,8 @@ src/
 
 ## 👥 Core Team
 
-- **President**: Alex Chen (Lead)
-- **Vice President**: Sarah Jones
+- **President**: 
+- **Vice President**: 
 - **Tech Lead**: Kirti
 - **Marketing Lead**: Jhanak
 - **Event Lead**: Arpita
