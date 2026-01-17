@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Calendar, Clock, MapPin, User, FileText, Globe } from 'lucide-react';
 import { db } from '../../firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import FormBuilder from '../../components/admin/FormBuilder';
 
 const AdminCreateEvent = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [questions, setQuestions] = useState([]); // Dynamic Form Questions
     const [formData, setFormData] = useState({
         title: '',
         date: '',
@@ -29,8 +31,9 @@ const AdminCreateEvent = () => {
         try {
             await addDoc(collection(db, "events"), {
                 ...formData,
-                date: new Date(formData.date), // Convert string to Date
+                date: new Date(formData.date),
                 registrationOpen: formData.status === 'Upcoming',
+                questions: questions, // Save dynamic questions
                 createdAt: new Date()
             });
             alert("Event Created Successfully!");
@@ -163,11 +166,17 @@ const AdminCreateEvent = () => {
                     />
                 </div>
 
+                {/* Dynamic Form Builder */}
+                <FormBuilder questions={questions} setQuestions={setQuestions} />
+
                 {/* Registration Link (External) */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mt-4">
                     <label className="flex items-center gap-2 text-zinc-400 text-sm">
                         <Globe size={14} /> External Registration Link (Optional)
                     </label>
+                    <p className="text-xs text-zinc-500">
+                        *If provided, the "Register" button will redirect here and skip the internal form.
+                    </p>
                     <input
                         type="url"
                         name="registrationLink"

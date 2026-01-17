@@ -24,8 +24,23 @@ const RegistrationModal = ({ event, onClose }) => {
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Invalid email format';
         }
-        if (!formData.enrollmentId.trim()) newErrors.enrollmentId = 'ID is required';
-        if (!formData.department.trim()) newErrors.department = 'Department is required';
+
+        // Legacy Validation only if no custom questions
+        if (!event.questions || event.questions.length === 0) {
+            if (!formData.enrollmentId?.trim()) newErrors.enrollmentId = 'ID is required';
+            if (!formData.department?.trim()) newErrors.department = 'Department is required';
+        }
+        // Dynamic Validation
+        else {
+            event.questions.forEach(q => {
+                if (q.required) {
+                    const val = formData[q.id];
+                    if (!val || (Array.isArray(val) && val.length === 0)) {
+                        newErrors[q.id] = 'This field is required';
+                    }
+                }
+            });
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -38,16 +53,24 @@ const RegistrationModal = ({ event, onClose }) => {
         setIsSubmitting(true);
 
         try {
-            await addDoc(collection(db, "registrations"), {
+            const registrationData = {
                 eventId: event.id,
                 eventTitle: event.title,
                 name: formData.name,
                 email: formData.email,
-                enrollmentId: formData.enrollmentId,
-                department: formData.department,
+                createdAt: new Date(),
+                // Save legacy fields if they exist, else N/A
+                enrollmentId: formData.enrollmentId || 'N/A',
+                department: formData.department || 'N/A',
                 teamName: formData.teamName || '',
-                createdAt: new Date()
-            });
+                // Save dynamic responses properly
+                responses: event.questions ? event.questions.map(q => ({
+                    question: q.label,
+                    answer: formData[q.id] || (q.type === 'checkbox' ? [] : '') // Ensure empty value
+                })) : []
+            };
+
+            await addDoc(collection(db, "registrations"), registrationData);
             setIsSubmitting(false);
             setIsSuccess(true);
         } catch (error) {
@@ -124,7 +147,8 @@ const RegistrationModal = ({ event, onClose }) => {
                                     {event.title}
                                 </p>
 
-                                <form onSubmit={handleSubmit}>
+                                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                                    {/* Base Fields usually needed for everything */}
                                     <InputField
                                         label="Full Name"
                                         name="name"
@@ -134,40 +158,119 @@ const RegistrationModal = ({ event, onClose }) => {
                                         placeholder="John Doe"
                                     />
                                     <InputField
-                                        label="College Email"
+                                        label="Email"
                                         name="email"
                                         type="email"
                                         value={formData.email}
                                         onChange={handleChange}
                                         error={errors.email}
-                                        placeholder="john@college.edu"
+                                        placeholder="john@example.com"
                                     />
-                                    <div style={{ display: 'flex', gap: '1rem' }}>
-                                        <InputField
-                                            label="Enrollment ID"
-                                            name="enrollmentId"
-                                            value={formData.enrollmentId}
-                                            onChange={handleChange}
-                                            error={errors.enrollmentId}
-                                            placeholder="123456"
-                                        />
-                                        <InputField
-                                            label="Department"
-                                            name="department"
-                                            value={formData.department}
-                                            onChange={handleChange}
-                                            error={errors.department}
-                                            placeholder="CS / IT"
-                                        />
-                                    </div>
 
-                                    <InputField
-                                        label="Team Name (Optional)"
-                                        name="teamName"
-                                        value={formData.teamName}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Code Warriors"
-                                    />
+                                    {/* Dynamic Questions (if any) */}
+                                    {event.questions && event.questions.length > 0 ? (
+                                        event.questions.map((q) => {
+                                            if (q.type === 'text') {
+                                                return (
+                                                    <InputField
+                                                        key={q.id}
+                                                        label={q.label}
+                                                        name={q.id}
+                                                        value={formData[q.id] || ''}
+                                                        onChange={handleChange}
+                                                        required={q.required}
+                                                        placeholder="Your answer"
+                                                    />
+                                                );
+                                            }
+                                            if (q.type === 'radio') {
+                                                return (
+                                                    <div key={q.id} className="mb-4">
+                                                        <label className="block mb-2 text-zinc-400 text-sm">{q.label}</label>
+                                                        <div className="flex flex-col gap-2">
+                                                            {q.options.map((opt, idx) => (
+                                                                <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name={q.id}
+                                                                        value={opt}
+                                                                        onChange={handleChange}
+                                                                        checked={formData[q.id] === opt}
+                                                                        className="accent-[var(--neon-cyan)]"
+                                                                    />
+                                                                    <span className="text-sm text-zinc-300">{opt}</span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                            if (q.type === 'checkbox') {
+                                                return (
+                                                    <div key={q.id} className="mb-4">
+                                                        <label className="block mb-2 text-zinc-400 text-sm">{q.label}</label>
+                                                        <div className="flex flex-col gap-2">
+                                                            {q.options.map((opt, idx) => {
+                                                                const checked = (formData[q.id] || []).includes(opt);
+                                                                return (
+                                                                    <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            name={q.id}
+                                                                            value={opt}
+                                                                            // Custom handler for checkbox array
+                                                                            onChange={(e) => {
+                                                                                const val = e.target.value;
+                                                                                const current = formData[q.id] || [];
+                                                                                const newVals = checked
+                                                                                    ? current.filter(v => v !== val)
+                                                                                    : [...current, val];
+                                                                                setFormData(prev => ({ ...prev, [q.id]: newVals }));
+                                                                            }}
+                                                                            checked={checked}
+                                                                            className="accent-[var(--neon-cyan)]"
+                                                                        />
+                                                                        <span className="text-sm text-zinc-300">{opt}</span>
+                                                                    </label>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                    ) : (
+                                        /* Default Static Fields if no dynamic questions */
+                                        <>
+                                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                                <InputField
+                                                    label="Enrollment ID"
+                                                    name="enrollmentId"
+                                                    value={formData.enrollmentId}
+                                                    onChange={handleChange}
+                                                    error={errors.enrollmentId}
+                                                    placeholder="123456"
+                                                />
+                                                <InputField
+                                                    label="Department"
+                                                    name="department"
+                                                    value={formData.department}
+                                                    onChange={handleChange}
+                                                    error={errors.department}
+                                                    placeholder="CS / IT"
+                                                />
+                                            </div>
+
+                                            <InputField
+                                                label="Team Name (Optional)"
+                                                name="teamName"
+                                                value={formData.teamName}
+                                                onChange={handleChange}
+                                                placeholder="e.g. Code Warriors"
+                                            />
+                                        </>
+                                    )}
 
                                     <button
                                         type="submit"
