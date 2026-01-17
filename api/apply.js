@@ -15,6 +15,23 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+import dns from 'dns';
+import { promisify } from 'util';
+
+const resolveMx = promisify(dns.resolveMx);
+
+async function isValidEmailDomain(email) {
+    try {
+        const domain = email.split('@')[1];
+        if (!domain) return false;
+
+        const addresses = await resolveMx(domain);
+        return addresses && addresses.length > 0;
+    } catch (error) {
+        return false;
+    }
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
@@ -27,6 +44,11 @@ export default async function handler(req, res) {
     }
 
     try {
+        // 0. Verify Email Existence (MX Check)
+        const isEmailValid = await isValidEmailDomain(email);
+        if (!isEmailValid) {
+            return res.status(400).json({ error: 'Invalid email address. The domain does not exist or accept emails.' });
+        }
         // 1. Check for duplicates (SERVER-SIDE VALIDATION)
         const appsRef = db.collection('applications');
         const snapshot = await appsRef.where('email', '==', email).get();
