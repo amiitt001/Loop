@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
-import { db } from '../firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+
 
 const Join = () => {
     const [formData, setFormData] = useState({
@@ -30,32 +29,22 @@ const Join = () => {
 
         setStatus('submitting');
         try {
-            // Check for duplicates
-            const q = query(collection(db, "applications"), where("email", "==", formData.email));
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                alert("You have already submitted an application with this email.");
-                setStatus('idle');
-                return;
-            }
-
-            // 1. Save to Firestore (Database Record)
-            await addDoc(collection(db, "applications"), {
-                ...formData,
-                createdAt: new Date(),
-                status: 'Pending'
-            });
-
-            // 2. Send Email via Serverless API (Secure)
-            const emailResponse = await fetch('/api/email', {
+            // Send Application to Backend (Validates unique email + Saves to DB + Sends Email)
+            const response = await fetch('/api/apply', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            if (!emailResponse.ok) {
-                console.warn('Email sending failed, but database record saved.');
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 409) {
+                    alert(data.error); // Duplicate found
+                    setStatus('idle');
+                    return;
+                }
+                throw new Error(data.error || "Submission failed");
             }
 
             setStatus('success');
