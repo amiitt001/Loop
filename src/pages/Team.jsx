@@ -135,7 +135,7 @@ const Team = () => {
         <p style={{ textAlign: 'center', color: '#71717a' }}>No team members found.</p>
       )}
 
-    
+
       {isMobile && !loading ? (
         <div>
           {(() => {
@@ -154,9 +154,21 @@ const Team = () => {
                           <p style={{ color: member.color || 'var(--text-dim)' }}>{member.role}</p>
                         </div>
                         <div className="stack-links">
-                          {member.social?.github && <Github size={20} color="var(--text-dim)" />}
-                          {member.social?.linkedin && <Linkedin size={20} color="var(--text-dim)" />}
-                          {member.social?.twitter && <Twitter size={20} color="var(--text-dim)" />}
+                          {member.social?.github && (
+                            <a href={member.social.github} target="_blank" rel="noopener noreferrer">
+                              <Github size={20} color="var(--text-dim)" />
+                            </a>
+                          )}
+                          {member.social?.linkedin && (
+                            <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer">
+                              <Linkedin size={20} color="var(--text-dim)" />
+                            </a>
+                          )}
+                          {member.social?.twitter && (
+                            <a href={member.social.twitter} target="_blank" rel="noopener noreferrer">
+                              <Twitter size={20} color="var(--text-dim)" />
+                            </a>
+                          )}
                         </div>
                       </div>
                     </section>
@@ -273,9 +285,21 @@ const TeamCard = ({ member, width }) => {
       {/* Hover Overlay */}
       <div className="social-overlay">
         <div style={{ display: 'flex', gap: '1rem' }}>
-          {member.social?.github && <Github className="social-icon" />}
-          {member.social?.linkedin && <Linkedin className="social-icon" />}
-          {member.social?.twitter && <Twitter className="social-icon" />}
+          {member.social?.github && (
+            <a href={member.social.github} target="_blank" rel="noopener noreferrer">
+              <Github className="social-icon" />
+            </a>
+          )}
+          {member.social?.linkedin && (
+            <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer">
+              <Linkedin className="social-icon" />
+            </a>
+          )}
+          {member.social?.twitter && (
+            <a href={member.social.twitter} target="_blank" rel="noopener noreferrer">
+              <Twitter className="social-icon" />
+            </a>
+          )}
         </div>
       </div>
 

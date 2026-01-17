@@ -79,9 +79,17 @@ const HomeTeamCard = ({ member, index }) => {
             <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', pointerEvents: 'none' }}>{member.name}</h3>
             <p style={{ fontSize: '0.85rem', color: member.color, marginBottom: '1rem', pointerEvents: 'none' }}>{member.role}</p>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', pointerEvents: 'none' }}>
-                <Github size={16} color="var(--text-dim)" />
-                <Linkedin size={16} color="var(--text-dim)" />
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', pointerEvents: 'auto', zIndex: 5 }}>
+                {member.social?.github && (
+                    <a href={member.social.github} target="_blank" rel="noopener noreferrer" style={{ pointerEvents: 'auto' }}>
+                        <Github size={16} color="var(--text-dim)" />
+                    </a>
+                )}
+                {member.social?.linkedin && (
+                    <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" style={{ pointerEvents: 'auto' }}>
+                        <Linkedin size={16} color="var(--text-dim)" />
+                    </a>
+                )}
             </div>
         </motion.div>
     );
@@ -230,8 +238,16 @@ const HomeTeam = () => {
                                             <p style={{ color: member.color }}>{member.role}</p>
                                         </div>
                                         <div className="stack-links">
-                                            <Github size={20} color="var(--text-dim)" />
-                                            <Linkedin size={20} color="var(--text-dim)" />
+                                            {member.social?.github && (
+                                                <a href={member.social.github} target="_blank" rel="noopener noreferrer">
+                                                    <Github size={20} color="var(--text-dim)" />
+                                                </a>
+                                            )}
+                                            {member.social?.linkedin && (
+                                                <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer">
+                                                    <Linkedin size={20} color="var(--text-dim)" />
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
                                 </section>
