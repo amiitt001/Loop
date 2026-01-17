@@ -100,6 +100,10 @@ export default async function handler(req, res) {
         const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
         if (serviceID && templateID && publicKey) {
+            console.log("EmailJS Params Present: ServiceID, TemplateID, PublicKey");
+            if (privateKey) console.log("EmailJS Private Key Present");
+            else console.warn("EmailJS Private Key MISSING");
+
             const templateParams = {
                 name,
                 email,
@@ -130,8 +134,10 @@ export default async function handler(req, res) {
 
                 if (!emailResponse.ok) {
                     console.error('EmailJS Error (Silent Fail):', await emailResponse.text());
-                    // Silent failure: We do not return 500, because application IS saved.
+                } else {
+                    console.log('EmailJS Success: Email sent to', email);
                 }
+                // Silent failure: We do not return 500, because application IS saved.
             } catch (err) {
                 console.error('EmailJS Network Error (Silent Fail):', err);
             }
