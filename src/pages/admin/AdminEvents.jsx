@@ -54,22 +54,8 @@ const AdminEvents = () => {
     };
 
     // Edit Event
-    const handleEdit = async (event) => {
-        const title = prompt("Edit Title:", event.title);
-        if (title === null) return;
-        const dateStr = prompt("Edit Date (YYYY-MM-DD):", event.dateDisplay);
-        const status = prompt("Edit Status (Upcoming/Active/Past):", event.status);
-
-        try {
-            await updateDoc(doc(db, "events", event.id), {
-                title: title || event.title,
-                date: dateStr ? new Date(dateStr) : event.date,
-                status: status || event.status
-            });
-        } catch (error) {
-            console.error("Error updating event: ", error);
-            alert("Error updating event.");
-        }
+    const handleEdit = (event) => {
+        navigate(`/admin/events/edit/${event.id}`);
     };
 
     // Manage Event (Toggle Registration)

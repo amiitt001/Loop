@@ -17,6 +17,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminMembers from './pages/admin/AdminMembers';
 import AdminCreateMember from './pages/admin/AdminCreateMember';
 import AdminCreateEvent from './pages/admin/AdminCreateEvent';
+import AdminEditEvent from './pages/admin/AdminEditEvent';
 import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 import AdminCreateContestant from './pages/admin/AdminCreateContestant';
 import AdminApplications from './pages/admin/AdminApplications';
@@ -53,6 +54,7 @@ function App() {
             <Route path="applications" element={<AdminApplications />} />
             <Route path="events" element={<AdminEvents />} />
             <Route path="events/new" element={<AdminCreateEvent />} />
+            <Route path="events/edit/:id" element={<AdminEditEvent />} />
           </Route>
 
           {/* Public Routes */}
