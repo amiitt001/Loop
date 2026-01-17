@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom'; // Added import
 import { Calendar, Clock, MapPin, RefreshCw } from 'lucide-react';
 import RegistrationModal from '../components/RegistrationModal';
 import { db } from '../firebase';
@@ -8,6 +9,20 @@ const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams(); // Hook for query params
+
+  // Auto-open modal if URL has ?register=EVENT_ID
+  useEffect(() => {
+    if (!loading && events.length > 0) {
+      const eventIdToOpen = searchParams.get('register');
+      if (eventIdToOpen) {
+        const eventToOpen = events.find(e => e.id === eventIdToOpen);
+        if (eventToOpen && eventToOpen.registrationOpen) {
+          setSelectedEvent(eventToOpen);
+        }
+      }
+    }
+  }, [loading, events, searchParams]);
 
   useEffect(() => {
     setLoading(true);

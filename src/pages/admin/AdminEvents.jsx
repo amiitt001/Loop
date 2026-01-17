@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Calendar, Clock, MoreVertical, RefreshCw, Trash2, Users } from 'lucide-react';
+import { Plus, Calendar, Clock, MoreVertical, RefreshCw, Trash2, Users, Link as LinkIcon } from 'lucide-react';
 import { db } from '../../firebase';
 import { collection, updateDoc, deleteDoc, doc, query, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -40,6 +40,17 @@ const AdminEvents = () => {
     // Create Event (Navigation)
     const handleCreate = () => {
         navigate('/admin/events/new');
+    };
+
+    // Copy Registration Link
+    const handleCopyLink = (event) => {
+        const link = `${window.location.origin}/events?register=${event.id}`;
+        navigator.clipboard.writeText(link).then(() => {
+            alert("Registration link copied to clipboard!");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            alert("Failed to copy link.");
+        });
     };
 
     // Edit Event
@@ -152,6 +163,13 @@ const AdminEvents = () => {
                                 className="bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20 py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-cyan)]/20 transition-colors"
                             >
                                 Manage
+                            </button>
+                            <button
+                                onClick={() => handleCopyLink(event)}
+                                title="Copy Registration Link"
+                                className="bg-zinc-800 text-zinc-400 border-none py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 hover:text-white transition-colors flex items-center gap-1"
+                            >
+                                <LinkIcon size={14} />
                             </button>
                             <button
                                 onClick={() => setSelectedEventForRegistrations(event)}
