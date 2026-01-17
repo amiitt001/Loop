@@ -266,6 +266,11 @@ const Join = () => {
           background: rgba(0, 243, 255, 0.05);
         }
 
+        .input-field option {
+          background-color: var(--bg-card);
+          color: #fff;
+        }
+
         .submit-btn {
           width: 100%;
           background: var(--neon-cyan);
