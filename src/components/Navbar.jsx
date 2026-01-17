@@ -41,7 +41,7 @@ const Navbar = () => {
                     zIndex: 1002
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                        <img src="/logo.png" alt="TN" style={{
+                        <img src="/logo.png" alt="LOOP" style={{
                             height: '38px',
                             width: '38px',
                             objectFit: 'cover',
@@ -56,7 +56,7 @@ const Navbar = () => {
                                 fontWeight: '900',
                                 color: '#fff',
                             }}>
-                                <span className="text-neon-cyan">TECH</span>NOVA
+                                <span className="text-neon-cyan">LOOP</span>
                             </span>
                             <span style={{
                                 fontSize: '0.6rem',

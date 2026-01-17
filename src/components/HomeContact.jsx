@@ -33,8 +33,8 @@ const HomeContact = () => {
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#fff' }}>
-                        <a href="mailto:hello@technova.edu" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'inherit', textDecoration: 'none' }}>
-                            <Mail color="var(--neon-cyan)" /> hello@technova.edu
+                        <a href="mailto:hello@loop.edu" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'inherit', textDecoration: 'none' }}>
+                            <Mail color="var(--neon-cyan)" /> hello@loop.edu
                         </a>
                     </div>
 

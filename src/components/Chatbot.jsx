@@ -7,7 +7,7 @@ import { collection, getDocs, query, where, orderBy, limit } from 'firebase/fire
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { id: 1, text: "Tech Nova assistant online. Ask about projects, events, leaderboard, or joining.", sender: 'bot' }
+        { id: 1, text: "LOOP assistant online. Ask about projects, events, leaderboard, or joining.", sender: 'bot' }
     ]);
     const [inputText, setInputText] = useState('');
     const messagesEndRef = useRef(null);
@@ -62,7 +62,7 @@ const Chatbot = () => {
         let botResponseText = "";
 
         if (lowerInput.includes('join') || lowerInput.includes('member') || lowerInput.includes('recruit')) {
-            botResponseText = "To join Tech Nova, fill out the application form on the 'Join Us' page. We recruit new members at the start of every semester based on technical skills and passion.";
+            botResponseText = "To join LOOP, fill out the application form on the 'Join Us' page. We recruit new members at the start of every semester based on technical skills and passion.";
         } else if (lowerInput.includes('leaderboard') || lowerInput.includes('rank') || lowerInput.includes('points') || lowerInput.includes('top')) {
             if (dataCache.contestants.length > 0) {
                 const top = dataCache.contestants[0];
@@ -84,7 +84,7 @@ const Chatbot = () => {
                 botResponseText = "We host monthly hackathons and weekly workshops. Check the Events tab for future updates.";
             }
         } else if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-            botResponseText = "System online. Accessing protocol... Hello! How can I assist you with Tech Nova today?";
+            botResponseText = "System online. Accessing protocol... Hello! How can I assist you with LOOP today?";
         } else {
             botResponseText = "Command not recognized. I can provide info on: Projects, Events, The Leaderboard, or How to Join.";
         }
@@ -129,7 +129,7 @@ const Chatbot = () => {
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <Bot size={18} color="var(--neon-cyan)" />
-                                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '1px' }}>NOVA ASSISTANT</span>
+                                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '1px' }}>LOOP ASSISTANT</span>
                                 </div>
                                 <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-dim)' }}>
                                     <X size={18} />

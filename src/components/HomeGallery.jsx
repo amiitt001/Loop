@@ -57,7 +57,7 @@ const HomeGallery = () => {
                     style={{ textAlign: 'center', marginBottom: '4rem' }}
                 >
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#fff' }}>MOMENTS WE BUILD</h2>
-                    <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>Inside Tech Nova</p>
+                    <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>Inside LOOP</p>
                     {loading && <div style={{ marginTop: '1rem' }}><RefreshCw className="spin" size={20} color="var(--text-dim)" /></div>}
                 </motion.div>
 

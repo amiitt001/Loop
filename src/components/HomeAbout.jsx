@@ -81,7 +81,7 @@ const HomeAbout = () => {
                             fontWeight: '900',
                             textTransform: 'uppercase'
                         }}>
-                            THE <span style={{ color: 'transparent', WebkitTextStroke: '1px #fff' }}>TECH NOVA</span><br />
+                            THE <span style={{ color: 'transparent', WebkitTextStroke: '1px #fff' }}>LOOP</span><br />
                             SYSTEM
                         </h2>
 
