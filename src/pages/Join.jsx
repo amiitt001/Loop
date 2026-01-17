@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -37,26 +37,15 @@ const Join = () => {
                 status: 'Pending'
             });
 
-            // 2. Send Email via EmailJS
-            // Make sure to define these in your .env file
-            const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-            const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-            const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+            // 2. Send Email via Serverless API (Secure)
+            const emailResponse = await fetch('/api/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
 
-            if (serviceID && templateID && publicKey) {
-                await emailjs.send(
-                    serviceID,
-                    templateID,
-                    {
-                        name: formData.name,
-                        email: formData.email,
-                        domain: formData.domain,
-                        reply_to: "technova@galgotias.edu" // Replace with actual support email if needed
-                    },
-                    publicKey
-                );
-            } else {
-                console.warn("EmailJS credentials missing in .env. Email not sent.");
+            if (!emailResponse.ok) {
+                console.warn('Email sending failed, but database record saved.');
             }
 
             setStatus('success');
