@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, CheckCircle, AlertCircle, Instagram, ExternalLink, User, Mail, Hash, Building2, Users } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -15,6 +15,8 @@ const RegistrationModal = ({ event, onClose }) => {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [instagramVisited, setInstagramVisited] = useState(false);
+    const [instagramFollowed, setInstagramFollowed] = useState(false);
 
     const validate = () => {
         const newErrors = {};
@@ -148,7 +150,6 @@ const RegistrationModal = ({ event, onClose }) => {
                                 </p>
 
                                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                                    {/* Base Fields usually needed for everything */}
                                     <InputField
                                         label="Full Name"
                                         name="name"
@@ -156,6 +157,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                         onChange={handleChange}
                                         error={errors.name}
                                         placeholder="John Doe"
+                                        icon={User}
                                     />
                                     <InputField
                                         label="Email"
@@ -165,6 +167,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                         onChange={handleChange}
                                         error={errors.email}
                                         placeholder="john@example.com"
+                                        icon={Mail}
                                     />
 
                                     {/* Dynamic Questions (if any) */}
@@ -243,24 +246,24 @@ const RegistrationModal = ({ event, onClose }) => {
                                     ) : (
                                         /* Default Static Fields if no dynamic questions */
                                         <>
-                                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                                <InputField
-                                                    label="Enrollment ID"
-                                                    name="enrollmentId"
-                                                    value={formData.enrollmentId}
-                                                    onChange={handleChange}
-                                                    error={errors.enrollmentId}
-                                                    placeholder="123456"
-                                                />
-                                                <InputField
-                                                    label="Department"
-                                                    name="department"
-                                                    value={formData.department}
-                                                    onChange={handleChange}
-                                                    error={errors.department}
-                                                    placeholder="CS / IT"
-                                                />
-                                            </div>
+                                            <InputField
+                                                label="Enrollment ID"
+                                                name="enrollmentId"
+                                                value={formData.enrollmentId}
+                                                onChange={handleChange}
+                                                error={errors.enrollmentId}
+                                                placeholder="123456"
+                                                icon={Hash}
+                                            />
+                                            <InputField
+                                                label="Department"
+                                                name="department"
+                                                value={formData.department}
+                                                onChange={handleChange}
+                                                error={errors.department}
+                                                placeholder="CS / IT"
+                                                icon={Building2}
+                                            />
 
                                             <InputField
                                                 label="Team Name (Optional)"
@@ -268,24 +271,79 @@ const RegistrationModal = ({ event, onClose }) => {
                                                 value={formData.teamName}
                                                 onChange={handleChange}
                                                 placeholder="e.g. Code Warriors"
+                                                icon={Users}
                                             />
                                         </>
                                     )}
 
+                                    {/* Instagram Verification Section */}
+                                    <div style={{ marginBottom: '1.5rem', padding: '1.5rem', background: 'var(--bg-dark)', borderRadius: '12px', border: '1px solid var(--border-dim)' }}>
+                                        <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <Instagram color="#E1306C" size={20} /> Required Verification
+                                        </h3>
+                                        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                                            To register, you must follow us on Instagram <strong>@gcetloop</strong>.
+                                        </p>
+
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            <a
+                                                href="https://www.instagram.com/gcetloop"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={() => setInstagramVisited(true)}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '0.5rem',
+                                                    padding: '0.8rem',
+                                                    background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                                                    color: 'white',
+                                                    borderRadius: '8px',
+                                                    textDecoration: 'none',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.9rem'
+                                                }}
+                                            >
+                                                <ExternalLink size={16} /> Visit @gcetloop on Instagram
+                                            </a>
+
+                                            <label style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.8rem',
+                                                cursor: instagramVisited ? 'pointer' : 'not-allowed',
+                                                opacity: instagramVisited ? 1 : 0.5,
+                                                transition: 'opacity 0.3s ease'
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={instagramFollowed}
+                                                    onChange={(e) => setInstagramFollowed(e.target.checked)}
+                                                    disabled={!instagramVisited}
+                                                    style={{ width: '18px', height: '18px', accentColor: 'var(--neon-cyan)' }}
+                                                />
+                                                <span style={{ color: '#fff', fontSize: '0.9rem' }}>
+                                                    I have successfully followed LOOP on Instagram.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || !instagramFollowed}
                                         style={{
                                             width: '100%',
                                             padding: '1rem',
                                             marginTop: '1rem',
-                                            background: isSubmitting ? 'var(--text-dim)' : 'var(--neon-cyan)',
+                                            background: (isSubmitting || !instagramFollowed) ? 'var(--text-dim)' : 'var(--neon-cyan)',
                                             color: '#000',
                                             border: 'none',
                                             borderRadius: '8px',
                                             fontWeight: 'bold',
                                             fontSize: '1rem',
-                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                            cursor: (isSubmitting || !instagramFollowed) ? 'not-allowed' : 'pointer',
                                             transition: 'all 0.3s ease',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -347,46 +405,41 @@ const RegistrationModal = ({ event, onClose }) => {
     );
 };
 
-const InputField = ({ label, name, type = "text", value, onChange, error, placeholder }) => (
-    <div style={{ marginBottom: '1.5rem', width: '100%' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+const InputField = ({ label, name, type = "text", value, onChange, error, placeholder, icon: Icon }) => (
+    <div className="w-full mb-6">
+        <label className="block mb-2 text-zinc-400 text-sm font-medium">
             {label}
         </label>
-        <div style={{ position: 'relative' }}>
+        <div className="relative group">
+            {Icon && (
+                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--neon-cyan)]'}`}>
+                    <Icon size={18} />
+                </div>
+            )}
             <input
                 type={type}
                 name={name}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                style={{
-                    width: '100%',
-                    background: 'rgba(255,255,255,0.05)',
-                    border: `1px solid ${error ? '#ff0055' : 'var(--border-dim)'}`,
-                    padding: '1rem',
-                    borderRadius: '8px',
-                    color: '#fff',
-                    fontFamily: 'var(--font-main)',
-                    outline: 'none',
-                    transition: 'all 0.3s ease'
-                }}
-                onFocus={(e) => !error && (e.target.style.borderColor = 'var(--neon-cyan)')}
-                onBlur={(e) => !error && (e.target.style.borderColor = 'var(--border-dim)')}
+                className={`
+                    w-full bg-black/20 border rounded-xl p-3 text-white outline-none transition-all duration-300
+                    ${Icon ? 'pl-11' : 'pl-4'}
+                    ${error
+                        ? 'border-[#ff0055] focus:shadow-[0_0_20px_rgba(255,0,85,0.2)]'
+                        : 'border-zinc-800 focus:border-[var(--neon-cyan)] focus:bg-[var(--neon-cyan)]/5 focus:shadow-[0_0_20px_rgba(0,243,255,0.1)]'}
+                `}
             />
             {error && (
-                <div style={{
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: '#ff0055'
-                }}>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#ff0055]">
                     <AlertCircle size={18} />
                 </div>
             )}
         </div>
         {error && (
-            <p style={{ color: '#ff0055', fontSize: '0.8rem', marginTop: '0.5rem' }}>{error}</p>
+            <p className="text-[#ff0055] text-xs mt-2 flex items-center gap-1">
+                <AlertCircle size={12} /> {error}
+            </p>
         )}
     </div>
 );

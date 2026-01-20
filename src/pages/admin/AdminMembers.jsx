@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, RefreshCw, Mail, Phone, Linkedin, Github } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, RefreshCw, Mail, Phone, Linkedin, Github, Shield } from 'lucide-react';
 import { db } from '../../firebase';
 import { collection, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -30,38 +30,8 @@ const AdminMembers = () => {
     }, []);
 
     // Edit Member
-    const handleEdit = async (member) => {
-        const name = prompt("Edit Name:", member.name);
-        if (name === null) return;
-        const role = prompt("Edit Role:", member.role);
-        if (role === null) return;
-        const email = prompt("Edit Email:", member.email || '');
-        if (email === null) return;
-        const phone = prompt("Edit Phone:", member.phone || '');
-        if (phone === null) return;
-        const img = prompt("Edit Photo URL:", member.img || '');
-        if (img === null) return;
-        const linkedin = prompt("Edit LinkedIn URL:", member.social?.linkedin || '');
-        if (linkedin === null) return;
-        const github = prompt("Edit GitHub URL:", member.social?.github || '');
-        if (github === null) return;
-
-        try {
-            await updateDoc(doc(db, "members", member.id), {
-                name: name || member.name,
-                role: role || member.role,
-                email: email,
-                phone: phone,
-                img: img,
-                social: {
-                    linkedin: linkedin,
-                    github: github
-                }
-            });
-        } catch (error) {
-            console.error("Error updating member: ", error);
-            alert("Error updating member.");
-        }
+    const handleEdit = (member) => {
+        navigate(`/admin/members/edit/${member.id}`);
     };
 
     // Delete Member
@@ -108,14 +78,30 @@ const AdminMembers = () => {
                             </div>
 
                             <div className="p-4 flex flex-col gap-3 text-sm text-zinc-400 flex-grow">
+                                {member.admissionNo && (
+                                    <div className="flex items-center gap-3 w-full">
+                                        <Shield size={16} className="min-w-[16px] text-zinc-500" />
+                                        <span className="text-zinc-300">{member.admissionNo}</span>
+                                    </div>
+                                )}
+                                {(member.branch || member.year) && (
+                                    <div className="flex items-center gap-3 w-full">
+                                        <div className="w-4 h-4 rounded-full border border-zinc-600 flex items-center justify-center text-[10px] min-w-[16px]">
+                                            <span className="w-1 h-1 bg-zinc-500 rounded-full"></span>
+                                        </div>
+                                        <span className="text-zinc-400">
+                                            {[member.branch, member.year].filter(Boolean).join(' • ')}
+                                        </span>
+                                    </div>
+                                )}
                                 {member.email && (
-                                    <div className="flex items-center gap-3 overflow-hidden">
+                                    <div className="flex items-center gap-3 overflow-hidden w-full">
                                         <Mail size={16} className="min-w-[16px]" />
                                         <span className="truncate">{member.email}</span>
                                     </div>
                                 )}
                                 {member.phone && (
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-3 w-full">
                                         <Phone size={16} className="min-w-[16px]" />
                                         <span>{member.phone}</span>
                                     </div>

@@ -125,7 +125,7 @@ const EventDetails = () => {
                     {/* Right Column: Registration Form */}
                     <div className="lg:col-span-1" id="registration-section">
                         <div className="sticky top-32">
-                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl shadow-black/50">
+                            <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 shadow-2xl shadow-black/50">
                                 <h3 className="text-xl font-bold text-white mb-6 border-b border-zinc-800 pb-4">
                                     Register Now
                                 </h3>

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, User, Shield, Camera, Github, Linkedin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Save, User, Shield, Camera, Github, Linkedin, RefreshCw } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-const AdminCreateMember = () => {
+const AdminEditMember = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         role: 'Member',
@@ -19,6 +21,40 @@ const AdminCreateMember = () => {
         github: ''
     });
 
+    useEffect(() => {
+        const fetchMember = async () => {
+            try {
+                const docRef = doc(db, "members", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setFormData({
+                        name: data.name || '',
+                        role: data.role || 'Member',
+                        admissionNo: data.admissionNo || '',
+                        branch: data.branch || '',
+                        year: data.year || '',
+                        active: data.active !== undefined ? data.active : true,
+                        img: data.img || '',
+                        linkedin: data.social?.linkedin || '',
+                        github: data.social?.github || ''
+                    });
+                } else {
+                    alert("Member not found!");
+                    navigate('/admin/members');
+                }
+            } catch (error) {
+                console.error("Error fetching member:", error);
+                alert("Error fetching member data.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMember();
+    }, [id, navigate]);
+
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setFormData({ ...formData, [e.target.name]: value });
@@ -26,32 +62,39 @@ const AdminCreateMember = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSaving(true);
 
         try {
-            await addDoc(collection(db, "members"), {
+            await updateDoc(doc(db, "members", id), {
                 name: formData.name,
                 role: formData.role,
                 admissionNo: formData.admissionNo,
                 branch: formData.branch,
                 year: formData.year,
                 active: formData.active,
-                img: formData.img || '', // Optional photo
-                social: { // Nested social links
-                    linkedin: formData.linkedin || '',
-                    github: formData.github || ''
-                },
-                createdAt: new Date()
+                img: formData.img,
+                social: {
+                    linkedin: formData.linkedin,
+                    github: formData.github
+                }
             });
-            alert("Member Added Successfully!");
+            alert("Member Updated Successfully!");
             navigate('/admin/members');
         } catch (error) {
-            console.error("Error adding member: ", error);
-            alert("Error adding member: " + error.message);
+            console.error("Error updating member: ", error);
+            alert("Error updating member: " + error.message);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-[50vh]">
+                <RefreshCw className="animate-spin text-[var(--neon-cyan)]" size={40} />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-3xl mx-auto">
@@ -62,7 +105,7 @@ const AdminCreateMember = () => {
                 <ArrowLeft size={18} /> Back to Members
             </button>
 
-            <h1 className="text-3xl font-bold mb-8 text-white">Add New Member</h1>
+            <h1 className="text-3xl font-bold mb-8 text-white">Edit Member</h1>
 
             <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 flex flex-col gap-6">
                 {/* Name */}
@@ -211,15 +254,15 @@ const AdminCreateMember = () => {
                 <div className="pt-6 border-t border-zinc-800 flex justify-end">
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={saving}
                         className={`
                             bg-[var(--neon-cyan)] text-black border-none rounded-lg py-3 px-8 text-base font-bold cursor-pointer flex items-center gap-2
-                            ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--neon-cyan)]/80'}
+                            ${saving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--neon-cyan)]/80'}
                             transition-all
                         `}
                     >
                         <Save size={18} />
-                        {loading ? 'Adding...' : 'Add Member'}
+                        {saving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </form>
@@ -227,4 +270,4 @@ const AdminCreateMember = () => {
     );
 };
 
-export default AdminCreateMember;
+export default AdminEditMember;

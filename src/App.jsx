@@ -16,6 +16,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminMembers from './pages/admin/AdminMembers';
 import AdminCreateMember from './pages/admin/AdminCreateMember';
+import AdminEditMember from './pages/admin/AdminEditMember';
 import AdminCreateEvent from './pages/admin/AdminCreateEvent';
 import AdminEditEvent from './pages/admin/AdminEditEvent';
 import AdminLeaderboard from './pages/admin/AdminLeaderboard';
@@ -48,7 +49,9 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="members" element={<AdminMembers />} />
+            <Route path="members" element={<AdminMembers />} />
             <Route path="members/new" element={<AdminCreateMember />} />
+            <Route path="members/edit/:id" element={<AdminEditMember />} />
             <Route path="contestants" element={<AdminLeaderboard />} />
             <Route path="contestants/new" element={<AdminCreateContestant />} />
             <Route path="applications" element={<AdminApplications />} />

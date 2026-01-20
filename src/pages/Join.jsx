@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink } from 'lucide-react';
 import { normalizeError, ApiError } from '../utils/errorHandler';
 
 
@@ -15,7 +15,10 @@ const Join = () => {
         domain: 'Full Stack Development',
         reason: ''
     });
+
     const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+    const [instagramVisited, setInstagramVisited] = useState(false);
+    const [instagramFollowed, setInstagramFollowed] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -224,7 +227,68 @@ const Join = () => {
                         ></textarea>
                     </div>
 
-                    <button type="submit" disabled={status === 'submitting'} className="submit-btn">
+                    <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--bg-dark)', borderRadius: '12px', border: '1px solid var(--border-dim)' }}>
+                        <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Instagram color="#E1306C" size={20} /> Required Verification
+                        </h3>
+                        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                            To join the squad, you must follow us on Instagram <strong>@gcetloop</strong>.
+                        </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <a
+                                href="https://www.instagram.com/gcetloop"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => setInstagramVisited(true)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.8rem',
+                                    background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                                    color: 'white',
+                                    borderRadius: '8px',
+                                    textDecoration: 'none',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                <ExternalLink size={16} /> Visit @gcetloop on Instagram
+                            </a>
+
+                            <label style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.8rem',
+                                cursor: instagramVisited ? 'pointer' : 'not-allowed',
+                                opacity: instagramVisited ? 1 : 0.5,
+                                transition: 'opacity 0.3s ease'
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    checked={instagramFollowed}
+                                    onChange={(e) => setInstagramFollowed(e.target.checked)}
+                                    disabled={!instagramVisited}
+                                    style={{ width: '18px', height: '18px', accentColor: 'var(--neon-cyan)' }}
+                                />
+                                <span style={{ color: '#fff', fontSize: '0.9rem' }}>
+                                    I have successfully followed LOOP on Instagram.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={status === 'submitting' || !instagramFollowed}
+                        className="submit-btn"
+                        style={{
+                            opacity: (status === 'submitting' || !instagramFollowed) ? 0.5 : 1,
+                            cursor: (status === 'submitting' || !instagramFollowed) ? 'not-allowed' : 'pointer'
+                        }}
+                    >
                         {status === 'submitting' ? 'SENDING...' : 'SUBMIT APPLICATION'} <Send size={18} />
                     </button>
 

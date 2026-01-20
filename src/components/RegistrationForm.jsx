@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Instagram, ExternalLink, User, Mail, Hash, Building2, Users } from 'lucide-react';
 
 const RegistrationForm = ({ event, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -14,6 +14,8 @@ const RegistrationForm = ({ event, onSuccess }) => {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [instagramVisited, setInstagramVisited] = useState(false);
+    const [instagramFollowed, setInstagramFollowed] = useState(false);
 
     const validate = () => {
         const newErrors = {};
@@ -112,6 +114,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                 onChange={handleChange}
                 error={errors.name}
                 placeholder="John Doe"
+                icon={User}
             />
             <InputField
                 label="Email"
@@ -121,6 +124,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                 onChange={handleChange}
                 error={errors.email}
                 placeholder="john@example.com"
+                icon={Mail}
             />
 
             {/* Dynamic Questions (if any) */}
@@ -212,6 +216,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                             onChange={handleChange}
                             error={errors.enrollmentId}
                             placeholder="123456"
+                            icon={Hash}
                         />
                         <InputField
                             label="Department"
@@ -220,6 +225,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                             onChange={handleChange}
                             error={errors.department}
                             placeholder="CS / IT"
+                            icon={Building2}
                         />
                     </div>
 
@@ -229,16 +235,51 @@ const RegistrationForm = ({ event, onSuccess }) => {
                         value={formData.teamName}
                         onChange={handleChange}
                         placeholder="e.g. Code Warriors"
+                        icon={Users}
                     />
                 </>
             )}
 
+            <div className="mb-8 p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
+                <h3 className="text-white text-lg mb-4 flex items-center gap-2">
+                    <Instagram color="#E1306C" size={20} /> Required Verification
+                </h3>
+                <p className="text-zinc-400 text-sm mb-6">
+                    To register, you must follow us on Instagram <strong>@gcetloop</strong>.
+                </p>
+
+                <div className="flex flex-col gap-4">
+                    <a
+                        href="https://www.instagram.com/gcetloop"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setInstagramVisited(true)}
+                        className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity no-underline"
+                    >
+                        <ExternalLink size={16} /> Visit @gcetloop on Instagram
+                    </a>
+
+                    <label className={`flex items-center gap-3 transition-opacity ${instagramVisited ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-50'}`}>
+                        <input
+                            type="checkbox"
+                            checked={instagramFollowed}
+                            onChange={(e) => setInstagramVisited && setInstagramFollowed(e.target.checked)}
+                            disabled={!instagramVisited}
+                            className="w-5 h-5 accent-[var(--neon-cyan)]"
+                        />
+                        <span className="text-zinc-300 text-sm">
+                            I have successfully followed LOOP on Instagram.
+                        </span>
+                    </label>
+                </div>
+            </div>
+
             <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !instagramFollowed}
                 className={`
                     w-full py-3 mt-4 rounded-lg font-bold text-base flex items-center justify-center gap-2 transition-all
-                    ${isSubmitting
+                    ${(isSubmitting || !instagramFollowed)
                         ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                         : 'bg-[var(--neon-cyan)] text-black hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] hover:-translate-y-0.5 cursor-pointer'}
                 `}
@@ -249,12 +290,17 @@ const RegistrationForm = ({ event, onSuccess }) => {
     );
 };
 
-const InputField = ({ label, name, type = "text", value, onChange, error, placeholder }) => (
+const InputField = ({ label, name, type = "text", value, onChange, error, placeholder, icon: Icon }) => (
     <div className="w-full">
-        <label className="block mb-2 text-zinc-400 text-sm">
+        <label className="block mb-2 text-zinc-400 text-sm font-medium">
             {label}
         </label>
-        <div className="relative">
+        <div className="relative group">
+            {Icon && (
+                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--neon-cyan)]'}`}>
+                    <Icon size={18} />
+                </div>
+            )}
             <input
                 type={type}
                 name={name}
@@ -262,8 +308,11 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
                 onChange={onChange}
                 placeholder={placeholder}
                 className={`
-                    w-full bg-white/5 border rounded-lg p-3 text-white outline-none transition-all
-                    ${error ? 'border-[#ff0055]' : 'border-zinc-700 focus:border-[var(--neon-cyan)]'}
+                    w-full bg-black/20 border rounded-xl p-3 text-white outline-none transition-all duration-300
+                    ${Icon ? 'pl-11' : 'pl-4'}
+                    ${error
+                        ? 'border-[#ff0055] focus:shadow-[0_0_20px_rgba(255,0,85,0.2)]'
+                        : 'border-zinc-800 focus:border-[var(--neon-cyan)] focus:bg-[var(--neon-cyan)]/5 focus:shadow-[0_0_20px_rgba(0,243,255,0.1)]'}
                 `}
             />
             {error && (
@@ -273,7 +322,9 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
             )}
         </div>
         {error && (
-            <p className="text-[#ff0055] text-xs mt-1">{error}</p>
+            <p className="text-[#ff0055] text-xs mt-2 flex items-center gap-1">
+                <AlertCircle size={12} /> {error}
+            </p>
         )}
     </div>
 );
