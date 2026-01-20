@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, RefreshCw } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, RefreshCw, Mail, Phone, Linkedin, Github } from 'lucide-react';
 import { db } from '../../firebase';
 import { collection, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,10 @@ const AdminMembers = () => {
         if (name === null) return;
         const role = prompt("Edit Role:", member.role);
         if (role === null) return;
+        const email = prompt("Edit Email:", member.email || '');
+        if (email === null) return;
+        const phone = prompt("Edit Phone:", member.phone || '');
+        if (phone === null) return;
         const img = prompt("Edit Photo URL:", member.img || '');
         if (img === null) return;
         const linkedin = prompt("Edit LinkedIn URL:", member.social?.linkedin || '');
@@ -46,6 +50,8 @@ const AdminMembers = () => {
             await updateDoc(doc(db, "members", member.id), {
                 name: name || member.name,
                 role: role || member.role,
+                email: email,
+                phone: phone,
                 img: img,
                 social: {
                     linkedin: linkedin,
@@ -74,6 +80,82 @@ const AdminMembers = () => {
         m.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Organize members by role
+    const heads = filteredMembers.filter(m => /Head|Lead|President|Vice/i.test(m.role));
+    const coordinators = filteredMembers.filter(m => /Coordinator/i.test(m.role) && !/Head|Lead|President|Vice/i.test(m.role));
+    const others = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator/i.test(m.role));
+
+    const renderMemberSection = (title, membersList) => {
+        if (membersList.length === 0) return null;
+        return (
+            <div className="mb-12">
+                <h2 className="text-xl font-bold mb-6 text-[var(--neon-cyan)] border-b border-zinc-800 pb-2 inline-block pr-6">{title}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {membersList.map((member) => (
+                        <div key={member.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-colors flex flex-col">
+                            <div className="p-6 flex flex-col items-center text-center border-b border-zinc-800">
+                                <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 mb-4 border-2 border-[var(--neon-cyan)]/30">
+                                    {member.img ? (
+                                        <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-zinc-600 text-3xl font-bold">
+                                            {member.name.charAt(0)}
+                                        </div>
+                                    )}
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
+                                <p className="text-[var(--neon-cyan)] text-sm font-medium uppercase tracking-wider">{member.role}</p>
+                            </div>
+
+                            <div className="p-4 flex flex-col gap-3 text-sm text-zinc-400 flex-grow">
+                                {member.email && (
+                                    <div className="flex items-center gap-3 overflow-hidden">
+                                        <Mail size={16} className="min-w-[16px]" />
+                                        <span className="truncate">{member.email}</span>
+                                    </div>
+                                )}
+                                {member.phone && (
+                                    <div className="flex items-center gap-3">
+                                        <Phone size={16} className="min-w-[16px]" />
+                                        <span>{member.phone}</span>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3 mt-2 justify-center">
+                                    {member.social?.linkedin && (
+                                        <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#0077b5] transition-colors">
+                                            <Linkedin size={20} />
+                                        </a>
+                                    )}
+                                    {member.social?.github && (
+                                        <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors">
+                                            <Github size={20} />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="p-3 bg-zinc-950/50 flex gap-2">
+                                <button
+                                    onClick={() => handleEdit(member)}
+                                    className="flex-1 bg-zinc-800 text-white border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Edit2 size={14} /> Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(member.id)}
+                                    className="flex-1 bg-red-500/10 text-red-500 border border-red-500/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Trash2 size={14} /> Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -101,82 +183,16 @@ const AdminMembers = () => {
                 />
             </div>
 
-            {/* Desktop Table View */}
-            <div className="hidden md:block bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-zinc-800 text-zinc-400 text-sm uppercase">
-                            <th className="p-4 font-medium">Name</th>
-                            <th className="p-4 font-medium">Role</th>
-                            <th className="p-4 font-medium text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredMembers.length === 0 ? (
-                            <tr>
-                                <td colSpan="3" className="p-8 text-center text-zinc-500">
-                                    {loading ? "Loading members..." : "No members found."}
-                                </td>
-                            </tr>
-                        ) : (
-                            filteredMembers.map((member) => (
-                                <tr key={member.id} className="border-b border-zinc-800 last:border-0 hover:bg-white/5 transition-colors">
-                                    <td className="p-4 font-medium">{member.name}</td>
-                                    <td className="p-4 text-zinc-400">{member.role}</td>
-                                    <td className="p-4 text-right">
-                                        <button
-                                            onClick={() => handleEdit(member)}
-                                            className="bg-transparent border-none text-zinc-400 hover:text-white cursor-pointer mr-2 transition-colors"
-                                        >
-                                            <Edit2 size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(member.id)}
-                                            className="bg-transparent border-none text-red-500 hover:text-red-400 cursor-pointer transition-colors"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            {/* Member Sections */}
+            {filteredMembers.length === 0 && !loading && (
+                <div className="p-8 text-center text-zinc-500 bg-zinc-900 rounded-xl border border-zinc-800">
+                    No members found.
+                </div>
+            )}
 
-            {/* Mobile Card View */}
-            <div className="md:hidden flex flex-col gap-4">
-                {filteredMembers.length === 0 ? (
-                    <div className="p-8 text-center text-zinc-500 bg-zinc-900 rounded-xl border border-zinc-800">
-                        {loading ? "Loading members..." : "No members found."}
-                    </div>
-                ) : (
-                    filteredMembers.map((member) => (
-                        <div key={member.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col gap-3">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="font-bold text-lg">{member.name}</h3>
-                                    <p className="text-zinc-400 text-sm">{member.role}</p>
-                                </div>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => handleEdit(member)}
-                                        className="p-2 bg-zinc-800 rounded-lg text-zinc-400 hover:text-white"
-                                    >
-                                        <Edit2 size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(member.id)}
-                                        className="p-2 bg-zinc-800 rounded-lg text-red-500 hover:text-red-400"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
+            {renderMemberSection("Heads & Leads", heads)}
+            {renderMemberSection("Coordinators", coordinators)}
+            {renderMemberSection("Core Members", others)}
         </div>
     );
 };

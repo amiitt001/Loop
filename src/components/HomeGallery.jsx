@@ -9,6 +9,8 @@ const HomeGallery = () => {
     const [galleryItems, setGalleryItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
+
     useEffect(() => {
         setLoading(true);
         const q = query(collection(db, "events"));
@@ -89,6 +91,8 @@ const HomeGallery = () => {
                         </motion.div>
                     ))}
                 </div>
+
+
 
                 <div style={{ textAlign: 'center', marginTop: '4rem' }}>
                     <Link to="/events">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Twitter, Linkedin, Heart } from 'lucide-react';
+import { Github, Instagram, Linkedin, Heart } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -16,9 +16,9 @@ const Footer = () => {
                 </p>
 
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '3rem' }}>
-                    <SocialLink icon={Github} href="#" />
-                    <SocialLink icon={Twitter} href="#" />
-                    <SocialLink icon={Linkedin} href="#" />
+                    <SocialLink icon={Github} href="https://github.com/amiitt001/Loop-Technova" />
+                    <SocialLink icon={Instagram} href="https://www.instagram.com/gcetloop" />
+                    <SocialLink icon={Linkedin} href="https://www.linkedin.com/company/loop-technova" />
                 </div>
 
                 <p style={{ color: '#555', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>

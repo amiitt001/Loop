@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Twitter, Linkedin, Github, Send } from 'lucide-react';
+import { Mail, Instagram, Linkedin, Github, Send } from 'lucide-react';
 
 const HomeContact = () => {
     const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -33,15 +33,15 @@ const HomeContact = () => {
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#fff' }}>
-                        <a href="mailto:hello@loop.edu" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'inherit', textDecoration: 'none' }}>
-                            <Mail color="var(--neon-cyan)" /> hello@loop.edu
+                        <a href="mailto:loop.gcetclub@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'inherit', textDecoration: 'none' }}>
+                            <Mail color="var(--neon-cyan)" /> loop.gcetclub@gmail.com
                         </a>
                     </div>
 
                     <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem' }}>
-                        <Github style={{ cursor: 'pointer' }} />
-                        <Twitter style={{ cursor: 'pointer' }} />
-                        <Linkedin style={{ cursor: 'pointer' }} />
+                        <a href="https://github.com/amiitt001/Loop-Technova" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Github style={{ cursor: 'pointer' }} /></a>
+                        <a href="https://www.instagram.com/gcetloop" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Instagram style={{ cursor: 'pointer' }} /></a>
+                        <a href="https://www.linkedin.com/company/loop-technova" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Linkedin style={{ cursor: 'pointer' }} /></a>
                     </div>
                 </motion.div>
 

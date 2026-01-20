@@ -137,31 +137,34 @@ const AdminEvents = () => {
                             </div>
                         </div>
 
-                        <div className="mt-auto pt-4 border-t border-zinc-800 flex justify-end gap-2 flex-wrap">
-                            <button
-                                onClick={() => handleEdit(event)}
-                                className="bg-zinc-800 text-white border-none py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                onClick={() => handleManage(event)}
-                                className="bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20 py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-cyan)]/20 transition-colors"
-                            >
-                                Manage
-                            </button>
-                            <button
-                                onClick={() => handleCopyLink(event)}
-                                title="Copy Registration Link"
-                                className="bg-zinc-800 text-zinc-400 border-none py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 hover:text-white transition-colors flex items-center gap-1"
-                            >
-                                <LinkIcon size={14} />
-                            </button>
+                        <div className="mt-auto pt-4 border-t border-zinc-800 flex flex-col gap-3">
+                            <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
+                                <button
+                                    onClick={() => handleEdit(event)}
+                                    className="bg-zinc-800 text-white border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex justify-center items-center"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleManage(event)}
+                                    className="bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-cyan)]/20 transition-colors flex justify-center items-center"
+                                >
+                                    Manage
+                                </button>
+                                <button
+                                    onClick={() => handleCopyLink(event)}
+                                    title="Copy Registration Link"
+                                    className="bg-zinc-800 text-zinc-400 border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 hover:text-white transition-colors flex items-center justify-center"
+                                >
+                                    <LinkIcon size={16} />
+                                </button>
+                            </div>
+
                             <button
                                 onClick={() => setSelectedEventForRegistrations(event)}
-                                className="bg-[var(--neon-violet)]/10 text-[var(--neon-violet)] border border-[var(--neon-violet)]/20 py-1.5 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-violet)]/20 transition-colors flex items-center gap-1"
+                                className="w-full bg-[var(--neon-violet)]/10 text-[var(--neon-violet)] border border-[var(--neon-violet)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-violet)]/20 transition-colors flex items-center justify-center gap-2"
                             >
-                                <Users size={14} /> View Reg.
+                                <Users size={16} /> View Registrations
                             </button>
                         </div>
                     </div>
