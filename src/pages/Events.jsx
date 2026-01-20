@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Calendar, Clock, MapPin, RefreshCw, ArrowRight } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, query, onSnapshot } from 'firebase/firestore';
@@ -53,9 +54,52 @@ const Events = () => {
 
   return (
     <div className="container" style={{ padding: '8rem 0 4rem' }}>
+      {/* SEO & Structured Data */}
+      <Helmet>
+        <title>Upcoming Tech Events & Workshops | LOOP Tech Club</title>
+        <meta name="description" content="Discover upcoming hackathons, coding workshops, and tech seminars at Galgotias College. Join LOOP, the premier tech club for developers and innovators." />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": events.map((event, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "item": {
+                "@type": "Event",
+                "name": event.title,
+                "startDate": event.date?.toDate ? event.date.toDate().toISOString() : new Date(event.date).toISOString(),
+                "endDate": event.date?.toDate ? new Date(event.date.toDate().getTime() + 7200000).toISOString() : new Date(new Date(event.date).getTime() + 7200000).toISOString(), // Approx 2 hours later
+                "eventStatus": "https://schema.org/EventScheduled",
+                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                "location": {
+                  "@type": "Place",
+                  "name": "Galgotias College of Engineering and Technology",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "1, Knowledge Park II",
+                    "addressLocality": "Greater Noida",
+                    "postalCode": "201310",
+                    "addressRegion": "UP",
+                    "addressCountry": "IN"
+                  }
+                },
+                "image": [
+                  "https://loop-technova.vercel.app/logo.png"
+                ],
+                "description": event.description || "Join us for an exciting tech event at GCET."
+              }
+            }))
+          })}
+        </script>
+      </Helmet>
+
       <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
         <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>EVENTS TIMELINE</h1>
-        <p style={{ color: 'var(--text-dim)' }}>Where ideas come to life.</p>
+        <p style={{ color: 'var(--text-dim)', maxWidth: '600px', margin: '0 auto' }}>
+          Explore our schedule of <strong>hackathons, coding bootcamps, and tech talks</strong>.
+          Stay ahead of the curve with LOOP's hands-on sessions designed for students.
+        </p>
         {loading && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}><RefreshCw className="spin" /></div>}
       </div>
 
@@ -84,7 +128,7 @@ const Events = () => {
                 {event.status || event.type}
               </div>
 
-              <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>{event.title}</h3>
+              <h2 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>{event.title}</h2>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
