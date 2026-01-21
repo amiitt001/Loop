@@ -1,4 +1,4 @@
-# Tech Nova - GCET Official Technical Club Website
+# LOOP - GCET Official Technical Club Website
 
 Welcome to the official repository for the **Tech Nova** website, a futuristic, high-performance platform for the technical club of Galgotias College of Engineering and Technology (GCET).
 
