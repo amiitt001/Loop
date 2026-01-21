@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, RefreshCw, Mail, Phone, Linkedin, Github, Shield } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 const AdminMembers = () => {
@@ -12,7 +12,6 @@ const AdminMembers = () => {
 
     // Real-time Members Listener
     useEffect(() => {
-        setLoading(true);
         const q = query(collection(db, "members"), orderBy("name", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const membersList = snapshot.docs.map(doc => ({

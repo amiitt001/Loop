@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, RefreshCw, Download, Search } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 const AdminRegistrationsModal = ({ event, onClose }) => {
     const [registrations, setRegistrations] = useState([]);
@@ -11,8 +11,6 @@ const AdminRegistrationsModal = ({ event, onClose }) => {
 
     useEffect(() => {
         if (!event) return;
-
-        setLoading(true);
         // Query registrations for this specific event
         const q = query(
             collection(db, "registrations"),

@@ -3,14 +3,13 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, onSnapshot, where, orderBy, limit } from 'firebase/firestore';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 
 const HomeEvents = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
         // Fetch upcoming/active events.
         // Assuming 'status' != 'Past' means upcoming/active.
         // We can't filter by 'status' != 'Past' AND order by date in one query easily without composite index if we mix inequality with sort.

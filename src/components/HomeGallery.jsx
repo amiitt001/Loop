@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Camera, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 
 const HomeGallery = () => {
     const [galleryItems, setGalleryItems] = useState([]);
@@ -12,7 +12,6 @@ const HomeGallery = () => {
 
 
     useEffect(() => {
-        setLoading(true);
         const q = query(collection(db, "events"));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {

@@ -30,12 +30,16 @@ const itemVariants = {
 const Team = () => {
   const [teamGroups, setTeamGroups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(max-width: 768px)').matches;
+    }
+    return false;
+  });
   const scrollerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
     const q = query(collection(db, "members"), orderBy("name"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const allMembers = snapshot.docs.map(doc => ({
@@ -69,7 +73,7 @@ const Team = () => {
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
     const onChange = (e) => setIsMobile(e.matches);
-    setIsMobile(mq.matches);
+    // Initial check removed as it's handled in useState initializer
     if (mq.addEventListener) mq.addEventListener('change', onChange);
     else mq.addListener(onChange);
     return () => {

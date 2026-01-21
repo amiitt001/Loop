@@ -134,7 +134,7 @@ const FeaturedCarousel = ({ members = [], className = '', mobileOnly = true }) =
         const target = Math.max(0, cardCenter - track.clientWidth / 2);
         try {
             track.scrollTo({ left: target, behavior: instant || useReduced ? 'auto' : 'smooth' });
-        } catch (e) {
+        } catch (_e) {
             track.scrollLeft = target;
         }
     };

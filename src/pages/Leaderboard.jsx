@@ -9,7 +9,6 @@ const Leaderboard = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
         // Fetch from 'contestants' instead of 'members'
         const q = query(collection(db, "contestants"), orderBy("points", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {

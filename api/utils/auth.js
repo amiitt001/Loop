@@ -1,4 +1,5 @@
 
+/* global process */
 import admin from 'firebase-admin';
 import { UnauthorizedError, ForbiddenError } from './errors.js';
 

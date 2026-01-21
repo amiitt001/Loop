@@ -86,6 +86,15 @@ src/
     npm run dev
     ```
 
+5.  **Run the Express backend (optional):**
+    - Change into the `server` folder and install server deps, or run from project root with `pnpm`.
+    ```bash
+    # from project root (uses pnpm to run server)
+    npm run dev
+    # or run server only
+    cd server && npm install && npm run dev
+    ```
+
 ## 👥 Core Team
 
 - **President**: 

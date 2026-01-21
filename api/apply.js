@@ -1,4 +1,5 @@
 
+/* global process */
 import admin from 'firebase-admin';
 
 // prevent re-initialization ensuring singleton

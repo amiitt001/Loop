@@ -13,7 +13,6 @@ const AdminEvents = () => {
 
     // Real-time Events Listener
     useEffect(() => {
-        setLoading(true);
         const q = query(collection(db, "events"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const eventsList = snapshot.docs.map(doc => {

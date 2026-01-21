@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Calendar, Trophy, Activity, RefreshCw } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState([
@@ -13,7 +13,6 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
 
         // 1. Members Listener (Just count)
         const unsubMembers = onSnapshot(collection(db, "members"), (snapshot) => {

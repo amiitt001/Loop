@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Trophy, Trash2, RefreshCw } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, deleteDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 const AdminLeaderboard = () => {
@@ -12,7 +12,6 @@ const AdminLeaderboard = () => {
 
     // Real-time Contestants Listener
     useEffect(() => {
-        setLoading(true);
         const q = query(collection(db, "contestants"), orderBy("points", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const list = snapshot.docs.map(doc => ({
@@ -29,24 +28,6 @@ const AdminLeaderboard = () => {
         return () => unsubscribe();
     }, []);
 
-    // Edit Contestant
-    const handleEdit = async (contestant) => {
-        const name = prompt("Edit Name:", contestant.name);
-        if (name === null) return;
-        const handle = prompt("Edit Handle:", contestant.platformHandle);
-        const points = prompt("Edit Points:", contestant.points);
-
-        try {
-            await updateDoc(doc(db, "contestants", contestant.id), {
-                name: name || contestant.name,
-                platformHandle: handle || contestant.platformHandle,
-                points: points ? Number(points) : contestant.points
-            });
-        } catch (error) {
-            console.error("Error updating contestant: ", error);
-            alert("Error updating contestant.");
-        }
-    };
 
     // Delete Contestant
     const handleDelete = async (id) => {

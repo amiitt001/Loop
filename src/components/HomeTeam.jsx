@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Github, Linkedin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, onSnapshot, orderBy, limit } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 // FeaturedCarousel removed for mobile stacked scroller implementation
 
 const HomeTeamCard = ({ member, index }) => {
@@ -98,11 +98,15 @@ const HomeTeamCard = ({ member, index }) => {
 const HomeTeam = () => {
     const [teamPreview, setTeamPreview] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return window.matchMedia('(max-width: 768px)').matches;
+        }
+        return false;
+    });
     const [featuredMembers, setFeaturedMembers] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
         // Maybe fetch top pointed members or just Heads?
         // Let's fetch all and filter/sort to catch "Heads" first.
         const q = query(collection(db, "members"), orderBy("name"));
@@ -160,7 +164,7 @@ const HomeTeam = () => {
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
         const onChange = (e) => setIsMobile(e.matches);
-        setIsMobile(mq.matches);
+        // Initial check removed
         if (mq.addEventListener) mq.addEventListener('change', onChange);
         else mq.addListener(onChange);
         return () => {
