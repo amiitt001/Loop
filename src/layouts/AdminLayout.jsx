@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Users, Calendar, LogOut, Menu, X, Trophy } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, LogOut, Menu, X, Trophy, Mail } from 'lucide-react';
 
 const AdminLayout = () => {
     const { currentUser, logout } = useAuth();
@@ -43,6 +43,7 @@ const AdminLayout = () => {
         { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/admin/members', icon: Users, label: 'Members' },
         { path: '/admin/contestants', icon: Trophy, label: 'Contestants' },
+        { path: '/admin/messages', icon: Mail, label: 'Messages' },
         { path: '/admin/applications', icon: Calendar, label: 'Applications' },
         { path: '/admin/events', icon: Calendar, label: 'Events' },
     ];

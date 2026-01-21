@@ -2,16 +2,32 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Instagram, Linkedin, Github, Send, Users } from 'lucide-react';
 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
+
 const HomeContact = () => {
     const [formState, setFormState] = useState({ name: '', email: '', message: '' });
     const [isSent, setIsSent] = useState(false);
+    const [isSending, setIsSending] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formState);
-        setIsSent(true);
-        setTimeout(() => setIsSent(false), 5000);
-        setFormState({ name: '', email: '', message: '' });
+        try {
+            setIsSending(true);
+            await addDoc(collection(db, "messages"), {
+                ...formState,
+                createdAt: serverTimestamp(),
+                read: false
+            });
+            setIsSent(true);
+            setFormState({ name: '', email: '', message: '' });
+            setTimeout(() => setIsSent(false), 5000);
+        } catch (error) {
+            console.error("Error sending message: ", error);
+            alert("Failed to send message. Please try again.");
+        } finally {
+            setIsSending(false);
+        }
     };
 
     return (
@@ -44,9 +60,9 @@ const HomeContact = () => {
                     </p>
 
                     <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem' }}>
-                        <a href="https://github.com/amiitt001/Loop-Technova" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Github style={{ cursor: 'pointer' }} /></a>
+                        <a href="https://github.com/amiitt001" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Github style={{ cursor: 'pointer' }} /></a>
                         <a href="https://www.instagram.com/gcetloop" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Instagram style={{ cursor: 'pointer' }} /></a>
-                        <a href="https://www.linkedin.com/company/loop-technova" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Linkedin style={{ cursor: 'pointer' }} /></a>
+                        <a href="https://www.linkedin.com/in/amiitt001" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Linkedin style={{ cursor: 'pointer' }} /></a>
                         <a href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Users style={{ cursor: 'pointer' }} /></a>
                     </div>
                 </motion.div>
@@ -121,20 +137,25 @@ const HomeContact = () => {
                                     onBlur={e => e.target.style.borderColor = 'var(--border-dim)'}
                                 ></textarea>
                             </div>
-                            <button type="submit" className="contact-btn" style={{
-                                padding: '1rem',
-                                background: 'var(--neon-cyan)',
-                                color: '#000',
-                                border: 'none',
-                                borderRadius: '8px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}>
-                                SEND MESSAGE <Send size={18} />
+                            <button
+                                type="submit"
+                                disabled={isSending}
+                                className="contact-btn"
+                                style={{
+                                    padding: '1rem',
+                                    background: isSending ? 'var(--bg-card)' : 'var(--neon-cyan)',
+                                    color: isSending ? 'var(--text-dim)' : '#000',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontWeight: 'bold',
+                                    cursor: isSending ? 'not-allowed' : 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    transition: 'all 0.3s ease'
+                                }}>
+                                {isSending ? 'SENDING...' : 'SEND MESSAGE'} <Send size={18} />
                             </button>
                         </form>
                     ) : (

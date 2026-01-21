@@ -22,6 +22,7 @@ import AdminEditEvent from './pages/admin/AdminEditEvent';
 import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 import AdminCreateContestant from './pages/admin/AdminCreateContestant';
 import AdminApplications from './pages/admin/AdminApplications';
+import AdminMessages from './pages/admin/AdminMessages';
 
 import AdminEvents from './pages/admin/AdminEvents';
 
@@ -54,7 +55,9 @@ function App() {
             <Route path="members/edit/:id" element={<AdminEditMember />} />
             <Route path="contestants" element={<AdminLeaderboard />} />
             <Route path="contestants/new" element={<AdminCreateContestant />} />
+            <Route path="contestants/new" element={<AdminCreateContestant />} />
             <Route path="applications" element={<AdminApplications />} />
+            <Route path="messages" element={<AdminMessages />} />
             <Route path="events" element={<AdminEvents />} />
             <Route path="events/new" element={<AdminCreateEvent />} />
             <Route path="events/edit/:id" element={<AdminEditEvent />} />
