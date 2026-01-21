@@ -1,5 +1,4 @@
-import React from 'react';
-import { Github, Instagram, Linkedin, Heart } from 'lucide-react';
+import { Github, Instagram, Linkedin, Heart, Users } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -19,6 +18,7 @@ const Footer = () => {
                     <SocialLink icon={Github} href="https://github.com/amiitt001/Loop-Technova" />
                     <SocialLink icon={Instagram} href="https://www.instagram.com/gcetloop" />
                     <SocialLink icon={Linkedin} href="https://www.linkedin.com/company/loop-technova" />
+                    <SocialLink icon={Users} href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" />
                 </div>
 
                 <p style={{ color: '#555', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
