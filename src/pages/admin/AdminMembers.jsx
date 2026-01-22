@@ -52,7 +52,8 @@ const AdminMembers = () => {
     // Organize members by role
     const heads = filteredMembers.filter(m => /Head|Lead|President|Vice/i.test(m.role));
     const coordinators = filteredMembers.filter(m => /Coordinator/i.test(m.role) && !/Head|Lead|President|Vice/i.test(m.role));
-    const others = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator/i.test(m.role));
+    const core = filteredMembers.filter(m => /Core/i.test(m.role));
+    const general = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator|Core/i.test(m.role));
 
     const renderMemberSection = (title, membersList) => {
         if (membersList.length === 0) return null;
@@ -177,7 +178,8 @@ const AdminMembers = () => {
 
             {renderMemberSection("Heads & Leads", heads)}
             {renderMemberSection("Coordinators", coordinators)}
-            {renderMemberSection("Core Members", others)}
+            {renderMemberSection("Core Team", core)}
+            {renderMemberSection("General Members", general)}
         </div>
     );
 };

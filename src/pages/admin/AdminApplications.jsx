@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RefreshCw, Search, Check, X, Trash2, Mail, Github, GraduationCap } from 'lucide-react';
 import { safeRender } from '../../utils/security';
 import { db, auth } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const AdminApplications = () => {
     const [applications, setApplications] = useState([]);
@@ -50,6 +50,28 @@ const AdminApplications = () => {
             await updateDoc(doc(db, "applications", id), {
                 status: newStatus
             });
+
+            // If approved, add to members collection
+            if (newStatus === 'Approved') {
+                const app = applications.find(a => a.id === id);
+                if (app) {
+                    await addDoc(collection(db, "members"), {
+                        name: app.name,
+                        email: app.email,
+                        role: "Member", // This puts them in 'General Members' section
+                        branch: app.branch,
+                        year: app.year,
+                        domain: app.domain,
+                        college: app.college,
+                        social: {
+                            github: app.github || '',
+                            linkedin: '',
+                        },
+                        createdAt: serverTimestamp()
+                    });
+                    alert("Application Approved! Added to Members list.");
+                }
+            }
         } catch (error) {
             console.error("Error updating status:", error);
             alert("Failed to update status. Check your permissions.");
