@@ -50,10 +50,11 @@ const AdminMembers = () => {
     );
 
     // Organize members by role
-    const heads = filteredMembers.filter(m => /Head|Lead|President|Vice/i.test(m.role));
-    const coordinators = filteredMembers.filter(m => /Coordinator/i.test(m.role) && !/Head|Lead|President|Vice/i.test(m.role));
-    const core = filteredMembers.filter(m => /Core/i.test(m.role));
-    const generalMembers = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator|Core/i.test(m.role));
+    const mentors = filteredMembers.filter(m => /Mentor/i.test(m.role));
+    const heads = filteredMembers.filter(m => /Head|Lead|President|Vice/i.test(m.role) && !/Mentor/i.test(m.role));
+    const coordinators = filteredMembers.filter(m => /Coordinator/i.test(m.role) && !/Head|Lead|President|Vice|Mentor/i.test(m.role));
+    const core = filteredMembers.filter(m => /Core/i.test(m.role) && !/Mentor/i.test(m.role));
+    const generalMembers = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator|Core|Mentor/i.test(m.role));
 
     const renderMemberSection = (title, membersList) => {
         if (membersList.length === 0) return null;
@@ -176,6 +177,7 @@ const AdminMembers = () => {
                 </div>
             )}
 
+            {renderMemberSection("Mentors", mentors)}
             {renderMemberSection("Heads & Leads", heads)}
             {renderMemberSection("Coordinators", coordinators)}
             {renderMemberSection("Core Team", core)}

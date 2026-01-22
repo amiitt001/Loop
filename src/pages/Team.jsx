@@ -53,8 +53,9 @@ const Team = () => {
       // Group: Core Team vs General Members
       const coreRoles = /Head|Lead|President|Vice|Coordinator|Core/i;
 
-      const coreTeam = allMembers.filter(m => coreRoles.test(m.role));
-      const generalMembers = allMembers.filter(m => !coreRoles.test(m.role));
+      const mentors = allMembers.filter(m => /Mentor/i.test(m.role));
+      const coreTeam = allMembers.filter(m => coreRoles.test(m.role) && !/Mentor/i.test(m.role));
+      const generalMembers = allMembers.filter(m => !coreRoles.test(m.role) && !/Mentor/i.test(m.role));
 
       // Sort Core Team: Heads/Presidents first, then others
       coreTeam.sort((a, b) => {
@@ -66,6 +67,7 @@ const Team = () => {
       });
 
       const groups = [];
+      if (mentors.length > 0) groups.push({ title: 'Mentors', width: '300px', members: mentors });
       if (coreTeam.length > 0) groups.push({ title: 'Core Team', width: '280px', members: coreTeam });
       if (generalMembers.length > 0) groups.push({ title: 'Members', width: '220px', members: generalMembers });
 
