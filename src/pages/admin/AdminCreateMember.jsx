@@ -95,6 +95,7 @@ const AdminCreateMember = () => {
                             className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
                         >
                             <option value="Head">Head</option>
+                            <option value="Mentor">Mentor</option>
                             <option value="Coordinator">Coordinator</option>
                             <option value="Member">Member</option>
                         </select>
