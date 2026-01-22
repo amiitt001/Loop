@@ -21,6 +21,10 @@ const Join = () => {
     const [instagramVisited, setInstagramVisited] = useState(false);
     const [instagramFollowed, setInstagramFollowed] = useState(false);
 
+    // Spam Protection State
+    const [startTime] = useState(Date.now());
+    const [honeypot, setHoneypot] = useState('');
+
     // Email Verification State
     const [verificationStatus, setVerificationStatus] = useState('idle'); // idle, sending, sent, verified
     const [verificationError, setVerificationError] = useState('');
@@ -95,6 +99,19 @@ const Join = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Spam Check 1: Honeypot (Bot Trap)
+        if (honeypot) {
+            console.log("Bot detected (honeypot)");
+            return; // Silently fail
+        }
+
+        // Spam Check 2: Time-based (Speed Trap)
+        // If submitted in less than 3 seconds
+        if (Date.now() - startTime < 3000) {
+            alert("Please take your time to fill out the form.");
+            return;
+        }
 
 
 
@@ -377,6 +394,15 @@ const Join = () => {
                     >
                         {status === 'submitting' ? 'SENDING...' : 'SUBMIT APPLICATION'} <Send size={18} />
                     </button>
+
+                    {/* Honeypot Field (Hidden) */}
+                    <input
+                        type="text"
+                        name="website_url_check"
+                        value={honeypot}
+                        onChange={(e) => setHoneypot(e.target.value)}
+                        style={{ display: 'none', tabindex: '-1', autocomplete: 'off' }}
+                    />
 
                     {status === 'error' && (
                         <p style={{ color: '#ff0055', marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>

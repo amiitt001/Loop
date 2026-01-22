@@ -18,6 +18,10 @@ const RegistrationModal = ({ event, onClose }) => {
     const [instagramVisited, setInstagramVisited] = useState(false);
     const [instagramFollowed, setInstagramFollowed] = useState(false);
 
+    // Spam Protection State
+    const [startTime] = useState(Date.now());
+    const [honeypot, setHoneypot] = useState('');
+
     const validate = () => {
         const newErrors = {};
         if (!formData.name.trim()) newErrors.name = 'Full Name is required';
@@ -50,6 +54,19 @@ const RegistrationModal = ({ event, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Spam Check 1: Honeypot
+        if (honeypot) {
+            console.log("Bot detected (honeypot)");
+            return;
+        }
+
+        // Spam Check 2: Time-based
+        if (Date.now() - startTime < 3000) {
+            alert("Please take your time to fill out the form.");
+            return;
+        }
+
         if (!validate()) return;
 
         setIsSubmitting(true);
@@ -353,6 +370,14 @@ const RegistrationModal = ({ event, onClose }) => {
                                     >
                                         {isSubmitting ? 'Processing...' : 'CONFIRM REGISTRATION'}
                                     </button>
+                                    {/* Honeypot Field (Hidden) */}
+                                    <input
+                                        type="text"
+                                        name="website_confirm"
+                                        value={honeypot}
+                                        onChange={(e) => setHoneypot(e.target.value)}
+                                        style={{ display: 'none', tabindex: '-1', autocomplete: 'off' }}
+                                    />
                                 </form>
                             </>
                         ) : (
