@@ -179,7 +179,7 @@ const AdminMembers = () => {
             {renderMemberSection("Heads & Leads", heads)}
             {renderMemberSection("Coordinators", coordinators)}
             {renderMemberSection("Core Team", core)}
-            {renderMemberSection("General Members", general)}
+            {renderMemberSection("Members", general)}
         </div>
     );
 };

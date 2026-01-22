@@ -67,7 +67,7 @@ const Team = () => {
 
       const groups = [];
       if (coreTeam.length > 0) groups.push({ title: 'Core Team', width: '280px', members: coreTeam });
-      if (generalMembers.length > 0) groups.push({ title: 'General Members', width: '220px', members: generalMembers });
+      if (generalMembers.length > 0) groups.push({ title: 'Members', width: '220px', members: generalMembers });
 
       setTeamGroups(groups);
       setLoading(false);
