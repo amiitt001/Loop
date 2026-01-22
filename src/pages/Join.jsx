@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink, Mail, Check } from 'lucide-react';
 import { normalizeError, ApiError } from '../utils/errorHandler';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import emailjs from '@emailjs/browser';
-
-
 
 const Join = () => {
     const [formData, setFormData] = useState({
@@ -23,21 +22,90 @@ const Join = () => {
     const [instagramVisited, setInstagramVisited] = useState(false);
     const [instagramFollowed, setInstagramFollowed] = useState(false);
 
+    // Email Verification State
+    const [verificationStatus, setVerificationStatus] = useState('idle'); // idle, sending, sent, verified
+    const [verificationError, setVerificationError] = useState('');
 
+    // Handle incoming email link
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+
+            // If email is missing (e.g. user opened link on different device), prompt for it
+            if (!email) {
+                email = window.prompt('Please provide your email for confirmation');
+            }
+
+            if (email) {
+                // Restore form data if available
+                const savedData = window.localStorage.getItem('joinFormData');
+                if (savedData) {
+                    setFormData(JSON.parse(savedData));
+                }
+
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then((result) => {
+                        // User is signed in
+                        window.localStorage.removeItem('emailForSignIn');
+                        window.localStorage.removeItem('joinFormData');
+                        setVerificationStatus('verified');
+                        // Update form email just in case
+                        setFormData(prev => ({ ...prev, email: email }));
+                    })
+                    .catch((error) => {
+                        console.error("Verification error:", error);
+                        setVerificationError("Verification failed or link expired. Please try again.");
+                    });
+            }
+        }
+    }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleVerifyEmail = async () => {
+        if (!formData.email) {
+            alert("Please enter an email address first.");
+            return;
+        }
+
+        setVerificationStatus('sending');
+        setVerificationError('');
+
+        const actionCodeSettings = {
+            // URL you want to redirect back to. The domain (www.example.com) for this
+            // URL must be in the authorized domains list in the Firebase Console.
+            url: window.location.href,
+            handleCodeInApp: true,
+        };
+
+        try {
+            // Save email and form data to persistence
+            window.localStorage.setItem('emailForSignIn', formData.email);
+            window.localStorage.setItem('joinFormData', JSON.stringify(formData));
+
+            await sendSignInLinkToEmail(auth, formData.email, actionCodeSettings);
+            setVerificationStatus('sent');
+        } catch (error) {
+            console.error("Error sending link:", error);
+            setVerificationError(error.message);
+            setVerificationStatus('idle');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (verificationStatus !== 'verified') {
+            alert("Please verify your email address before submitting.");
+            return;
+        }
 
         if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college) {
             alert("Please fill in all required fields.");
             return;
         }
-
-
 
         setStatus('submitting');
         try {
@@ -55,8 +123,8 @@ const Join = () => {
 
             const templateParams = {
                 to_name: "Admin",
-                name: formData.name, // Matched to {{name}} in template
-                email: formData.email, // Matched to {{email}} in template
+                name: formData.name,
+                email: formData.email,
                 branch: formData.branch,
                 year: formData.year,
                 college: formData.college,
@@ -66,7 +134,7 @@ const Join = () => {
                 message: `New Application from ${formData.name} (${formData.branch}, ${formData.year})`
             };
 
-            await emailjs.send(serviceId, templateId, templateParams, publicKey); // Best effort, but awaited
+            await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
             setStatus('success');
             setFormData({
@@ -79,17 +147,15 @@ const Join = () => {
                 domain: 'Full Stack Development',
                 reason: ''
             });
-            setCaptchaAnswer('');
+            // Sign out the temporary user
+            signOut(auth);
+            setVerificationStatus('idle');
+
         } catch (error) {
             console.error("Submission Error:", error);
-            // If firestore succeeded but email failed, we should probably still count it as success? 
-            // For now, let's assume if Firestore fails we stop. If email fails, we log but maybe don't block success?
-            // Actually, if email fails, it will go to catch block. 
-            // Implementing a split try/catch could be better if we want to ensure db write is enough.
-            // But let's keep it simple: if email fails, tell user something went wrong? 
-            // No, the record IS in DB. 
             alert("Application saved, but email notification failed. We have received your data.");
-            setStatus('success'); // Still mark as success since DB write worked (assuming addDoc was first)
+            setStatus('success');
+            signOut(auth);
         }
     };
 
@@ -157,15 +223,52 @@ const Join = () => {
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>College Email *</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="input-field"
-                                placeholder="john@college.edu"
-                                required
-                            />
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="input-field"
+                                    placeholder="john@college.edu"
+                                    required
+                                    disabled={verificationStatus === 'verified' || verificationStatus === 'sent'}
+                                />
+                                {verificationStatus === 'verified' ? (
+                                    <div style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        background: 'rgba(0, 255, 136, 0.1)', border: '1px solid var(--neon-green)',
+                                        color: 'var(--neon-green)', padding: '0 1rem', borderRadius: '8px'
+                                    }}>
+                                        <Check size={20} />
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={handleVerifyEmail}
+                                        disabled={verificationStatus === 'sending' || verificationStatus === 'sent' || !formData.email}
+                                        style={{
+                                            background: verificationStatus === 'sent' ? 'var(--bg-card)' : 'var(--neon-cyan)',
+                                            color: verificationStatus === 'sent' ? 'var(--text-dim)' : '#000',
+                                            border: verificationStatus === 'sent' ? '1px solid var(--border-dim)' : 'none',
+                                            borderRadius: '8px', padding: '0 1rem', cursor: 'pointer', fontWeight: 'bold',
+                                            whiteSpace: 'nowrap', transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        {verificationStatus === 'sending' ? 'Sending...' : verificationStatus === 'sent' ? 'Sent' : 'Verify'}
+                                    </button>
+                                )}
+                            </div>
+                            {verificationStatus === 'sent' && (
+                                <p style={{ fontSize: '0.8rem', color: 'var(--neon-cyan)', marginTop: '0.5rem' }}>
+                                    Verification link sent! Please check your inbox and click the link to verify.
+                                </p>
+                            )}
+                            {verificationError && (
+                                <p style={{ fontSize: '0.8rem', color: '#ff0055', marginTop: '0.5rem' }}>
+                                    {verificationError}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -310,11 +413,11 @@ const Join = () => {
 
                     <button
                         type="submit"
-                        disabled={status === 'submitting' || !instagramFollowed}
+                        disabled={status === 'submitting' || !instagramFollowed || verificationStatus !== 'verified'}
                         className="submit-btn"
                         style={{
-                            opacity: (status === 'submitting' || !instagramFollowed) ? 0.5 : 1,
-                            cursor: (status === 'submitting' || !instagramFollowed) ? 'not-allowed' : 'pointer'
+                            opacity: (status === 'submitting' || !instagramFollowed || verificationStatus !== 'verified') ? 0.5 : 1,
+                            cursor: (status === 'submitting' || !instagramFollowed || verificationStatus !== 'verified') ? 'not-allowed' : 'pointer'
                         }}
                     >
                         {status === 'submitting' ? 'SENDING...' : 'SUBMIT APPLICATION'} <Send size={18} />
