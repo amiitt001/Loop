@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Search, Check, X, Trash2, Mail, Github, GraduationCap } from 'lucide-react';
+import { RefreshCw, Search, Check, X, Trash2, Mail, Github, GraduationCap, ExternalLink } from 'lucide-react';
 import { safeRender } from '../../utils/security';
 import { db, auth } from '../../firebase';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -83,7 +83,22 @@ const AdminApplications = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <h1 className="text-2xl md:text-3xl font-bold">Membership Applications</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold">Membership Applications</h1>
                     {loading && <RefreshCw className="animate-spin text-[var(--neon-violet)]" size={20} />}
+                    <a
+                        href={import.meta.env.VITE_GOOGLE_SHEET_VIEW_URL || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                            if (!import.meta.env.VITE_GOOGLE_SHEET_VIEW_URL) {
+                                e.preventDefault();
+                                alert("Please set VITE_GOOGLE_SHEET_VIEW_URL in your .env file to the Google Sheet URL.");
+                            }
+                        }}
+                        className="flex items-center gap-2 bg-green-600/20 text-green-500 border border-green-600/50 px-3 py-1.5 rounded-lg hover:bg-green-600/30 transition-colors text-sm font-medium"
+                    >
+                        <ExternalLink size={16} /> View Sheet
+                    </a>
                 </div>
                 <div className="relative w-full md:w-auto">
                     <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />

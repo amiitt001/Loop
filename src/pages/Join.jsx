@@ -106,15 +106,18 @@ const Join = () => {
         }
 
         try {
-            const formBody = new FormData();
+            const formParams = new URLSearchParams();
             for (const key in data) {
-                formBody.append(key, data[key]);
+                formParams.append(key, data[key]);
             }
 
             await fetch(scriptURL, {
                 method: 'POST',
-                body: formBody,
-                mode: 'no-cors' // Important for Google Apps Script
+                body: formParams,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                mode: 'no-cors'
             });
             console.log("Submitted to Google Sheets");
         } catch (error) {
