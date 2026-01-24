@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Terminal, Cpu, Network, Code, ArrowRight } from 'lucide-react';
 
@@ -12,9 +13,9 @@ const SYSTEM_MODULES = [
     },
     {
         id: '02',
-        title: 'R&D PROJECTS',
+        title: 'TECH TALKS',
         icon: <Cpu size={24} />,
-        desc: 'Experimental labs for AI, IoT, and Blockchain. Turning theoretical concepts into deployable code.',
+        desc: 'Interactions with industry experts and alumni. Bridging the gap between theory and real-world tech.',
         color: 'var(--neon-violet)'
     },
     {
@@ -34,6 +35,7 @@ const SYSTEM_MODULES = [
 ];
 
 const HomeAbout = () => {
+    const navigate = useNavigate();
     return (
         <section style={{
             padding: '8rem 0',
@@ -90,12 +92,11 @@ const HomeAbout = () => {
                             color: 'var(--text-dim)',
                             lineHeight: '1.8',
                             marginBottom: '2rem',
-                            maxWidth: '500px',
+                            maxWidth: '600px',
                             fontFamily: 'var(--font-main)'
                         }}>
-                            We are not just a club; we are an engineering collective.
-                            Our mission is to deconstruct complex problems and reassemble them into elegant solutions.
-                            Built by students, for the future.
+                            LOOP is the official technical community of Galgotias College of Engineering and Technology (GCET).
+                            We are a collective of innovators, developers, and tech enthusiasts dedicated to fostering a culture of coding and creativity on campus.
                         </p>
 
                         <button style={{
@@ -119,6 +120,7 @@ const HomeAbout = () => {
                                 e.currentTarget.style.borderColor = 'var(--border-dim)';
                                 e.currentTarget.style.boxShadow = 'none';
                             }}
+                            onClick={() => navigate('/join')}
                         >
                             INITIALIZE PROTOCOLS <ArrowRight size={16} />
                         </button>

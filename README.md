@@ -1,69 +1,116 @@
 # LOOP - GCET Official Technical Club Website
 
-Welcome to the official repository for the **Tech Nova** website, a futuristic, high-performance platform for the technical club of Galgotias College of Engineering and Technology (GCET).
+> **Note:** Previously known as "Tech Nova".
+
+Welcome to the official repository for **LOOP**, the futuristic, high-performance platform for the technical club of Galgotias College of Engineering and Technology (GCET).
 
 This project features a modern, dark-themed UI with neon aesthetics, advanced animations, and a secure internal admin panel for club management.
 
 ## 🚀 Features
 
 ### Public Website
-- **Futuristic UI**: Customized dark theme with neon cyan/violet accents and glassmorphism effects.
+- **Futuristic UI**: Customized dark theme with neon cyan/violet accents, glassmorphism effects, and dynamic 3D backgrounds.
 - **Interactive Home Page**: 
-    - Animated "Particles" Hero section.
-    - "Credibility Strip" with live counters.
-    - "About System" HUD layout.
-- **Team Section**: Detailed profile cards with hover reveals and social links.
+    - **3D Particle System**: Interactive background reacting to mouse movement.
+    - **Credibility Strip**: Live counters for members and events.
+    - **"About System" HUD**: Sci-fi inspired layout.
+- **Team Section**: Detailed profile cards with hover reveals and social connections.
 - **Events & Registration**: 
     - Real-time event timeline.
-    - **Instant Registration**: Public users can register for open events instantly.
+    - **Instant Registration**: Seamless public registration for club events.
 - **Join Us (Membership)**: 
-    - Detailed application form (Branch, Year, GitHub, etc.).
-    - Automated status tracking.
-- **Leaderboard**: Gamified ranking system for club contestants.
-- **Chatbot**: Built-in rule-based assistant to guide visitors.
+    - Comprehensive application form with automated validation.
+    - Status tracking system.
+- **Chatbot**: Integrated AI assistant to guide visitors.
+- **Mobile Responsive**: Fully optimized for all devices with touch-friendly interactions.
 
 ### Admin Panel (Secure)
-- **Dashboard**: Real-time overview of members, events, and stats.
-- **Authentication**: Firebase-powered secure login for admins only.
-- **Live Event Management**: 
-    - Create/Edit events.
-    - **View Registrations**: Real-time list of registered students with export options.
-- **Membership Applications**: 
-    - **Real-time Review**: Approve/Reject applications instantly.
-    - View detailed applicant profiles (GitHub, Branch, College).
-- **Team & Contestants**: Manage internal team members and leaderboard scores.
-- **Messages (New)**: 
-    - **Inquiry Management**: View and reply to contact form submissions.
-    - **Filtering**: Search and filter messages by sender or content.
+- **Dashboard**: Specialized command center for club leads.
+- **Authentication**: Role-based access via Firebase.
+- **Live Event Management**: Create, edit, and toggle event registrations instantly.
+- **Membership Hub**: 
+    - Real-time application review (Approve/Reject).
+    - Detailed candidate profiles (GitHub stats, etc.).
+- **Message Center**: 
+    - **Inquiry Management**: Centralized view for contact form submissions.
+    - **Smart Filtering**: Rapidly sort and address queries.
+
+## 🎨 Visuals & Aesthetics
+
+LOOP sets a new standard for club websites with its focus on visual immersion:
+
+- **3D Particle Engine**: A custom-built, lightweight particle system that provides depth and motion.
+- **Glassmorphism**: Extensive use of backdrop filters and translucent layers to create hierarchy.
+- **Neon Typography**: Glowing text elements that reinforce the futuristic cyber-tech theme.
+- **Motion Design**: Smooth transitions and entry animations powered by `framer-motion`.
+
+<!-- 
+Add screenshots here:
+![Hero Section Preview](docs/images/hero-preview.png) 
+![Admin Dashboard](docs/images/admin-preview.png)
+-->
+
+## 🏗️ Architecture
+
+The system utilizes a hybrid architecture leveraging React for the frontend and Serverless functions for secure backend operations.
+
+```mermaid
+graph TD
+  User((User))
+  Admin((Admin))
+  Client[React Client / Vite]
+  API[Vercel Serverless Functions]
+  Auth[Firebase Auth]
+  DB[(Firestore Database)]
+  Email[EmailJS Service]
+
+  User -->|Visits / Interacts| Client
+  Admin -->|Manages Content| Client
+  Client -->|Authenticates| Auth
+  Client -->|Reads Public Data| DB
+  Client -->|Submits Application| API
+  API -->|Validates & Writes| DB
+  API -->|Sends Confirmations| Email
+```
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, Vite
-- **Styling**: Vanilla CSS (Custom Variables), Framer Motion (Animations), Lucide React (Icons)
-- **Backend / Services**: 
-    - **Firebase Authentication**: Admin security.
+- **Frontend**: React 19, Vite, TailwindCSS (for utility), Vanilla CSS (for custom effects).
+- **Styling**: Framer Motion (Animations), Lucide React (Icons).
+- **Backend**: 
+    - **Vercel Serverless Functions**: Secure API endpoints for sensitive logic.
+    - **Firebase Authentication**: Identity management.
     - **Firebase Firestore**: Real-time NoSQL database.
-- **Routing**: React Router DOM v7
+- **Services**: 
+    - **EmailJS**: Transactional email delivery.
 
 ## 📂 Project Structure
 
 ```bash
 src/
-├── components/     # Reusable UI components (Navbar, Cards, Chatbot, Modals)
-├── contexts/       # Global state (AuthContext)
-├── layouts/        # Layout wrappers (AdminLayout)
-├── pages/          # Route pages (Home, Team, Dashboard, Join)
-│   └── admin/      # Secure admin views (Applications, Registrations, Events)
-├── assets/         # Static assets
-└── firebase.js     # Firebase configuration
+├── components/     # UI Building Blocks (Navbar, Cards, Particles)
+├── contexts/       # Global State (AuthContext)
+├── layouts/        # Page Wrappers (AdminLayout, PublicLayout)
+├── pages/          # Application Routes
+│   ├── admin/      # Secure Management Views
+│   └── public/     # Visitor Pages (Home, Team, Events)
+├── api/            # Serverless Backend Functions
+└── assets/         # Images and Static Resources
 ```
 
 ## ⚡ Getting Started
 
+### Prerequisites
+- Node.js (v18+)
+- Firebase Project Credentials
+- EmailJS Account
+
+### Installation
+
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/technova.git
-    cd technova
+    git clone https://github.com/your-username/loop-website.git
+    cd loop-website
     ```
 
 2.  **Install dependencies:**
@@ -71,40 +118,30 @@ src/
     npm install
     ```
 
-3.  **Configure Firebase:**
-    - Create a `.env` file or update `src/firebase.js` with your Firebase credentials:
-    ```javascript
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
-    };
+3.  **Configure Environment Variables:**
+    Create a `.env` file in the root directory.
+
+    **Client-Side (Vite):**
+    ```env
+    VITE_FIREBASE_API_KEY=your_key
+    VITE_FIREBASE_AUTH_DOMAIN=your_domain
+    VITE_FIREBASE_PROJECT_ID=your_id
+    # ... other firebase config
     ```
 
-4.  **Run the development server:**
+    **Server-Side (Local Development):**
+    ```env
+    FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}
+    EMAILJS_SERVICE_ID=your_service_id
+    EMAILJS_TEMPLATE_ID=your_template_id
+    EMAILJS_PUBLIC_KEY=your_public_key
+    EMAILJS_PRIVATE_KEY=your_private_key
+    ```
+
+4.  **Run Development Server:**
     ```bash
     npm run dev
     ```
-
-5.  **Run the Express backend (optional):**
-    - Change into the `server` folder and install server deps, or run from project root with `pnpm`.
-    ```bash
-    # from project root (uses pnpm to run server)
-    npm run dev
-    # or run server only
-    cd server && npm install && npm run dev
-    ```
-
-## 👥 Core Team
-
-- **President**: 
-- **Vice President**: 
-- **Tech Lead**: Kirti
-- **Marketing Lead**: Jhanak
-- **Event Lead**: Arpita
-
----
-*Built with 💻 and ☕ by the Tech Nova Team.*
+    *Note: To test serverless functions locally, use `vercel dev` if configured.*
+ 
+*Built with 💻 and ☕ by the LOOP Team.*

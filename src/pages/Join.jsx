@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail } from 'firebase/auth';
 import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink } from 'lucide-react';
 import { normalizeError, ApiError } from '../utils/errorHandler';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 
@@ -97,6 +98,30 @@ const Join = () => {
         }
     };
 
+    const submitToGoogleSheets = async (data) => {
+        const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL;
+        if (!scriptURL) {
+            console.warn("Google Sheet URL not found in env variables.");
+            return;
+        }
+
+        try {
+            const formBody = new FormData();
+            for (const key in data) {
+                formBody.append(key, data[key]);
+            }
+
+            await fetch(scriptURL, {
+                method: 'POST',
+                body: formBody,
+                mode: 'no-cors' // Important for Google Apps Script
+            });
+            console.log("Submitted to Google Sheets");
+        } catch (error) {
+            console.error("Google Sheets Error:", error);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -128,6 +153,9 @@ const Join = () => {
                 createdAt: serverTimestamp(),
                 status: 'Pending'
             });
+
+            // Google Sheets Submission (Non-blocking)
+            submitToGoogleSheets(formData);
 
             // Send Email Notification
             const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
