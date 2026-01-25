@@ -3,7 +3,7 @@ import { signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail } fro
 import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink } from 'lucide-react';
 import { normalizeError, ApiError } from '../utils/errorHandler';
 import { db, auth } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 
 const Join = () => {
@@ -150,6 +150,16 @@ const Join = () => {
 
         setStatus('submitting');
         try {
+            // Check for duplicate application
+            const q = query(collection(db, "applications"), where("email", "==", formData.email));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                alert("You have already submitted an application with this email address.");
+                setStatus('idle');
+                return;
+            }
+
             // Direct Firestore Submission
             await addDoc(collection(db, "applications"), {
                 ...formData,
