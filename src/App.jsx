@@ -50,11 +50,9 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="members" element={<AdminMembers />} />
-            <Route path="members" element={<AdminMembers />} />
             <Route path="members/new" element={<AdminCreateMember />} />
             <Route path="members/edit/:id" element={<AdminEditMember />} />
             <Route path="contestants" element={<AdminLeaderboard />} />
-            <Route path="contestants/new" element={<AdminCreateContestant />} />
             <Route path="contestants/new" element={<AdminCreateContestant />} />
             <Route path="applications" element={<AdminApplications />} />
             <Route path="messages" element={<AdminMessages />} />

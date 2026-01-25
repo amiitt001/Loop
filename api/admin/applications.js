@@ -1,7 +1,7 @@
 
 import admin from 'firebase-admin';
 import { safeHandler } from '../utils/wrapper.js';
-import { checkMethod, ValidationError } from '../utils/errors.js'; // Assuming checkMethod logic or doing it manually
+import { checkMethod, ValidationError } from '../utils/errors.js'; 
 import { verifyAdmin } from '../utils/auth.js';
 import { ValidationError as CustomValidationError } from '../utils/errors.js';
 

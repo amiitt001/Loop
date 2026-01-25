@@ -117,7 +117,7 @@ const AdminApplications = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <h1 className="text-2xl md:text-3xl font-bold">Membership Applications</h1>
-                    <h1 className="text-2xl md:text-3xl font-bold">Membership Applications</h1>
+
                     {loading && <RefreshCw className="animate-spin text-[var(--neon-violet)]" size={20} />}
                     <a
                         href={import.meta.env.VITE_GOOGLE_SHEET_VIEW_URL || '#'}
