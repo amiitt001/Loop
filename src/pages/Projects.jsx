@@ -8,7 +8,7 @@ const PROJECTS = [
         description: 'A voice-activated AI assistant for developers with real-time code analysis.',
         tags: ['Python', 'TensorFlow', 'React'],
         link: '#',
-        icon: <Cpu size={40} color="var(--neon-cyan)" />
+        icon: <Cpu size={40} color="var(--accent)" />
     },
     {
         id: 2,
@@ -16,7 +16,7 @@ const PROJECTS = [
         description: 'Official mobile app for the club, featuring event tracking and QR attendance.',
         tags: ['Flutter', 'Firebase', 'Dart'],
         link: '#',
-        icon: <Layers size={40} color="var(--neon-violet)" />
+        icon: <Layers size={40} color="var(--accent)" />
     },
     {
         id: 3,
@@ -24,7 +24,7 @@ const PROJECTS = [
         description: 'Blockchain-based voting system for student council elections.',
         tags: ['Solidity', 'Web3.js', 'Next.js'],
         link: '#',
-        icon: <Database size={40} color="var(--neon-green)" />
+        icon: <Database size={40} color="var(--accent)" />
     },
     {
         id: 4,
@@ -48,7 +48,7 @@ const Projects = () => {
     return (
         <div className="container" style={{ padding: '8rem 0 4rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
-                <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>PROJECTS</h1>
+                <h1 className="text-accent" style={{ fontSize: '3rem', marginBottom: '1rem' }}>PROJECTS</h1>
                 <p style={{ color: 'var(--text-dim)' }}>Pushing the boundaries of what's possible.</p>
             </div>
 
@@ -88,7 +88,7 @@ const ProjectCard = ({ project, index }) => {
                         background: 'rgba(255,255,255,0.05)',
                         padding: '0.3rem 0.8rem',
                         borderRadius: '20px',
-                        color: 'var(--neon-cyan)',
+                        color: 'var(--accent)',
                         border: '1px solid rgba(0, 243, 255, 0.1)'
                     }}>
                         {tag}
@@ -119,7 +119,7 @@ const ProjectCard = ({ project, index }) => {
         }
         .project-card:hover {
           transform: translateY(-10px);
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
           box-shadow: 0 10px 40px -10px rgba(0, 243, 255, 0.15);
         }
         .project-card::before {
@@ -129,7 +129,7 @@ const ProjectCard = ({ project, index }) => {
           left: 0;
           width: 100%;
           height: 4px;
-          background: linear-gradient(90deg, var(--neon-cyan), var(--neon-violet));
+          background: linear-gradient(90deg, var(--accent), var(--accent));
           opacity: 0;
           transition: opacity 0.3s ease;
         }

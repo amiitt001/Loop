@@ -46,7 +46,7 @@ const Navbar = () => {
                             width: '38px',
                             objectFit: 'cover',
                             borderRadius: '50%',
-                            border: '2px solid var(--neon-cyan)',
+                            border: '2px solid var(--accent)',
                         }} />
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: '1.2' }}>
                             <span style={{
@@ -56,7 +56,7 @@ const Navbar = () => {
                                 fontWeight: '900',
                                 color: '#fff',
                             }}>
-                                <span className="text-neon-cyan">LOOP</span>
+                                <span className="text-accent">LOOP</span>
                             </span>
                             <span style={{
                                 fontSize: '0.6rem',
@@ -133,8 +133,8 @@ const Navbar = () => {
 
                 .join-btn {
                     background: transparent;
-                    border: 1px solid var(--neon-cyan);
-                    color: var(--neon-cyan);
+                    border: 1px solid var(--accent);
+                    color: var(--accent);
                     padding: 0.5rem 1.5rem;
                     font-family: var(--font-mono);
                     font-weight: bold;
@@ -142,7 +142,7 @@ const Navbar = () => {
                     transition: all 0.3s ease;
                 }
                 .join-btn:hover {
-                    background: var(--neon-cyan);
+                    background: var(--accent);
                     color: #000;
                     box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
                 }
@@ -156,14 +156,14 @@ const NavLink = ({ to, icon: Icon, label, active }) => (
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
-        color: active ? 'var(--neon-cyan)' : 'var(--text-dim)',
+        color: active ? 'var(--accent)' : 'var(--text-dim)',
         fontFamily: 'var(--font-mono)',
         fontSize: '0.9rem',
         transition: 'color 0.3s ease',
         padding: '0.5rem'
     }}
         onMouseEnter={(e) => e.target.style.color = 'var(--text-main)'}
-        onMouseLeave={(e) => e.target.style.color = active ? 'var(--neon-cyan)' : 'var(--text-dim)'}
+        onMouseLeave={(e) => e.target.style.color = active ? 'var(--accent)' : 'var(--text-dim)'}
     >
         <Icon size={16} />
         {label}
@@ -174,7 +174,7 @@ const MobileNavLink = ({ to, label, onClick, active }) => (
     <Link to={to} onClick={onClick} style={{
         fontSize: '1.5rem',
         fontFamily: 'var(--font-display)',
-        color: active ? 'var(--neon-cyan)' : '#fff',
+        color: active ? 'var(--accent)' : '#fff',
         textDecoration: 'none',
         letterSpacing: '1px'
     }}>

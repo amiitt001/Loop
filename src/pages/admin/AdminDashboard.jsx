@@ -5,9 +5,9 @@ import { collection, onSnapshot } from 'firebase/firestore';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState([
-        { label: 'Total Members', value: '-', icon: Users, color: 'text-[var(--neon-cyan)]', bg: 'bg-[var(--neon-cyan)]/10' },
-        { label: 'Upcoming Events', value: '-', icon: Calendar, color: 'text-[var(--neon-violet)]', bg: 'bg-[var(--neon-violet)]/10' },
-        { label: 'Total Events', value: '-', icon: Activity, color: 'text-[var(--neon-green)]', bg: 'bg-[var(--neon-green)]/10' },
+        { label: 'Total Members', value: '-', icon: Users, color: 'text-[var(--accent)]', bg: 'bg-[var(--accent)]/10' },
+        { label: 'Upcoming Events', value: '-', icon: Calendar, color: 'text-[var(--accent)]', bg: 'bg-[var(--accent)]/10' },
+        { label: 'Total Events', value: '-', icon: Activity, color: 'text-[var(--accent)]', bg: 'bg-[var(--accent)]/10' },
         { label: 'Top Contestant', value: '-', icon: Trophy, color: 'text-[#ff0055]', bg: 'bg-[#ff0055]/10' },
     ]);
     const [loading, setLoading] = useState(true);

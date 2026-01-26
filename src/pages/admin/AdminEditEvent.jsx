@@ -115,19 +115,19 @@ const AdminEditEvent = () => {
     };
 
     if (loading) {
-        return <div className="text-white text-center py-10">Loading event...</div>;
+        return <div className="text-main text-center py-10">Loading event...</div>;
     }
 
     return (
         <div className="max-w-3xl mx-auto">
             <button
                 onClick={() => navigate('/admin/events')}
-                className="bg-transparent border-none text-zinc-400 flex items-center gap-2 mb-8 cursor-pointer text-sm hover:text-white transition-colors"
+                className="bg-transparent border-none text-zinc-400 flex items-center gap-2 mb-8 cursor-pointer text-sm hover:text-main transition-colors"
             >
                 <ArrowLeft size={18} /> Back to Events
             </button>
 
-            <h1 className="text-3xl font-bold mb-8 text-white">Edit Event</h1>
+            <h1 className="text-3xl font-bold mb-8 text-main">Edit Event</h1>
 
             <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 flex flex-col gap-6">
                 {/* Title */}
@@ -140,7 +140,7 @@ const AdminEditEvent = () => {
                         onChange={handleChange}
                         required
                         placeholder="e.g. AI Workshop 2026"
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
 
@@ -157,7 +157,7 @@ const AdminEditEvent = () => {
                             value={formData.date}
                             onChange={handleChange}
                             required
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
 
@@ -172,7 +172,7 @@ const AdminEditEvent = () => {
                             value={formData.time}
                             onChange={handleChange}
                             required
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
 
@@ -188,7 +188,7 @@ const AdminEditEvent = () => {
                             onChange={handleChange}
                             required
                             placeholder="e.g. Main Auditorium"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
 
@@ -199,7 +199,7 @@ const AdminEditEvent = () => {
                             name="status"
                             value={formData.status}
                             onChange={handleChange}
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         >
                             <option value="Upcoming">Upcoming</option>
                             <option value="Active">Active (Live)</option>
@@ -219,7 +219,7 @@ const AdminEditEvent = () => {
                         value={formData.speaker}
                         onChange={handleChange}
                         placeholder="e.g. Dr. Jane Doe"
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
 
@@ -234,7 +234,7 @@ const AdminEditEvent = () => {
                         onChange={handleChange}
                         rows="4"
                         placeholder="Project detailed agenda, prerequisites, etc."
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors resize-y"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors resize-y"
                     />
                 </div>
 
@@ -255,7 +255,7 @@ const AdminEditEvent = () => {
                         value={formData.registrationLink}
                         onChange={handleChange}
                         placeholder="https://..."
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-violet)] transition-colors"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
 
@@ -264,8 +264,8 @@ const AdminEditEvent = () => {
                         type="submit"
                         disabled={saving}
                         className={`
-                            bg-[var(--neon-violet)] text-white border-none rounded-lg py-3 px-8 text-base font-bold cursor-pointer flex items-center gap-2
-                            ${saving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--neon-violet)]/80'}
+                            bg-[var(--accent)] text-main border-none rounded-lg py-3 px-8 text-base font-bold cursor-pointer flex items-center gap-2
+                            ${saving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--accent)]/80'}
                             transition-all
                         `}
                     >

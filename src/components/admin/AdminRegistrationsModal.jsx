@@ -127,7 +127,7 @@ const AdminRegistrationsModal = ({ event, onClose }) => {
                         }}>
                             <div>
                                 <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff' }}>Registrations</h2>
-                                <p style={{ color: 'var(--neon-violet)', fontSize: '0.9rem' }}>{event.title}</p>
+                                <p style={{ color: 'var(--accent)', fontSize: '0.9rem' }}>{event.title}</p>
                             </div>
                             <button onClick={onClose} style={{
                                 background: 'transparent', border: 'none', color: '#a1a1aa', cursor: 'pointer'
@@ -163,7 +163,7 @@ const AdminRegistrationsModal = ({ event, onClose }) => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '0.5rem',
-                                    background: 'var(--neon-violet)',
+                                    background: 'var(--accent)',
                                     color: '#fff',
                                     border: 'none',
                                     padding: '0.6rem 1.2rem',
@@ -181,7 +181,7 @@ const AdminRegistrationsModal = ({ event, onClose }) => {
                         <div style={{ flex: 1, overflowY: 'auto', padding: '0 1.5rem 1.5rem' }}>
                             {loading ? (
                                 <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-                                    <RefreshCw className="spin" color="var(--neon-violet)" />
+                                    <RefreshCw className="spin" color="var(--accent)" />
                                 </div>
                             ) : filtered.length === 0 ? (
                                 <p style={{ textAlign: 'center', color: '#71717a', padding: '2rem' }}>No registrations found.</p>

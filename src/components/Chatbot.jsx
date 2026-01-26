@@ -110,7 +110,7 @@ const Chatbot = () => {
                                 background: 'rgba(10, 10, 10, 0.95)',
                                 backdropFilter: 'blur(16px)',
                                 borderRadius: '16px',
-                                border: '1px solid var(--neon-cyan)',
+                                border: '1px solid var(--accent)',
                                 boxShadow: '0 0 30px rgba(0, 243, 255, 0.15)',
                                 marginBottom: '20px',
                                 display: 'flex',
@@ -128,7 +128,7 @@ const Chatbot = () => {
                                 justifyContent: 'space-between'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Bot size={18} color="var(--neon-cyan)" />
+                                    <Bot size={18} color="var(--accent)" />
                                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '1px' }}>LOOP ASSISTANT</span>
                                 </div>
                                 <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-dim)' }}>
@@ -151,7 +151,7 @@ const Chatbot = () => {
                                             maxWidth: '80%',
                                             padding: '0.8rem 1rem',
                                             borderRadius: '12px',
-                                            background: msg.sender === 'user' ? 'var(--neon-cyan)' : 'rgba(255,255,255,0.05)',
+                                            background: msg.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
                                             color: msg.sender === 'user' ? '#000' : '#fff',
                                             border: msg.sender === 'bot' ? '1px solid rgba(255,255,255,0.1)' : 'none',
                                             fontSize: '0.9rem',
@@ -188,11 +188,11 @@ const Chatbot = () => {
                                         fontSize: '0.8rem',
                                         outline: 'none'
                                     }}
-                                    onFocus={(e) => e.target.style.borderColor = 'var(--neon-cyan)'}
+                                    onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                                     onBlur={(e) => e.target.style.borderColor = 'var(--border-dim)'}
                                 />
                                 <button type="submit" style={{
-                                    background: 'var(--neon-cyan)',
+                                    background: 'var(--accent)',
                                     border: 'none',
                                     borderRadius: '8px',
                                     width: '40px',
@@ -212,13 +212,13 @@ const Chatbot = () => {
                 {/* Floating Toggle Button */}
                 <motion.button
                     onClick={() => setIsOpen(!isOpen)}
-                    whileHover={{ scale: 1.1, boxShadow: '0 0 20px var(--neon-cyan)' }}
+                    whileHover={{ scale: 1.1, boxShadow: '0 0 20px var(--accent)' }}
                     whileTap={{ scale: 0.9 }}
                     style={{
                         width: '60px',
                         height: '60px',
                         borderRadius: '50%',
-                        background: 'var(--neon-cyan)',
+                        background: 'var(--accent)',
                         border: 'none',
                         display: 'flex',
                         alignItems: 'center',

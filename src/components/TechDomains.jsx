@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { Globe, Cpu, Smartphone, Cloud, Database } from 'lucide-react';
 
 const DOMAINS = [
-    { id: 1, title: 'Web Development', icon: <Globe size={40} />, color: 'var(--neon-cyan)', desc: 'Building modern, sculpted experiences using React, Next.js, and WebGL.' },
-    { id: 2, title: 'AI & Machine Learning', icon: <Cpu size={40} />, color: 'var(--neon-violet)', desc: 'Training models, neural networks, and deploying intelligent agents.' },
-    { id: 3, title: 'App Development', icon: <Smartphone size={40} />, color: 'var(--neon-green)', desc: 'Cross-platform mobile apps with Flutter and React Native.' },
+    { id: 1, title: 'Web Development', icon: <Globe size={40} />, color: 'var(--accent)', desc: 'Building modern, sculpted experiences using React, Next.js, and WebGL.' },
+    { id: 2, title: 'AI & Machine Learning', icon: <Cpu size={40} />, color: 'var(--accent)', desc: 'Training models, neural networks, and deploying intelligent agents.' },
+    { id: 3, title: 'App Development', icon: <Smartphone size={40} />, color: 'var(--accent)', desc: 'Cross-platform mobile apps with Flutter and React Native.' },
     { id: 4, title: 'Cloud & DevOps', icon: <Cloud size={40} />, color: '#ff0055', desc: 'Scalable infrastructure, CI/CD pipelines, and containerization.' },
     { id: 5, title: 'Blockchain', icon: <Database size={40} />, color: '#ffd700', desc: 'Smart contracts, DApps, and decentralized systems architecture.' },
 ];
@@ -20,7 +20,7 @@ const TechDomains = () => {
                     viewport={{ once: true }}
                     style={{ textAlign: 'center', marginBottom: '4rem' }}
                 >
-                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>WHAT WE <span style={{ color: 'var(--neon-cyan)' }}>BUILD</span></h2>
+                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>WHAT WE <span style={{ color: 'var(--accent)' }}>BUILD</span></h2>
                     <p style={{ color: 'var(--text-dim)', maxWidth: '600px', margin: '0 auto' }}>
                         We dive deep into diverse technical domains. No hello worlds here—only production-grade code.
                     </p>

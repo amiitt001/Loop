@@ -140,7 +140,7 @@ const RegistrationModal = ({ event, onClose }) => {
                             maxWidth: '500px',
                             height: '100%',
                             background: 'var(--bg-card)',
-                            borderLeft: '1px solid var(--neon-cyan)',
+                            borderLeft: '1px solid var(--accent)',
                             zIndex: 10001,
                             padding: '2rem',
                             overflowY: 'auto',
@@ -162,7 +162,7 @@ const RegistrationModal = ({ event, onClose }) => {
                         {!isSuccess ? (
                             <>
                                 <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#fff' }}>Register for Event</h2>
-                                <p style={{ color: 'var(--neon-cyan)', marginBottom: '2rem', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                                <p style={{ color: 'var(--accent)', marginBottom: '2rem', fontSize: '1.1rem', fontWeight: 'bold' }}>
                                     {event.title}
                                 </p>
 
@@ -209,14 +209,14 @@ const RegistrationModal = ({ event, onClose }) => {
                                                         <label className="block mb-2 text-zinc-400 text-sm">{q.label}</label>
                                                         <div className="flex flex-col gap-2">
                                                             {q.options.map((opt, idx) => (
-                                                                <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                                                <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-main transition-colors">
                                                                     <input
                                                                         type="radio"
                                                                         name={q.id}
                                                                         value={opt}
                                                                         onChange={handleChange}
                                                                         checked={formData[q.id] === opt}
-                                                                        className="accent-[var(--neon-cyan)]"
+                                                                        className="accent-[var(--accent)]"
                                                                     />
                                                                     <span className="text-sm text-zinc-300">{opt}</span>
                                                                 </label>
@@ -233,7 +233,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                                             {q.options.map((opt, idx) => {
                                                                 const checked = (formData[q.id] || []).includes(opt);
                                                                 return (
-                                                                    <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                                                    <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-main transition-colors">
                                                                         <input
                                                                             type="checkbox"
                                                                             name={q.id}
@@ -248,7 +248,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                                                                 setFormData(prev => ({ ...prev, [q.id]: newVals }));
                                                                             }}
                                                                             checked={checked}
-                                                                            className="accent-[var(--neon-cyan)]"
+                                                                            className="accent-[var(--accent)]"
                                                                         />
                                                                         <span className="text-sm text-zinc-300">{opt}</span>
                                                                     </label>
@@ -338,7 +338,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                                     checked={instagramFollowed}
                                                     onChange={(e) => setInstagramFollowed(e.target.checked)}
                                                     disabled={!instagramVisited}
-                                                    style={{ width: '18px', height: '18px', accentColor: 'var(--neon-cyan)' }}
+                                                    style={{ width: '18px', height: '18px', accentColor: 'var(--accent)' }}
                                                 />
                                                 <span style={{ color: '#fff', fontSize: '0.9rem' }}>
                                                     I have successfully followed LOOP on Instagram.
@@ -354,7 +354,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                             width: '100%',
                                             padding: '1rem',
                                             marginTop: '1rem',
-                                            background: (isSubmitting || !instagramFollowed) ? 'var(--text-dim)' : 'var(--neon-cyan)',
+                                            background: (isSubmitting || !instagramFollowed) ? 'var(--text-dim)' : 'var(--accent)',
                                             color: '#000',
                                             border: 'none',
                                             borderRadius: '8px',
@@ -394,7 +394,7 @@ const RegistrationModal = ({ event, onClose }) => {
                                     animate={{ scale: 1 }}
                                     transition={{ type: 'spring', stiffness: 200, damping: 10 }}
                                 >
-                                    <CheckCircle size={80} color="var(--neon-green)" style={{ marginBottom: '1.5rem' }} />
+                                    <CheckCircle size={80} color="var(--accent)" style={{ marginBottom: '1.5rem' }} />
                                 </motion.div>
                                 <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Registered!</h3>
                                 <p style={{ color: 'var(--text-dim)', marginBottom: '2rem' }}>
@@ -437,7 +437,7 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
         </label>
         <div className="relative group">
             {Icon && (
-                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--neon-cyan)]'}`}>
+                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--accent)]'}`}>
                     <Icon size={18} />
                 </div>
             )}
@@ -448,11 +448,11 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
                 onChange={onChange}
                 placeholder={placeholder}
                 className={`
-                    w-full bg-black/20 border rounded-xl p-3 text-white outline-none transition-all duration-300
+                    w-full bg-main/20 border rounded-xl p-3 text-main outline-none transition-all duration-300
                     ${Icon ? 'pl-11' : 'pl-4'}
                     ${error
                         ? 'border-[#ff0055] focus:shadow-[0_0_20px_rgba(255,0,85,0.2)]'
-                        : 'border-zinc-800 focus:border-[var(--neon-cyan)] focus:bg-[var(--neon-cyan)]/5 focus:shadow-[0_0_20px_rgba(0,243,255,0.1)]'}
+                        : 'border-zinc-800 focus:border-[var(--accent)] focus:bg-[var(--accent)]/5 focus:shadow-[0_0_20px_rgba(0, 243, 255,0.1)]'}
                 `}
             />
             {error && (

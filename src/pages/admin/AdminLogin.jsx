@@ -66,7 +66,7 @@ const AdminLogin = () => {
                         marginBottom: '1rem',
                         border: '1px solid rgba(0, 243, 255, 0.2)'
                     }}>
-                        <Lock size={32} color="var(--neon-cyan)" />
+                        <Lock size={32} color="var(--accent)" />
                     </div>
                     <h2 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '0.5rem' }}>Admin Access</h2>
                     <p style={{ color: '#666', fontSize: '0.9rem' }}>Secure gateway for authorized personnel.</p>
@@ -100,7 +100,7 @@ const AdminLogin = () => {
                                 fontSize: '1rem',
                                 outline: 'none'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--neon-cyan)'}
+                            onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                             onBlur={(e) => e.target.style.borderColor = '#333'}
                         />
                     </div>
@@ -121,7 +121,7 @@ const AdminLogin = () => {
                                 fontSize: '1rem',
                                 outline: 'none'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--neon-cyan)'}
+                            onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                             onBlur={(e) => e.target.style.borderColor = '#333'}
                         />
                     </div>
@@ -132,7 +132,7 @@ const AdminLogin = () => {
                         style={{
                             marginTop: '1rem',
                             padding: '0.8rem',
-                            background: 'var(--neon-cyan)',
+                            background: 'var(--accent)',
                             color: '#000',
                             fontWeight: 'bold',
                             border: 'none',

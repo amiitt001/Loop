@@ -60,12 +60,12 @@ const AdminMembers = () => {
         if (membersList.length === 0) return null;
         return (
             <div className="mb-12">
-                <h2 className="text-xl font-bold mb-6 text-[var(--neon-cyan)] border-b border-zinc-800 pb-2 inline-block pr-6">{title}</h2>
+                <h2 className="text-xl font-bold mb-6 text-[var(--accent)] border-b border-zinc-800 pb-2 inline-block pr-6">{title}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {membersList.map((member) => (
                         <div key={member.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-colors flex flex-col">
                             <div className="p-6 flex flex-col items-center text-center border-b border-zinc-800">
-                                <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 mb-4 border-2 border-[var(--neon-cyan)]/30">
+                                <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 mb-4 border-2 border-[var(--accent)]/30">
                                     {member.img ? (
                                         <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
                                     ) : (
@@ -74,8 +74,8 @@ const AdminMembers = () => {
                                         </div>
                                     )}
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
-                                <p className="text-[var(--neon-cyan)] text-sm font-medium uppercase tracking-wider">{member.role}</p>
+                                <h3 className="text-xl font-bold text-main mb-1">{member.name}</h3>
+                                <p className="text-[var(--accent)] text-sm font-medium uppercase tracking-wider">{member.role}</p>
                             </div>
 
                             <div className="p-4 flex flex-col gap-3 text-sm text-zinc-400 flex-grow">
@@ -115,7 +115,7 @@ const AdminMembers = () => {
                                         </a>
                                     )}
                                     {member.social?.github && (
-                                        <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors">
+                                        <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-main transition-colors">
                                             <Github size={20} />
                                         </a>
                                     )}
@@ -125,7 +125,7 @@ const AdminMembers = () => {
                             <div className="p-3 bg-zinc-950/50 flex gap-2">
                                 <button
                                     onClick={() => handleEdit(member)}
-                                    className="flex-1 bg-zinc-800 text-white border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 bg-zinc-800 text-main border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Edit2 size={14} /> Edit
                                 </button>
@@ -148,11 +148,11 @@ const AdminMembers = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <h1 className="text-2xl md:text-3xl font-bold">Members</h1>
-                    {loading && <RefreshCw className="animate-spin text-[var(--neon-cyan)]" size={20} />}
+                    {loading && <RefreshCw className="animate-spin text-[var(--accent)]" size={20} />}
                 </div>
                 <button
                     onClick={() => navigate('/admin/members/new')}
-                    className="bg-[var(--neon-cyan)] text-black hover:bg-[var(--neon-cyan)]/80 transition-colors border-none rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer font-semibold w-full md:w-auto"
+                    className="bg-[var(--accent)] text-black hover:bg-[var(--accent)]/80 transition-colors border-none rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer font-semibold w-full md:w-auto"
                 >
                     <Plus size={18} /> Add Member
                 </button>
@@ -166,7 +166,7 @@ const AdminMembers = () => {
                     placeholder="Search members..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-3 pl-12 pr-4 text-main focus:outline-none focus:border-[var(--accent)] transition-colors"
                 />
             </div>
 

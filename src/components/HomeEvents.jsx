@@ -48,11 +48,11 @@ const HomeEvents = () => {
             <div className="container">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '3rem' }}>
                     <div>
-                        <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>UPCOMING <span style={{ color: 'var(--neon-green)' }}>EVENTS</span></h2>
+                        <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>UPCOMING <span style={{ color: 'var(--accent)' }}>EVENTS</span></h2>
                         <p style={{ color: 'var(--text-dim)' }}>Join the action. Learn, compete, win.</p>
                         {loading && <div style={{ marginTop: '1rem' }}><RefreshCw className="spin" size={20} color="var(--text-dim)" /></div>}
                     </div>
-                    <Link to="/events" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--neon-green)', fontWeight: 'bold' }}>
+                    <Link to="/events" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)', fontWeight: 'bold' }}>
                         VIEW ALL <ArrowRight size={18} />
                     </Link>
                 </div>
@@ -70,8 +70,8 @@ const HomeEvents = () => {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 style={{
-                                    background: 'linear-gradient(135deg, rgba(0,243,255,0.1), rgba(0,0,0,0))',
-                                    border: '1px solid var(--neon-cyan)',
+                                    background: 'linear-gradient(135deg, rgba(0, 243, 255,0.1), rgba(0,0,0,0))',
+                                    border: '1px solid var(--accent)',
                                     borderRadius: '16px',
                                     padding: '2.5rem',
                                     display: 'flex',
@@ -82,7 +82,7 @@ const HomeEvents = () => {
                             >
                                 <div style={{
                                     display: 'inline-block',
-                                    background: 'var(--neon-cyan)',
+                                    background: 'var(--accent)',
                                     color: '#000',
                                     fontWeight: 'bold',
                                     padding: '0.2rem 0.8rem',
@@ -93,17 +93,17 @@ const HomeEvents = () => {
                                 }}>
                                     FEATURED
                                 </div>
-                                <h3 style={{ fontSize: '2rem', marginBottom: '1rem', textShadow: '0 0 20px rgba(0,243,255,0.3)' }}>{featuredEvent.title}</h3>
+                                <h3 style={{ fontSize: '2rem', marginBottom: '1rem', textShadow: '0 0 20px rgba(0, 243, 255,0.3)' }}>{featuredEvent.title}</h3>
                                 <p style={{ color: 'var(--text-dim)', marginBottom: '2rem', flex: 1 }}>
                                     {featuredEvent.description ? featuredEvent.description.substring(0, 150) + (featuredEvent.description.length > 150 ? '...' : '') : 'No description available.'}
                                 </p>
                                 <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem', color: '#fff', fontSize: '0.9rem' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <Calendar size={16} color="var(--neon-cyan)" />
+                                        <Calendar size={16} color="var(--accent)" />
                                         {featuredEvent.dateObj.toLocaleDateString()}
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <Clock size={16} color="var(--neon-cyan)" />
+                                        <Clock size={16} color="var(--accent)" />
                                         {featuredEvent.time || featuredEvent.location || 'TBD'}
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@ const HomeEvents = () => {
                                         style={{
                                             width: '100%',
                                             padding: '1rem',
-                                            background: 'var(--neon-cyan)',
+                                            background: 'var(--accent)',
                                             color: '#000',
                                             border: 'none',
                                             borderRadius: '8px',

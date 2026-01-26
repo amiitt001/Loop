@@ -87,11 +87,11 @@ const AdminEvents = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <h1 className="text-2xl md:text-3xl font-bold">Events</h1>
-                    {loading && <RefreshCw className="animate-spin text-[var(--neon-violet)]" size={20} />}
+                    {loading && <RefreshCw className="animate-spin text-[var(--accent)]" size={20} />}
                 </div>
                 <button
                     onClick={handleCreate}
-                    className="bg-[var(--neon-violet)] text-white border-none rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer font-semibold hover:bg-[var(--neon-violet)]/80 transition-colors w-full md:w-auto"
+                    className="bg-[var(--accent)] text-main border-none rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer font-semibold hover:bg-[var(--accent)]/80 transition-colors w-full md:w-auto"
                 >
                     <Plus size={18} /> Create Event
                 </button>
@@ -108,7 +108,7 @@ const AdminEvents = () => {
                                 ${event.status === 'Active'
                                     ? 'bg-green-500/10 text-green-500 border-green-500'
                                     : event.status === 'Upcoming'
-                                        ? 'bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border-[var(--neon-cyan)]'
+                                        ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]'
                                         : 'bg-zinc-800 text-zinc-500 border-zinc-700'
                                 }
                             `}>
@@ -140,20 +140,20 @@ const AdminEvents = () => {
                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
                                 <button
                                     onClick={() => handleEdit(event)}
-                                    className="bg-zinc-800 text-white border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex justify-center items-center"
+                                    className="bg-zinc-800 text-main border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex justify-center items-center"
                                 >
                                     Edit
                                 </button>
                                 <button
                                     onClick={() => handleManage(event)}
-                                    className="bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-cyan)]/20 transition-colors flex justify-center items-center"
+                                    className="bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--accent)]/20 transition-colors flex justify-center items-center"
                                 >
                                     Manage
                                 </button>
                                 <button
                                     onClick={() => handleCopyLink(event)}
                                     title="Copy Registration Link"
-                                    className="bg-zinc-800 text-zinc-400 border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 hover:text-white transition-colors flex items-center justify-center"
+                                    className="bg-zinc-800 text-zinc-400 border-none py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-zinc-700 hover:text-main transition-colors flex items-center justify-center"
                                 >
                                     <LinkIcon size={16} />
                                 </button>
@@ -161,7 +161,7 @@ const AdminEvents = () => {
 
                             <button
                                 onClick={() => setSelectedEventForRegistrations(event)}
-                                className="w-full bg-[var(--neon-violet)]/10 text-[var(--neon-violet)] border border-[var(--neon-violet)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--neon-violet)]/20 transition-colors flex items-center justify-center gap-2"
+                                className="w-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20 py-2 px-3 rounded-md text-sm cursor-pointer hover:bg-[var(--accent)]/20 transition-colors flex items-center justify-center gap-2"
                             >
                                 <Users size={16} /> View Registrations
                             </button>

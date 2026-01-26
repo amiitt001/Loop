@@ -3,7 +3,7 @@ import { signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail } fro
 import { Send, CheckCircle, AlertCircle, Instagram, ExternalLink } from 'lucide-react';
 import { normalizeError, ApiError } from '../utils/errorHandler';
 import { db, auth } from '../firebase';
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, setDoc, doc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 
 const Join = () => {
@@ -160,8 +160,9 @@ const Join = () => {
                 return;
             }
 
-            // Direct Firestore Submission
-            await addDoc(collection(db, "applications"), {
+            // Direct Firestore Submission matched by Email ID to prevent duplicates
+            // Rules allow create but deny update for non-admins, enforcing uniqueness
+            await setDoc(doc(db, "applications", formData.email), {
                 ...formData,
                 createdAt: serverTimestamp(),
                 status: 'Pending'
@@ -213,7 +214,7 @@ const Join = () => {
         <div className="container" style={{ padding: '8rem 0 4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
             <div style={{ textAlign: 'center', marginBottom: '3rem' }} className="animate-fade-in">
-                <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>JOIN THE SQUAD</h1>
+                <h1 className="text-accent" style={{ fontSize: '3rem', marginBottom: '1rem' }}>JOIN THE SQUAD</h1>
                 <p style={{ color: 'var(--text-dim)', maxWidth: '500px' }}>
                     Ready to build the future? Fill out the form below to apply for membership.
                 </p>
@@ -226,10 +227,10 @@ const Join = () => {
                     background: 'var(--bg-card)',
                     padding: '3rem',
                     borderRadius: '16px',
-                    border: '1px solid var(--neon-cyan)',
+                    border: '1px solid var(--accent)',
                     textAlign: 'center'
                 }} className="animate-fade-in">
-                    <CheckCircle size={64} color="var(--neon-green)" style={{ margin: '0 auto 1.5rem' }} />
+                    <CheckCircle size={64} color="var(--accent)" style={{ margin: '0 auto 1.5rem' }} />
                     <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#fff' }}>Application Sent!</h2>
                     <p style={{ color: 'var(--text-dim)' }}>
                         We have received your application. Our team will review it and get back to you soon.
@@ -413,7 +414,7 @@ const Join = () => {
                                     checked={instagramFollowed}
                                     onChange={(e) => setInstagramFollowed(e.target.checked)}
                                     disabled={!instagramVisited}
-                                    style={{ width: '18px', height: '18px', accentColor: 'var(--neon-cyan)' }}
+                                    style={{ width: '18px', height: '18px', accentColor: 'var(--accent)' }}
                                 />
                                 <span style={{ color: '#fff', fontSize: '0.9rem' }}>
                                     I have successfully followed LOOP on Instagram.
@@ -467,7 +468,7 @@ const Join = () => {
           transition: all 0.3s ease;
         }
         .input-field:focus {
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
           background: rgba(0, 243, 255, 0.05);
         }
 
@@ -478,7 +479,7 @@ const Join = () => {
 
         .submit-btn {
           width: 100%;
-          background: var(--neon-cyan);
+          background: var(--accent);
           color: #000;
           font-weight: bold;
           font-family: var(--font-display);

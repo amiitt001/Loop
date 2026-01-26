@@ -9,28 +9,28 @@ const SYSTEM_MODULES = [
         title: 'HACKATHONS',
         icon: <Terminal size={24} />,
         desc: 'High-intensity engineering marathons. We build 48-hour prototypes that solve real problems.',
-        color: 'var(--neon-cyan)'
+        color: 'var(--accent)'
     },
     {
         id: '02',
         title: 'TECH TALKS',
         icon: <Cpu size={24} />,
         desc: 'Interactions with industry experts and alumni. Bridging the gap between theory and real-world tech.',
-        color: 'var(--neon-violet)'
+        color: 'var(--accent)'
     },
     {
         id: '03',
         title: 'WORKSHOPS',
         icon: <Network size={24} />,
         desc: 'Peer-to-peer knowledge transfer. Senior devs training the next generation of architects.',
-        color: 'var(--neon-green)'
+        color: 'var(--accent)'
     },
     {
         id: '04',
         title: 'OPEN SOURCE',
         icon: <Code size={24} />,
         desc: 'Contributing to the global ecosystem. We maintain libraries and tools used by developers worldwide.',
-        color: '#ff0055' // A new accent for variety, or could reuse neon-cyan
+        color: '#ff0055' // A new accent for variety, or could reuse accent
     }
 ];
 
@@ -72,8 +72,8 @@ const HomeAbout = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                            <div style={{ width: '40px', height: '2px', background: 'var(--neon-cyan)' }}></div>
-                            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--neon-cyan)', letterSpacing: '2px', fontSize: '0.9rem' }}>SYSTEM: ONLINE</span>
+                            <div style={{ width: '40px', height: '2px', background: 'var(--accent)' }}></div>
+                            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)', letterSpacing: '2px', fontSize: '0.9rem' }}>SYSTEM: ONLINE</span>
                         </div>
 
                         <h2 style={{
@@ -113,7 +113,7 @@ const HomeAbout = () => {
                             transition: 'all 0.3s ease'
                         }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = 'var(--neon-cyan)';
+                                e.currentTarget.style.borderColor = 'var(--accent)';
                                 e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 243, 255, 0.2)';
                             }}
                             onMouseLeave={(e) => {

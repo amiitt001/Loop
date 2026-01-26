@@ -39,7 +39,7 @@ const Leaderboard = () => {
         <div className="container" style={{ padding: '8rem 0 4rem' }}>
 
             <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
-                <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>LEADERBOARD</h1>
+                <h1 className="text-accent" style={{ fontSize: '3rem', marginBottom: '1rem' }}>LEADERBOARD</h1>
                 <p style={{ color: 'var(--text-dim)' }}>Top contributors driving innovation.</p>
                 {loading && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}><RefreshCw className="spin" /></div>}
 
@@ -65,7 +65,7 @@ const Leaderboard = () => {
                             outline: 'none',
                             fontFamily: 'var(--font-mono)'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = 'var(--neon-cyan)'}
+                        onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                         onBlur={(e) => e.target.style.borderColor = 'var(--border-dim)'}
                     />
                 </div>
@@ -103,12 +103,12 @@ const Leaderboard = () => {
                             </div>
                             <div>
                                 <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{user.name}</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--neon-violet)' }}>@{user.platformHandle || 'contestant'}</div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>@{user.platformHandle || 'contestant'}</div>
                             </div>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'var(--neon-cyan)', fontWeight: 'bold' }}>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'var(--accent)', fontWeight: 'bold' }}>
                                 {user.points}
                             </div>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>PTS</div>
@@ -138,7 +138,7 @@ const Leaderboard = () => {
         }
         .rank-row:hover {
           transform: translateX(10px);
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
           background: var(--bg-card-hover);
         }
         .spin { animation: spin 1s linear infinite; }
@@ -150,7 +150,7 @@ const Leaderboard = () => {
 
 const TopCard = ({ user, rank, delay }) => {
     const isFirst = rank === 1;
-    const borderColor = isFirst ? 'var(--neon-cyan)' : 'var(--border-dim)';
+    const borderColor = isFirst ? 'var(--accent)' : 'var(--border-dim)';
     const glow = isFirst ? '0 0 30px rgba(0, 243, 255, 0.2)' : 'none';
     const scale = isFirst ? 'scale(1.1)' : 'scale(1)';
 
@@ -168,12 +168,12 @@ const TopCard = ({ user, rank, delay }) => {
             boxShadow: glow,
             zIndex: isFirst ? 2 : 1
         }}>
-            {isFirst && <Crown size={32} color="var(--neon-cyan)" style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)' }} />}
+            {isFirst && <Crown size={32} color="var(--accent)" style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)' }} />}
 
             <div style={{
                 fontSize: '4rem',
                 fontFamily: 'var(--font-display)',
-                color: isFirst ? 'var(--neon-cyan)' : 'var(--text-dim)',
+                color: isFirst ? 'var(--accent)' : 'var(--text-dim)',
                 opacity: 0.2,
                 position: 'absolute',
                 top: '10px',
@@ -182,12 +182,12 @@ const TopCard = ({ user, rank, delay }) => {
                 {rank}
             </div>
 
-            <div style={{ width: '80px', height: '80px', background: '#333', borderRadius: '50%', margin: '0 auto 1rem', border: `2px solid ${isFirst ? 'var(--neon-cyan)' : '#555'}`, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '80px', height: '80px', background: '#333', borderRadius: '50%', margin: '0 auto 1rem', border: `2px solid ${isFirst ? 'var(--accent)' : '#555'}`, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {user.img ? <img src={user.img} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: '2.5rem', color: '#888' }}>{user.name.charAt(0)}</span>}
             </div>
 
             <h3 style={{ fontSize: '1.4rem' }}>{user.name}</h3>
-            <p style={{ color: 'var(--neon-violet)', marginBottom: '1rem', fontSize: '0.9rem' }}>@{user.platformHandle || 'contestant'}</p>
+            <p style={{ color: 'var(--accent)', marginBottom: '1rem', fontSize: '0.9rem' }}>@{user.platformHandle || 'contestant'}</p>
 
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.5rem', borderRadius: '8px' }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 'bold' }}>{user.points}</span>

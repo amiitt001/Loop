@@ -48,7 +48,7 @@ const FormBuilder = ({ questions, setQuestions }) => {
 
     return (
         <div className="flex flex-col gap-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
-            <h3 className="text-xl font-bold text-white">Registration Form Builder</h3>
+            <h3 className="text-xl font-bold text-main">Registration Form Builder</h3>
 
             {/* Question List */}
             <div className="flex flex-col gap-4">
@@ -64,7 +64,7 @@ const FormBuilder = ({ questions, setQuestions }) => {
                                     value={q.label}
                                     onChange={(e) => updateQuestion(q.id, 'label', e.target.value)}
                                     placeholder="Enter Question (e.g. What is your experience?)"
-                                    className="w-full bg-transparent text-white font-medium outline-none border-b border-zinc-800 focus:border-[var(--neon-cyan)] pb-1 transition-colors"
+                                    className="w-full bg-transparent text-main font-medium outline-none border-b border-zinc-800 focus:border-[var(--accent)] pb-1 transition-colors"
                                 />
                             </div>
                             <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ const FormBuilder = ({ questions, setQuestions }) => {
                                 <button
                                     type="button"
                                     onClick={() => addOption(q.id)}
-                                    className="text-xs text-[var(--neon-cyan)] hover:text-white transition-colors flex items-center gap-1 mt-1 font-medium"
+                                    className="text-xs text-[var(--accent)] hover:text-main transition-colors flex items-center gap-1 mt-1 font-medium"
                                 >
                                     <Plus size={12} /> Add Option
                                 </button>
@@ -122,7 +122,7 @@ const FormBuilder = ({ questions, setQuestions }) => {
                                     type="checkbox"
                                     checked={q.required}
                                     onChange={(e) => updateQuestion(q.id, 'required', e.target.checked)}
-                                    className="accent-[var(--neon-cyan)]"
+                                    className="accent-[var(--accent)]"
                                 />
                                 Required Field
                             </label>
@@ -143,21 +143,21 @@ const FormBuilder = ({ questions, setQuestions }) => {
                 <button
                     type="button"
                     onClick={() => addQuestion('text')}
-                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-main py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
                     <Type size={14} /> Short Answer
                 </button>
                 <button
                     type="button"
                     onClick={() => addQuestion('radio')}
-                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-main py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
                     <List size={14} /> Multiple Choice
                 </button>
                 <button
                     type="button"
                     onClick={() => addQuestion('checkbox')}
-                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-main py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
                     <CheckSquare size={14} /> Checkboxes
                 </button>

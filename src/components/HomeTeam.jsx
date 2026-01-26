@@ -130,7 +130,7 @@ const HomeTeam = () => {
 
             // Assign colors dynamically if needed or random neon colors?
             // The original had specific colors. Let's just cycle through neon colors.
-            const neonColors = ['var(--neon-cyan)', 'var(--neon-violet)', '#ff0055', 'var(--neon-green)'];
+            const neonColors = ['var(--accent)', 'var(--accent)', '#ff0055', 'var(--accent)'];
 
             const previewWithColors = preview.map((member, index) => ({
                 ...member,

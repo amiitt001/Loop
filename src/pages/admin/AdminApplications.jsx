@@ -118,7 +118,7 @@ const AdminApplications = () => {
                 <div className="flex items-center gap-3">
                     <h1 className="text-2xl md:text-3xl font-bold">Membership Applications</h1>
 
-                    {loading && <RefreshCw className="animate-spin text-[var(--neon-violet)]" size={20} />}
+                    {loading && <RefreshCw className="animate-spin text-[var(--accent)]" size={20} />}
                     <a
                         href={import.meta.env.VITE_GOOGLE_SHEET_VIEW_URL || '#'}
                         target="_blank"
@@ -141,7 +141,7 @@ const AdminApplications = () => {
                         placeholder="Search..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full md:w-[300px] bg-zinc-900 border border-zinc-800 rounded-full py-2.5 pl-10 pr-4 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                        className="w-full md:w-[300px] bg-zinc-900 border border-zinc-800 rounded-full py-2.5 pl-10 pr-4 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
             </div>
@@ -153,13 +153,13 @@ const AdminApplications = () => {
                     <div key={app.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 flex flex-col md:flex-row gap-6 relative overflow-hidden group">
                         {/* Status Stripe */}
                         <div className={`absolute left-0 top-0 bottom-0 w-1 ${app.status === 'Approved' ? 'bg-green-500' :
-                            app.status === 'Rejected' ? 'bg-red-500' : 'bg-[var(--neon-cyan)]'
+                            app.status === 'Rejected' ? 'bg-red-500' : 'bg-[var(--accent)]'
                             }`} />
 
                         <div className="flex-1 pl-2">
                             <div className="flex flex-wrap items-center gap-3 mb-2">
                                 <h3 className="text-lg font-bold">{safeRender(app.name, "Invalid Name")}</h3>
-                                <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-800 text-[var(--neon-violet)] border border-zinc-700">
+                                <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-800 text-[var(--accent)] border border-zinc-700">
                                     {safeRender(app.domain)}
                                 </span>
                                 <span className="text-xs text-zinc-500">
@@ -170,7 +170,7 @@ const AdminApplications = () => {
                             <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-sm text-zinc-400">
                                 <div className="flex items-center gap-2">
                                     <Mail size={14} />
-                                    <a href={`mailto:${app.email}`} className="hover:text-white transition-colors">
+                                    <a href={`mailto:${app.email}`} className="hover:text-main transition-colors">
                                         {safeRender(app.email)}
                                     </a>
                                 </div>
@@ -183,7 +183,7 @@ const AdminApplications = () => {
                                 {app.github && (
                                     <div className="flex items-center gap-2">
                                         <Github size={14} />
-                                        <a href={app.github} target="_blank" rel="noopener noreferrer" className="text-[var(--neon-cyan)] hover:underline">GitHub Profile</a>
+                                        <a href={app.github} target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">GitHub Profile</a>
                                     </div>
                                 )}
                             </div>
@@ -231,7 +231,7 @@ const AdminApplications = () => {
                             <button
                                 onClick={() => handleDelete(app.id)}
                                 title="Delete"
-                                className="bg-transparent text-zinc-500 border border-zinc-800 p-2 rounded-lg hover:text-white hover:border-zinc-600 transition-colors flex justify-center items-center mt-auto"
+                                className="bg-transparent text-zinc-500 border border-zinc-800 p-2 rounded-lg hover:text-main hover:border-zinc-600 transition-colors flex justify-center items-center mt-auto"
                             >
                                 <Trash2 size={18} />
                             </button>

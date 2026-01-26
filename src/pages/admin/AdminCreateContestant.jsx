@@ -131,7 +131,7 @@ const AdminCreateContestant = () => {
                         type="submit"
                         disabled={loading}
                         style={{
-                            background: 'var(--neon-cyan)',
+                            background: 'var(--accent)',
                             color: '#000',
                             border: 'none',
                             borderRadius: '8px',

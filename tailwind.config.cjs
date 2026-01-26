@@ -7,9 +7,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'neon-cyan': 'var(--neon-cyan)',
-        'neon-violet': 'var(--neon-violet)',
-        'neon-green': 'var(--neon-green)'
+        accent: 'var(--accent)',
+        'accent-soft': 'var(--accent-soft)',
+        'bg-main': 'var(--bg-main)',
+        'bg-card': 'var(--bg-card)',
+        'bg-glass': 'var(--bg-glass)',
+        'border-glow': 'var(--border-glow)',
       }
     }
   },

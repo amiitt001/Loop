@@ -57,12 +57,12 @@ const AdminCreateMember = () => {
         <div className="max-w-3xl mx-auto">
             <button
                 onClick={() => navigate('/admin/members')}
-                className="bg-transparent border-none text-zinc-400 flex items-center gap-2 mb-8 cursor-pointer text-sm hover:text-white transition-colors"
+                className="bg-transparent border-none text-zinc-400 flex items-center gap-2 mb-8 cursor-pointer text-sm hover:text-main transition-colors"
             >
                 <ArrowLeft size={18} /> Back to Members
             </button>
 
-            <h1 className="text-3xl font-bold mb-8 text-white">Add New Member</h1>
+            <h1 className="text-3xl font-bold mb-8 text-main">Add New Member</h1>
 
             <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 flex flex-col gap-6">
                 {/* Name */}
@@ -77,7 +77,7 @@ const AdminCreateMember = () => {
                         onChange={handleChange}
                         required
                         placeholder="e.g. John Doe"
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
 
@@ -92,7 +92,7 @@ const AdminCreateMember = () => {
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         >
                             <option value="Head">Head</option>
                             <option value="Mentor">Mentor</option>
@@ -113,7 +113,7 @@ const AdminCreateMember = () => {
                             onChange={handleChange}
                             required
                             placeholder="e.g. 23XXXX"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
 
@@ -127,7 +127,7 @@ const AdminCreateMember = () => {
                             value={formData.branch}
                             onChange={handleChange}
                             required
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         >
                             <option value="">Select Branch</option>
                             <option value="CSE">CSE</option>
@@ -151,7 +151,7 @@ const AdminCreateMember = () => {
                             value={formData.year}
                             onChange={handleChange}
                             required
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         >
                             <option value="">Select Year</option>
                             <option value="1st Year">1st Year</option>
@@ -173,7 +173,7 @@ const AdminCreateMember = () => {
                         value={formData.img}
                         onChange={handleChange}
                         placeholder="e.g. https://example.com/photo.jpg"
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                     />
                 </div>
 
@@ -189,7 +189,7 @@ const AdminCreateMember = () => {
                             value={formData.linkedin}
                             onChange={handleChange}
                             placeholder="e.g. https://linkedin.com/in/johndoe"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
 
@@ -204,7 +204,7 @@ const AdminCreateMember = () => {
                             value={formData.github}
                             onChange={handleChange}
                             placeholder="e.g. https://github.com/johndoe"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-white outline-none focus:border-[var(--neon-cyan)] transition-colors"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-main outline-none focus:border-[var(--accent)] transition-colors"
                         />
                     </div>
                 </div>
@@ -214,8 +214,8 @@ const AdminCreateMember = () => {
                         type="submit"
                         disabled={loading}
                         className={`
-                            bg-[var(--neon-cyan)] text-black border-none rounded-lg py-3 px-8 text-base font-bold cursor-pointer flex items-center gap-2
-                            ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--neon-cyan)]/80'}
+                            bg-[var(--accent)] text-black border-none rounded-lg py-3 px-8 text-base font-bold cursor-pointer flex items-center gap-2
+                            ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--accent)]/80'}
                             transition-all
                         `}
                     >

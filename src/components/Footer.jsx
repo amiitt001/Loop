@@ -22,7 +22,7 @@ const Footer = () => {
                 </div>
 
                 <p style={{ color: '#555', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                    Built with <Heart size={14} color="var(--neon-violet)" fill="var(--neon-violet)" /> by Technova Team &copy; 2026
+                    Built with <Heart size={14} color="var(--accent)" fill="var(--accent)" /> by Technova Team &copy; 2026
                 </p>
             </div>
         </footer>
@@ -38,7 +38,7 @@ const SocialLink = ({ icon: Icon, href }) => (
         background: 'rgba(255,255,255,0.05)'
     }}
         onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--neon-cyan)';
+            e.currentTarget.style.color = 'var(--accent)';
             e.currentTarget.style.background = 'rgba(0, 243, 255, 0.1)';
             e.currentTarget.style.transform = 'translateY(-3px)';
         }}

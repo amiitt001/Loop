@@ -91,11 +91,11 @@ const RegistrationForm = ({ event, onSuccess }) => {
 
     if (isSuccess) {
         return (
-            <div className="flex flex-col items-center justify-center text-center p-8 bg-zinc-900/50 rounded-xl border border-[var(--neon-green)]/30">
-                <CheckCircle size={60} color="var(--neon-green)" className="mb-4" />
-                <h3 className="text-2xl font-bold text-white mb-2">Registered!</h3>
+            <div className="flex flex-col items-center justify-center text-center p-8 bg-zinc-900/50 rounded-xl border border-[var(--accent)]/30">
+                <CheckCircle size={60} color="var(--accent)" className="mb-4" />
+                <h3 className="text-2xl font-bold text-main mb-2">Registered!</h3>
                 <p className="text-zinc-400 mb-4">
-                    You have successfully registered for <span className="text-white font-medium">{event.title}</span>.
+                    You have successfully registered for <span className="text-main font-medium">{event.title}</span>.
                 </p>
                 <p className="text-sm text-zinc-500">
                     A confirmation email has been sent to {formData.email}.
@@ -151,14 +151,14 @@ const RegistrationForm = ({ event, onSuccess }) => {
                                 </label>
                                 <div className="flex flex-col gap-2">
                                     {q.options.map((opt, idx) => (
-                                        <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                        <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-main transition-colors">
                                             <input
                                                 type="radio"
                                                 name={q.id}
                                                 value={opt}
                                                 onChange={handleChange}
                                                 checked={formData[q.id] === opt}
-                                                className="accent-[var(--neon-cyan)]"
+                                                className="accent-[var(--accent)]"
                                             />
                                             <span className="text-sm text-zinc-300">{opt}</span>
                                         </label>
@@ -178,7 +178,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                                     {q.options.map((opt, idx) => {
                                         const checked = (formData[q.id] || []).includes(opt);
                                         return (
-                                            <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                            <label key={idx} className="flex items-center gap-2 cursor-pointer hover:text-main transition-colors">
                                                 <input
                                                     type="checkbox"
                                                     name={q.id}
@@ -192,7 +192,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                                                         setFormData(prev => ({ ...prev, [q.id]: newVals }));
                                                     }}
                                                     checked={checked}
-                                                    className="accent-[var(--neon-cyan)]"
+                                                    className="accent-[var(--accent)]"
                                                 />
                                                 <span className="text-sm text-zinc-300">{opt}</span>
                                             </label>
@@ -241,7 +241,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
             )}
 
             <div className="mb-8 p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
-                <h3 className="text-white text-lg mb-4 flex items-center gap-2">
+                <h3 className="text-main text-lg mb-4 flex items-center gap-2">
                     <Instagram color="#E1306C" size={20} /> Required Verification
                 </h3>
                 <p className="text-zinc-400 text-sm mb-6">
@@ -254,7 +254,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setInstagramVisited(true)}
-                        className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity no-underline"
+                        className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-main rounded-lg font-bold text-sm hover:opacity-90 transition-opacity no-underline"
                     >
                         <ExternalLink size={16} /> Visit @gcetloop on Instagram
                     </a>
@@ -265,7 +265,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                             checked={instagramFollowed}
                             onChange={(e) => setInstagramVisited && setInstagramFollowed(e.target.checked)}
                             disabled={!instagramVisited}
-                            className="w-5 h-5 accent-[var(--neon-cyan)]"
+                            className="w-5 h-5 accent-[var(--accent)]"
                         />
                         <span className="text-zinc-300 text-sm">
                             I have successfully followed LOOP on Instagram.
@@ -281,7 +281,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
                     w-full py-3 mt-4 rounded-lg font-bold text-base flex items-center justify-center gap-2 transition-all
                     ${(isSubmitting || !instagramFollowed)
                         ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                        : 'bg-[var(--neon-cyan)] text-black hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] hover:-translate-y-0.5 cursor-pointer'}
+                        : 'bg-[var(--accent)] text-black hover:shadow-[0_0_15px_rgba(0, 243, 255,0.4)] hover:-translate-y-0.5 cursor-pointer'}
                 `}
             >
                 {isSubmitting ? 'Processing...' : 'CONFIRM REGISTRATION'}
@@ -297,7 +297,7 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
         </label>
         <div className="relative group">
             {Icon && (
-                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--neon-cyan)]'}`}>
+                <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${error ? 'text-[#ff0055]' : 'text-zinc-500 group-focus-within:text-[var(--accent)]'}`}>
                     <Icon size={18} />
                 </div>
             )}
@@ -308,11 +308,11 @@ const InputField = ({ label, name, type = "text", value, onChange, error, placeh
                 onChange={onChange}
                 placeholder={placeholder}
                 className={`
-                    w-full bg-black/20 border rounded-xl p-3 text-white outline-none transition-all duration-300
+                    w-full bg-main/20 border rounded-xl p-3 text-main outline-none transition-all duration-300
                     ${Icon ? 'pl-11' : 'pl-4'}
                     ${error
                         ? 'border-[#ff0055] focus:shadow-[0_0_20px_rgba(255,0,85,0.2)]'
-                        : 'border-zinc-800 focus:border-[var(--neon-cyan)] focus:bg-[var(--neon-cyan)]/5 focus:shadow-[0_0_20px_rgba(0,243,255,0.1)]'}
+                        : 'border-zinc-800 focus:border-[var(--accent)] focus:bg-[var(--accent)]/5 focus:shadow-[0_0_20px_rgba(0, 243, 255,0.1)]'}
                 `}
             />
             {error && (

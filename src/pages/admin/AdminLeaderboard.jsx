@@ -50,12 +50,12 @@ const AdminLeaderboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Contestants</h1>
-                    {loading && <RefreshCw className="spin" size={20} color="var(--neon-cyan)" />}
+                    {loading && <RefreshCw className="spin" size={20} color="var(--accent)" />}
                 </div>
                 <button
                     onClick={() => navigate('/admin/contestants/new')}
                     style={{
-                        background: 'var(--neon-cyan)',
+                        background: 'var(--accent)',
                         color: '#000',
                         border: 'none',
                         borderRadius: '8px',
@@ -120,7 +120,7 @@ const AdminLeaderboard = () => {
                                     <td style={{ padding: '1rem', color: '#a1a1aa' }}>#{index + 1}</td>
                                     <td style={{ padding: '1rem', fontWeight: '500' }}>{contestant.name}</td>
                                     <td style={{ padding: '1rem', color: '#a1a1aa' }}>@{contestant.platformHandle}</td>
-                                    <td style={{ padding: '1rem', color: 'var(--neon-cyan)' }}>{contestant.points}</td>
+                                    <td style={{ padding: '1rem', color: 'var(--accent)' }}>{contestant.points}</td>
                                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                                         <button
                                             onClick={() => handleDelete(contestant.id)}

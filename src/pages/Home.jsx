@@ -52,9 +52,17 @@ const Home = () => {
       <div style={{ position: 'relative', overflow: 'hidden' }}>
 
         {/* SECTION 1: HERO */}
-        <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+        <section style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          position: 'relative',
+          background: 'radial-gradient(circle at 30% center, rgba(0, 243, 255, 0.08), transparent 50%)'
+        }}>
           {/* Advanced Animated Background */}
           <div className="grid-bg"></div>
+
           <div className="particles">
             {particles.map((p, i) => (
               <motion.div
@@ -83,103 +91,131 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '4rem', paddingBottom: '4rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }} className="hero-grid">
 
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}
-            >
-              <span style={{
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--neon-cyan)',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                fontSize: '0.8rem',
-                border: '1px solid rgba(0, 243, 255, 0.3)',
-                padding: '0.5rem 1rem',
-                borderRadius: '20px',
-                background: 'rgba(0, 243, 255, 0.05)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}>
-                <span style={{ width: '8px', height: '8px', background: 'var(--neon-cyan)', borderRadius: '50%', boxShadow: '0 0 5px var(--neon-cyan)' }}></span>
-                SYSTEM ONLINE: EST. 2026
-              </span>
-            </motion.div>
-
-            {/* Main Headline */}
-            <motion.h1
-              variants={letterContainer}
-              initial="hidden"
-              animate="show"
-              style={{
-                fontSize: 'clamp(3rem, 8vw, 6rem)',
-                lineHeight: '1.1',
-                margin: '0 0 1rem',
-                textShadow: '0 0 40px rgba(0,0,0,0.5)',
-                fontWeight: '900',
-                letterSpacing: '-2px'
-              }}
-            >
-              {Array.from("ARCHITECTS OF").map((char, i) => (
-                <motion.span key={i} variants={letterItem}>{char === ' ' ? '\u00A0' : char}</motion.span>
-              ))}
-              <br />
-              <span className="text-neon-cyan glow-text glitch" data-text="THE FUTURE" style={{ display: 'inline-block' }}>
-                {Array.from("THE FUTURE").map((char, i) => (
-                  <motion.span key={i} variants={letterItem} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</motion.span>
-                ))}
-              </span>
-            </motion.h1>
-
-            {/* Subtext */}
-            <motion.p
-              variants={fadeInUp}
-              initial="hidden"
-              animate="show"
-              transition={{ delay: 0.8 }}
-              style={{
-                maxWidth: '600px',
-                margin: '0 auto 2.5rem',
-                fontSize: '1.5rem',
-                color: 'var(--text-dim)',
-                fontFamily: 'var(--font-mono)'
-              }}
-            >
-              Code. Create. <span style={{ color: '#fff' }}>Conquer.</span>
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              animate="show"
-              transition={{ delay: 1 }}
-              style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
-            >
-              <Link to="/join">
-                <motion.button
-                  className="btn-primary"
-                  whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(0, 243, 255, 0.4)' }}
-                  whileTap={{ scale: 0.95 }}
+              {/* Left Column: Text */}
+              <div style={{ textAlign: 'left' }}>
+                <motion.p
+                  variants={fadeInUp}
+                  initial="hidden"
+                  animate="show"
+                  transition={{ delay: 0.4 }}
+                  style={{
+                    fontSize: '1.1rem',
+                    color: 'var(--text-dim)',
+                    fontFamily: 'var(--font-main)',
+                    lineHeight: '1.8',
+                    marginBottom: '2.5rem',
+                    maxWidth: '540px'
+                  }}
                 >
-                  JOIN THE SQUAD <ArrowRight size={20} />
-                </motion.button>
-              </Link>
-              <Link to="/leaderboard">
-                <motion.button
-                  className="btn-secondary"
-                  whileHover={{ scale: 1.05, borderColor: 'var(--neon-violet)', color: 'var(--neon-violet)', boxShadow: '0 0 20px rgba(189, 0, 255, 0.2)' }}
-                  whileTap={{ scale: 0.95 }}
+                  Welcome to <strong>LOOP</strong> — Galgotias College's premier technical society.
+                  We bridge the gap between classroom theory and industry reality through
+                  <strong> hackathons, coding bootcamps, and top-tier tech summits</strong>.
+                  Join a community of builders, dreamers, and doers.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  variants={fadeInUp}
+                  initial="hidden"
+                  animate="show"
+                  transition={{ delay: 0.6 }}
+                  style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
                 >
-                  <Trophy size={18} /> VIEW LEADERBOARD
-                </motion.button>
-              </Link>
-            </motion.div>
+                  <Link to="/join">
+                    <motion.button
+                      className="btn-primary"
+                      whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(0, 243, 255, 0.3)' }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      JOIN THE CLUB <ArrowRight size={20} />
+                    </motion.button>
+                  </Link>
+                  <Link to="/leaderboard">
+                    <motion.button
+                      className="btn-secondary"
+                      whileHover={{ scale: 1.05, borderColor: 'var(--accent)', color: 'var(--accent)', boxShadow: '0 0 25px rgba(0, 243, 255, 0.15)' }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      VIEW LEADERBOARD
+                    </motion.button>
+                  </Link>
+                </motion.div>
+              </div>
+
+              {/* Right Column: Image Gallery */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ position: 'relative', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                className="hero-gallery"
+              >
+                {/* Floating Images Collage */}
+                <motion.div
+                  animate={{ y: [0, -15, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    position: 'absolute',
+                    top: '12%',
+                    right: '5%',
+                    width: '260px',
+                    height: '320px',
+                    zIndex: 2,
+                    border: '1px solid rgba(0, 243, 255, 0.4)',
+                    background: 'var(--bg-card)',
+                    padding: '8px',
+                    transform: 'rotate(5deg)',
+                    boxShadow: '0 15px 40px rgba(0,0,0,0.6)'
+                  }}
+                >
+                  <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)', zIndex: 2 }}></div>
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1000&auto=format&fit=crop" alt="Coding" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(20%) contrast(1.1)' }} />
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ y: [0, 15, 0] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '8%',
+                    left: '8%',
+                    width: '280px',
+                    height: '200px',
+                    zIndex: 3,
+                    border: '1px solid rgba(0, 243, 255, 0.6)',
+                    background: 'var(--bg-main)',
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.7)',
+                    padding: '6px',
+                    transform: 'rotate(-3deg)'
+                  }}
+                >
+                  <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
+                    <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)', zIndex: 2 }}></div>
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop" alt="Conference" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(15%) contrast(1.1)' }} />
+                  </div>
+                </motion.div>
+
+                {/* Ambient Glow Refinement */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '450px',
+                  height: '450px',
+                  background: 'radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, transparent 70%)',
+                  filter: 'blur(80px)',
+                  zIndex: 1,
+                  pointerEvents: 'none'
+                }}></div>
+              </motion.div>
+            </div>
+
           </div>
         </section>
 
@@ -207,12 +243,12 @@ const Home = () => {
         <div style={{ padding: '8rem 0', textAlign: 'center', background: 'linear-gradient(0deg, var(--bg-card) 0%, transparent 100%)' }}>
           <div className="container">
             <h2 style={{ fontSize: '3rem', marginBottom: '2rem', maxWidth: '800px', margin: '0 auto 2rem' }}>
-              READY TO <span style={{ color: 'var(--neon-cyan)' }}>BUILD</span> THE IMPOSSIBLE?
+              READY TO <span style={{ color: 'var(--accent)' }}>BUILD</span> THE IMPOSSIBLE?
             </h2>
             <Link to="/join">
               <motion.button
                 className="btn-primary"
-                whileHover={{ scale: 1.1, boxShadow: '0 0 50px rgba(0,243,255,0.4)' }}
+                whileHover={{ scale: 1.1, boxShadow: '0 0 50px rgba(0, 243, 255,0.4)' }}
                 whileTap={{ scale: 0.9 }}
                 style={{ margin: '0 auto' }}
               >
@@ -254,9 +290,9 @@ const Home = () => {
         }
         .particle {
           position: absolute;
-          background: var(--neon-cyan);
+          background: var(--accent);
           border-radius: 50%;
-          box-shadow: 0 0 5px var(--neon-cyan);
+          box-shadow: 0 0 5px var(--accent);
         }
 
         @keyframes grid-move {
@@ -265,7 +301,7 @@ const Home = () => {
         }
 
         .btn-primary {
-          background: var(--neon-cyan);
+          background: var(--accent);
           color: #000;
           padding: 1rem 2.5rem;
           font-weight: 800;
@@ -297,7 +333,7 @@ const Home = () => {
           backdrop-filter: blur(5px);
         }
 
-        .glow-text {
+        . {
           text-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
         }
 
@@ -305,6 +341,17 @@ const Home = () => {
             .btn-primary, .btn-secondary {
                 width: 100%;
                 justify-content: center;
+            }
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+                text-align: center;
+            }
+            .hero-grid > div:first-child {
+                text-align: center !important;
+            }
+            .hero-gallery {
+                display: none !important; /* Hide complex gallery on mobile or simplify */
             }
         }
       `}</style>

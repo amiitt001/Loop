@@ -110,9 +110,9 @@ const FeaturedCarousel = ({ members = [], className = '', mobileOnly = true }) =
             <div className={`w-full ${className}`}>
                 <div className="grid grid-cols-3 gap-4">
                     {members.slice(0, 6).map((m) => (
-                        <div key={m.id} className="flex flex-col items-center p-3 bg-gray-900 rounded-lg border border-gray-800">
-                            <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: m.color || 'var(--neon-cyan)' }}>
-                                {m.img ? <img src={m.img} alt={m.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg font-bold text-white">{m.name.charAt(0)}</div>}
+                        <div key={m.id} className="flex flex-col items-center p-3 bg-card rounded-lg border border-gray-800">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: m.color || 'var(--accent)' }}>
+                                {m.img ? <img src={m.img} alt={m.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg font-bold text-main">{m.name.charAt(0)}</div>}
                             </div>
                             <div className="mt-2 text-sm font-semibold">{m.name}</div>
                             <div className="text-xs text-gray-400">{m.role}</div>
@@ -225,7 +225,7 @@ const FeaturedCarousel = ({ members = [], className = '', mobileOnly = true }) =
                                         style={{
                                             width: 64,
                                             height: 64,
-                                            border: `2px solid ${m.color || 'var(--neon-cyan)'}`
+                                            border: `2px solid ${m.color || 'var(--accent)'}`
                                         }}
                                     >
                                         {m.img ? (
@@ -235,7 +235,7 @@ const FeaturedCarousel = ({ members = [], className = '', mobileOnly = true }) =
                                         )}
                                     </div>
 
-                                    <div className="mt-2 text-sm font-semibold text-white text-center" style={{ fontSize: 13 }}>{m.name}</div>
+                                    <div className="mt-2 text-sm font-semibold text-main text-center" style={{ fontSize: 13 }}>{m.name}</div>
                                     <div className="text-xs text-gray-400 text-center">{m.role}</div>
                                 </div>
                             </motion.div>

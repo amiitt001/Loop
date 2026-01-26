@@ -74,7 +74,7 @@ const HomeContact = () => {
                     viewport={{ once: true }}
                     style={{ flex: '1 1 300px', maxWidth: '500px' }}
                 >
-                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--neon-cyan)' }}>Get in Touch</h2>
+                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--accent)' }}>Get in Touch</h2>
                     <p style={{ fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.6', color: 'var(--text-dim)' }}>
                         Have a question or want to collaborate? Connect with us on social media or send us a message!
                     </p>
@@ -112,7 +112,7 @@ const HomeContact = () => {
                                         color: '#fff',
                                         outline: 'none'
                                     }}
-                                    onFocus={e => e.target.style.borderColor = 'var(--neon-cyan)'}
+                                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                                     onBlur={e => e.target.style.borderColor = 'var(--border-dim)'}
                                 />
                             </div>
@@ -132,7 +132,7 @@ const HomeContact = () => {
                                         color: '#fff',
                                         outline: 'none'
                                     }}
-                                    onFocus={e => e.target.style.borderColor = 'var(--neon-cyan)'}
+                                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                                     onBlur={e => e.target.style.borderColor = 'var(--border-dim)'}
                                 />
                             </div>
@@ -153,7 +153,7 @@ const HomeContact = () => {
                                         outline: 'none',
                                         resize: 'none'
                                     }}
-                                    onFocus={e => e.target.style.borderColor = 'var(--neon-cyan)'}
+                                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                                     onBlur={e => e.target.style.borderColor = 'var(--border-dim)'}
                                 ></textarea>
                             </div>
@@ -175,7 +175,7 @@ const HomeContact = () => {
                                 className="contact-btn"
                                 style={{
                                     padding: '1rem',
-                                    background: isSending ? 'var(--bg-card)' : 'var(--neon-cyan)',
+                                    background: isSending ? 'var(--bg-card)' : 'var(--accent)',
                                     color: isSending ? 'var(--text-dim)' : '#000',
                                     border: 'none',
                                     borderRadius: '8px',
@@ -198,12 +198,12 @@ const HomeContact = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                             textAlign: 'center',
-                            border: '1px solid var(--neon-green)',
+                            border: '1px solid var(--accent)',
                             background: 'rgba(0,255,0,0.05)',
                             borderRadius: '16px',
                             padding: '2rem'
                         }}>
-                            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--neon-green)' }}>Message Sent!</h3>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--accent)' }}>Message Sent!</h3>
                             <p style={{ color: 'var(--text-dim)' }}>We'll get back to you shortly.</p>
                         </div>
                     )}

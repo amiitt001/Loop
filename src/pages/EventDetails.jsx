@@ -35,7 +35,7 @@ const EventDetails = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center pt-24">
-                <div className="w-8 h-8 border-2 border-[var(--neon-cyan)] border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
     }
@@ -43,10 +43,10 @@ const EventDetails = () => {
     if (!event) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
-                <h2 className="text-2xl font-bold text-white mb-4">Event Not Found</h2>
+                <h2 className="text-2xl font-bold text-main mb-4">Event Not Found</h2>
                 <button
                     onClick={() => navigate('/events')}
-                    className="text-[var(--neon-cyan)] hover:underline"
+                    className="text-[var(--accent)] hover:underline"
                 >
                     Back to Events
                 </button>
@@ -68,7 +68,7 @@ const EventDetails = () => {
             <div className="container max-w-5xl mx-auto">
                 <button
                     onClick={() => navigate('/events')}
-                    className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8"
+                    className="flex items-center gap-2 text-zinc-400 hover:text-main transition-colors mb-8"
                 >
                     <ArrowLeft size={18} /> Back to Timeline
                 </button>
@@ -77,29 +77,29 @@ const EventDetails = () => {
                     {/* Left Column: Event Details */}
                     <div className="lg:col-span-2 space-y-8">
                         <div>
-                            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] mb-4 border border-[var(--neon-cyan)]/20">
+                            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-[var(--accent)]/10 text-[var(--accent)] mb-4 border border-[var(--accent)]/20">
                                 {event.status || 'UPCOMING'}
                             </span>
-                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                            <h1 className="text-4xl md:text-5xl font-bold text-main mb-6 leading-tight">
                                 {event.title}
                             </h1>
 
                             <div className="flex flex-wrap gap-6 text-zinc-300 mb-8">
                                 <div className="flex items-center gap-2">
-                                    <Calendar size={18} className="text-[var(--neon-violet)]" />
+                                    <Calendar size={18} className="text-[var(--accent)]" />
                                     <span>{dateDisplay}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Clock size={18} className="text-[var(--neon-violet)]" />
+                                    <Clock size={18} className="text-[var(--accent)]" />
                                     <span>{event.time}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <MapPin size={18} className="text-[var(--neon-violet)]" />
+                                    <MapPin size={18} className="text-[var(--accent)]" />
                                     <span>{event.location}</span>
                                 </div>
                                 {event.speaker && (
                                     <div className="flex items-center gap-2">
-                                        <User size={18} className="text-[var(--neon-violet)]" />
+                                        <User size={18} className="text-[var(--accent)]" />
                                         <span>{event.speaker}</span>
                                     </div>
                                 )}
@@ -108,14 +108,14 @@ const EventDetails = () => {
                             {/* Mobile Only: Jump to Register */}
                             <button
                                 onClick={scrollToRegistration}
-                                className="w-full md:hidden bg-[var(--neon-cyan)] text-black font-bold py-3 px-6 rounded-lg mb-8"
+                                className="w-full md:hidden bg-[var(--accent)] text-black font-bold py-3 px-6 rounded-lg mb-8"
                             >
                                 Scroll to Registration ↓
                             </button>
                         </div>
 
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8">
-                            <h3 className="text-xl font-bold text-white mb-4">About Event</h3>
+                            <h3 className="text-xl font-bold text-main mb-4">About Event</h3>
                             <div className="prose prose-invert max-w-none text-zinc-400 leading-relaxed whitespace-pre-wrap">
                                 {event.description || "No detailed description available."}
                             </div>
@@ -126,7 +126,7 @@ const EventDetails = () => {
                     <div className="lg:col-span-1" id="registration-section">
                         <div className="sticky top-32">
                             <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 shadow-2xl shadow-black/50">
-                                <h3 className="text-xl font-bold text-white mb-6 border-b border-zinc-800 pb-4">
+                                <h3 className="text-xl font-bold text-main mb-6 border-b border-zinc-800 pb-4">
                                     Register Now
                                 </h3>
 
@@ -140,7 +140,7 @@ const EventDetails = () => {
                                             href={event.registrationLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 w-full bg-[var(--neon-cyan)] text-black font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] transition-all"
+                                            className="inline-flex items-center justify-center gap-2 w-full bg-[var(--accent)] text-black font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_15px_rgba(0, 243, 255,0.4)] transition-all"
                                         >
                                             Register Externally <Globe size={18} />
                                         </a>

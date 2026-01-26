@@ -31,7 +31,7 @@ const HomeGallery = () => {
             const galleryPreview = pastEvents.slice(0, 4);
 
             // Assign random/cycling colors for variety
-            const colors = ['var(--neon-cyan)', 'var(--neon-violet)', 'var(--neon-green)', '#ff0055'];
+            const colors = ['var(--accent)', 'var(--accent)', 'var(--accent)', '#ff0055'];
 
             const processedItems = galleryPreview.map((item, index) => ({
                 ...item,

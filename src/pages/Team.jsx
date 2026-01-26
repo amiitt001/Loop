@@ -135,7 +135,7 @@ const Team = () => {
   return (
     <div className="container" style={{ padding: '8rem 0 4rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
-        <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>MEET THE SQUAD</h1>
+        <h1 className="text-accent" style={{ fontSize: '3rem', marginBottom: '1rem' }}>MEET THE SQUAD</h1>
         <p style={{ color: 'var(--text-dim)' }}>The minds behind the machines.</p>
         {loading && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}><RefreshCw className="spin" /></div>}
       </div>
@@ -154,8 +154,8 @@ const Team = () => {
                 <div className="stack-scroller hide-scrollbar" ref={scrollerRef}>
                   {flat.map((member, idx) => (
                     <section key={member.id || idx} className={`stack-item ${idx === activeIndex ? 'active' : ''}`} data-index={idx}>
-                      <div className="stack-card" style={{ borderColor: member.color || 'var(--neon-cyan)' }}>
-                        <div className="stack-avatar" style={{ borderColor: member.color || 'var(--neon-cyan)' }}>
+                      <div className="stack-card" style={{ borderColor: member.color || 'var(--accent)' }}>
+                        <div className="stack-avatar" style={{ borderColor: member.color || 'var(--accent)' }}>
                           {member.img ? <img src={member.img} alt={member.name} /> : <span>{member.name.charAt(0)}</span>}
                         </div>
                         <div className="stack-meta">
@@ -207,7 +207,7 @@ const Team = () => {
             <h2 style={{
               textAlign: 'center',
               marginBottom: '2rem',
-              color: 'var(--neon-violet)',
+              color: 'var(--accent)',
               fontSize: '2rem',
               position: 'relative',
               display: 'inline-block',
@@ -215,7 +215,7 @@ const Team = () => {
               transform: 'translateX(-50%)'
             }}>
               {group.title}
-              <span style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%', height: '2px', background: 'var(--neon-violet)', opacity: 0.5 }}></span>
+              <span style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%', height: '2px', background: 'var(--accent)', opacity: 0.5 }}></span>
             </h2>
 
             <motion.div
@@ -346,13 +346,13 @@ const TeamCard = ({ member, width }) => {
 
         .team-card:hover .card-inner {
           transform: translateY(-5px);
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
           background: rgba(10, 10, 10, 0.9);
         }
 
         .team-card:hover .avatar-placeholder,
         .team-card:hover .member-avatar {
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
           box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
         }
 
@@ -387,7 +387,7 @@ const TeamCard = ({ member, width }) => {
           transition: transform 0.2s;
         }
         .social-icon:hover {
-          color: var(--neon-cyan);
+          color: var(--accent);
           transform: scale(1.2);
         }
       `}</style>

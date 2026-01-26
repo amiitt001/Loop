@@ -50,7 +50,7 @@ const CredibilityStrip = () => {
                         <div style={{
                             fontSize: '2.5rem',
                             fontWeight: '900',
-                            color: 'var(--neon-cyan)',
+                            color: 'var(--accent)',
                             fontFamily: 'var(--font-display)',
                             marginBottom: '0.5rem',
                             textShadow: '0 0 15px rgba(0, 243, 255, 0.3)'

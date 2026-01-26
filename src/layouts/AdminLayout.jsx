@@ -54,16 +54,16 @@ const AdminLayout = () => {
     ];
 
     return (
-        <div className="flex h-screen bg-zinc-950 text-white overflow-hidden">
+        <div className="flex h-screen bg-zinc-950 text-main overflow-hidden">
             {/* Mobile Header */}
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 w-full bg-zinc-900 border-b border-zinc-800 z-50 h-16 px-4 flex items-center justify-between">
-                <span className="text-lg font-bold tracking-widest text-white">
-                    <span className="text-[var(--neon-cyan)]">TECH</span> ADMIN
+                <span className="text-lg font-bold tracking-widest text-main">
+                    <span className="text-[var(--accent)]">TECH</span> ADMIN
                 </span>
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-zinc-400 hover:text-main"
                 >
                     {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -72,7 +72,7 @@ const AdminLayout = () => {
             {/* Sidebar Overlay (Mobile) */}
             {isMobile && sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    className="fixed inset-0 bg-main/50 z-40 md:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
@@ -92,14 +92,14 @@ const AdminLayout = () => {
                 <div className={`p-6 flex items-center ${sidebarOpen ? 'justify-between' : 'justify-center'} mb-6`}>
                     {sidebarOpen && (
                         <span className="text-xl font-bold tracking-widest whitespace-nowrap">
-                            <span className="text-[var(--neon-cyan)]">TECH</span> ADMIN
+                            <span className="text-[var(--accent)]">TECH</span> ADMIN
                         </span>
                     )}
 
                     {/* Desktop Toggle Button */}
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className={`text-zinc-400 hover:text-white hidden md:block ${!sidebarOpen && 'mx-auto'}`}
+                        className={`text-zinc-400 hover:text-main hidden md:block ${!sidebarOpen && 'mx-auto'}`}
                     >
                         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
@@ -118,14 +118,14 @@ const AdminLayout = () => {
                                 className={`
                                     flex items-center gap-3 p-3 rounded-lg transition-all duration-200
                                     ${isActive
-                                        ? 'bg-[var(--neon-cyan)]/10 text-white border border-[var(--neon-cyan)]/20'
-                                        : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                        ? 'bg-[var(--accent)]/10 text-main border border-[var(--accent)]/20'
+                                        : 'text-zinc-400 hover:text-main hover:bg-white/5 border border-transparent'
                                     }
                                     ${!sidebarOpen && 'justify-center'}
                                 `}
                                 title={!sidebarOpen ? item.label : ''}
                             >
-                                <item.icon size={20} className={isActive ? 'text-[var(--neon-cyan)]' : 'currentColor'} />
+                                <item.icon size={20} className={isActive ? 'text-[var(--accent)]' : 'currentColor'} />
                                 <span className={`whitespace-nowrap transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 md:hidden'}`}>
                                     {item.label}
                                 </span>

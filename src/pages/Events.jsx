@@ -94,7 +94,7 @@ const Events = () => {
       </Helmet>
 
       <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="animate-fade-in">
-        <h1 className="text-neon-cyan" style={{ fontSize: '3rem', marginBottom: '1rem' }}>EVENTS TIMELINE</h1>
+        <h1 className="text-accent" style={{ fontSize: '3rem', marginBottom: '1rem' }}>EVENTS TIMELINE</h1>
         <p style={{ color: 'var(--text-dim)', maxWidth: '600px', margin: '0 auto' }}>
           Explore our schedule of <strong>hackathons, coding bootcamps, and tech talks</strong>.
           Stay ahead of the curve with LOOP's hands-on sessions designed for students.
@@ -116,7 +116,7 @@ const Events = () => {
                 position: 'absolute',
                 top: '-10px',
                 right: '20px',
-                background: event.type === 'upcoming' ? 'var(--neon-cyan)' : '#333',
+                background: event.type === 'upcoming' ? 'var(--accent)' : '#333',
                 color: event.type === 'upcoming' ? '#000' : '#888',
                 padding: '0.2rem 0.8rem',
                 borderRadius: '12px',
@@ -131,15 +131,15 @@ const Events = () => {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Calendar size={14} color="var(--neon-violet)" /> {event.dateDisplay}
+                  <Calendar size={14} color="var(--accent)" /> {event.dateDisplay}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Clock size={14} color="var(--neon-violet)" /> {event.location || 'TBD'}
+                  <Clock size={14} color="var(--accent)" /> {event.location || 'TBD'}
                 </div>
               </div>
 
               {/* View Details Link */}
-              <div className="mt-4 flex items-center gap-2 text-[var(--neon-cyan)] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-4 flex items-center gap-2 text-[var(--accent)] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                 View Details <ArrowRight size={14} />
               </div>
             </div>
@@ -191,10 +191,10 @@ const Events = () => {
           width: 14px;
           height: 14px;
           background: var(--bg-dark);
-          border: 2px solid var(--neon-cyan);
+          border: 2px solid var(--accent);
           border-radius: 50%;
           z-index: 2;
-          box-shadow: 0 0 10px var(--neon-cyan);
+          box-shadow: 0 0 10px var(--accent);
         }
         
         .timeline-item:nth-child(even) .timeline-dot {
@@ -218,14 +218,14 @@ const Events = () => {
         .timeline-item:hover .timeline-content {
           transform: translateY(-5px);
           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-          border-color: var(--neon-cyan);
+          border-color: var(--accent);
         }
 
         .register-btn {
           margin-top: 1.5rem;
           background: transparent;
-          border: 1px solid var(--neon-cyan);
-          color: var(--neon-cyan);
+          border: 1px solid var(--accent);
+          color: var(--accent);
           padding: 0.6rem 1.5rem;
           border-radius: 50px;
           font-family: var(--font-mono);
@@ -236,7 +236,7 @@ const Events = () => {
           display: inline-block;
         }
         .register-btn:hover {
-          background: var(--neon-cyan);
+          background: var(--accent);
           color: #000;
           box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
           transform: translateY(-2px);
