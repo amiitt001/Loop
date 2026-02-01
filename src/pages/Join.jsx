@@ -16,6 +16,7 @@ const Join = () => {
         year: '1st Year',
         college: 'Galgotias College of Engineering and Technology',
         domain: 'Full Stack Development',
+        customDomain: '',
         linkedin: '',
         reason: ''
     });
@@ -143,6 +144,13 @@ const Join = () => {
             return;
         }
 
+        const finalDomain = formData.domain === 'Others' ? formData.customDomain : formData.domain;
+
+        if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college || !finalDomain) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
 
 
         if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college) {
@@ -166,12 +174,13 @@ const Join = () => {
             // Rules allow create but deny update for non-admins, enforcing uniqueness
             await setDoc(doc(db, "applications", formData.email), {
                 ...formData,
+                domain: finalDomain,
                 createdAt: serverTimestamp(),
                 status: 'Pending'
             });
 
             // Google Sheets Submission (Non-blocking)
-            submitToGoogleSheets(formData);
+            submitToGoogleSheets({ ...formData, domain: finalDomain });
 
             // Send Email Notification
             const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -185,7 +194,7 @@ const Join = () => {
                 branch: formData.branch,
                 year: formData.year,
                 college: formData.college,
-                domain: formData.domain,
+                domain: finalDomain,
                 reason: formData.reason,
                 github: formData.github,
                 linkedin: formData.linkedin,
@@ -203,6 +212,7 @@ const Join = () => {
                 year: '1st Year',
                 college: 'Galgotias College of Engineering and Technology',
                 domain: 'Full Stack Development',
+                customDomain: '',
                 linkedin: '',
                 reason: ''
             });
@@ -373,8 +383,24 @@ const Join = () => {
                             <option>Cloud / DevOps</option>
                             <option>UI / UX Design</option>
                             <option>Content & Marketing</option>
+                            <option>Others</option>
                         </select>
                     </div>
+
+                    {formData.domain === 'Others' && (
+                        <div style={{ marginBottom: '1.5rem' }} className="animate-fade-in">
+                            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>Specify Domain *</label>
+                            <input
+                                type="text"
+                                name="customDomain"
+                                value={formData.customDomain}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="E.g. Game Development, Blockchain, etc."
+                                required
+                            />
+                        </div>
+                    )}
 
                     <div style={{ marginBottom: '2rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>Why do you want to join? *</label>
