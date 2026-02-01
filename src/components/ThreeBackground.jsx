@@ -259,62 +259,54 @@ const Vortex = ({ isMobile }) => {
     )
 }
 
-// 6. LEADERBOARD: Ascension (Golden)
-const Ascension = ({ isMobile }) => {
-    const meshRef = useRef();
-    const count = isMobile ? 60 : 200;
-
-    const dummy = useMemo(() => new THREE.Object3D(), []);
-    const particles = useMemo(() => {
-        const temp = [];
-        for (let i = 0; i < count; i++) {
-            const t = Math.random() * 100;
-            const speed = 0.02 + Math.random() / 50;
-            const xFactor = (Math.random() - 0.5) * 25;
-            const yFactor = (Math.random() - 0.5) * 25;
-            const zFactor = (Math.random() - 0.5) * 25;
-            const scale = 0.5 + Math.random() * 1.5;
-            temp.push({ t, speed, xFactor, yFactor, zFactor, scale, my: yFactor });
-        }
-        return temp;
-    }, []);
+// 6. LEADERBOARD: CyberGrid (Tech Theme)
+const CyberGrid = () => {
+    const group = useRef();
+    const gridRef = useRef();
 
     useFrame((state) => {
-        if (!meshRef.current) return;
+        if (group.current) {
+            const t = state.clock.getElapsedTime();
+            const scrollY = window.scrollY;
 
-        particles.forEach((particle, i) => {
-            // Update time
-            const t = particle.t += particle.speed;
+            // Move grid to simulate forward movement
+            // interactions
+            group.current.position.z = (t * 2) % 10;
 
-            // Ascension: Continuous Upward movement
-            particle.my += particle.speed * 2;
-            if (particle.my > 12) particle.my = -12;
-
-            const x = particle.xFactor + Math.sin(t) * 0.5;
-            const y = particle.my;
-            const z = particle.zFactor + Math.cos(t) * 0.5;
-
-            dummy.position.set(x, y, z);
-            dummy.scale.set(particle.scale, particle.scale, particle.scale);
-            dummy.rotation.set(t, t * 0.5, 0);
-
-            dummy.updateMatrix();
-            meshRef.current.setMatrixAt(i, dummy.matrix);
-        });
-        meshRef.current.instanceMatrix.needsUpdate = true;
-
-        // Interactive Tilt + Scroll Rise
-        const scrollY = window.scrollY;
-        meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -state.pointer.y * 0.1 - scrollY * 0.0005, 0.05);
-        meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, state.pointer.x * 0.1, 0.05);
-        meshRef.current.position.y = scrollY * 0.005; // Rise with scroll
+            // Subtle rotation based on mouse
+            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.pointer.y * 0.05, 0.05);
+            group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, state.pointer.x * 0.05, 0.05);
+        }
     });
 
     return (
-        <instancedMesh ref={meshRef} args={[null, null, count]}>
-            <octahedronGeometry args={[0.1, 0]} />
-            <meshStandardMaterial color="#FFD700" emissive="#FF8800" emissiveIntensity={0.4} transparent opacity={0.9} />
-        </instancedMesh>
+        <group>
+            {/* Infinite Moving Grid Effect */}
+            <group ref={group}>
+                <gridHelper args={[60, 60, 0x00f3ff, 0x001133]} position={[0, -2, 0]} />
+                <gridHelper args={[60, 60, 0x00f3ff, 0x001133]} position={[0, -2, -60]} />
+            </group>
+
+            {/* Floating Tech Cubes */}
+            {Array.from({ length: 20 }).map((_, i) => (
+                <Float key={i} speed={1.5} rotationIntensity={1.5} floatIntensity={2} position={[
+                    (Math.random() - 0.5) * 30,
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 20 - 10
+                ]}>
+                    <mesh rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
+                        <boxGeometry args={[Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5]} />
+                        <meshBasicMaterial color="#00f3ff" wireframe={true} transparent opacity={0.3} />
+                    </mesh>
+                </Float>
+            ))}
+
+            {/* Digital Horizon Glow */}
+            <mesh position={[0, 0, -40]}>
+                <planeGeometry args={[100, 50]} />
+                <meshBasicMaterial color="#000510" transparent opacity={0.8} />
+            </mesh>
+        </group>
     )
 }
 
@@ -372,7 +364,7 @@ const ThreeBackground = ({ variant = 'home' }) => {
                 )}
 
                 {variant === 'leaderboard' && (
-                    <Ascension isMobile={isMobile} />
+                    <CyberGrid />
                 )}
 
 
