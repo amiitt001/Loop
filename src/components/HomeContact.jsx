@@ -82,7 +82,7 @@ const HomeContact = () => {
                     <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem' }}>
                         <a href="https://github.com/amiitt001" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Github style={{ cursor: 'pointer' }} /></a>
                         <a href="https://www.instagram.com/gcetloop" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Instagram style={{ cursor: 'pointer' }} /></a>
-                        <a href="https://www.linkedin.com/in/amiitt001" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Linkedin style={{ cursor: 'pointer' }} /></a>
+                        <a href="https://www.linkedin.com/company/loopgcet/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Linkedin style={{ cursor: 'pointer' }} /></a>
                         <a href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}><Users style={{ cursor: 'pointer' }} /></a>
                     </div>
                 </motion.div>

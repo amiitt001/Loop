@@ -13,7 +13,7 @@ const PROJECTS = [
     },
     {
         id: 2,
-        title: 'Technova App',
+        title: 'Loop App',
         description: 'Official mobile app for the club, featuring event tracking and QR attendance.',
         tags: ['Flutter', 'Firebase', 'Dart'],
         link: '#',

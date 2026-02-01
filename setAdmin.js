@@ -19,4 +19,4 @@ const makeAdmin = async (email) => {
 };
 
 // REPLACE THIS WITH YOUR EMAIL
-makeAdmin('amitverma2k99@gmail.com');
+makeAdmin('loop.gcetclub@gmail.com');

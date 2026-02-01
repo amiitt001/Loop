@@ -9,7 +9,7 @@ const Footer = () => {
             background: 'transparent'
         }}>
             <div className="container">
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#fff' }}>TECHNOVA</h2>
+                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#fff' }}>LOOP</h2>
                 <p style={{ color: 'var(--text-dim)', marginBottom: '2rem' }}>
                     Innovating the future, one line of code at a time.
                 </p>
@@ -17,12 +17,12 @@ const Footer = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '3rem' }}>
                     <SocialLink icon={Github} href="https://github.com/amiitt001/Loop-Technova" />
                     <SocialLink icon={Instagram} href="https://www.instagram.com/gcetloop" />
-                    <SocialLink icon={Linkedin} href="https://www.linkedin.com/company/loop-technova" />
+                    <SocialLink icon={Linkedin} href="https://www.linkedin.com/company/loopgcet/" />
                     <SocialLink icon={Users} href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" />
                 </div>
 
                 <p style={{ color: '#555', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                    Built with <Heart size={14} color="var(--accent)" fill="var(--accent)" /> by Technova Team &copy; 2026
+                    Built with <Heart size={14} color="var(--accent)" fill="var(--accent)" /> by Loop Team &copy; 2026
                 </p>
             </div>
         </footer>

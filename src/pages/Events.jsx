@@ -86,7 +86,7 @@ const Events = () => {
                   }
                 },
                 "image": [
-                  "https://loop-technova.vercel.app/logo.png"
+                  "https://loop.vercel.app/logo.png"
                 ],
                 "description": event.description || "Join us for an exciting tech event at GCET."
               }
