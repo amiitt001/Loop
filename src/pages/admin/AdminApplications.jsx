@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Search, Check, X, Trash2, Mail, Github, GraduationCap, ExternalLink } from 'lucide-react';
+import { RefreshCw, Search, Check, X, Trash2, Mail, Github, Linkedin, GraduationCap, ExternalLink } from 'lucide-react';
 import { safeRender } from '../../utils/security';
 import { db, auth } from '../../firebase';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -184,6 +184,12 @@ const AdminApplications = () => {
                                     <div className="flex items-center gap-2">
                                         <Github size={14} />
                                         <a href={app.github} target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">GitHub Profile</a>
+                                    </div>
+                                )}
+                                {app.linkedin && (
+                                    <div className="flex items-center gap-2">
+                                        <Linkedin size={14} />
+                                        <a href={app.linkedin} target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">LinkedIn Profile</a>
                                     </div>
                                 )}
                             </div>
