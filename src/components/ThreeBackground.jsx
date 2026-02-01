@@ -36,11 +36,13 @@ const FloatingBits = ({ color = "#00f3ff", count = 20 }) => {
 // --- VARIANTS ---
 
 // 1. HOME: Tech Loop (Torus)
-const TechLoop = () => {
+const TechLoop = ({ isMobile }) => {
     const meshRef = useRef();
-    const particlesCount = 1500;
+    const particlesCount = isMobile ? 600 : 1500;
     const positions = useMemo(() => {
         const positions = new Float32Array(particlesCount * 3);
+        // ... (rest same logic but using new count) needs full replace or careful use
+        // I will just regenerate the positions logic to be safe or use existing if generic
         for (let i = 0; i < particlesCount; i++) {
             const u = Math.random() * Math.PI * 2;
             const v = Math.random() * Math.PI * 2;
@@ -54,12 +56,13 @@ const TechLoop = () => {
             positions[i * 3 + 2] = z;
         }
         return positions;
-    }, []);
+    }, [particlesCount]);
 
     useFrame((state, delta) => {
         if (meshRef.current) {
-            meshRef.current.rotation.x += delta * 0.1;
-            meshRef.current.rotation.y += delta * 0.15;
+            const scrollY = window.scrollY;
+            meshRef.current.rotation.x += delta * 0.1 + scrollY * 0.0002;
+            meshRef.current.rotation.y += delta * 0.15 + scrollY * 0.0001;
 
             // Mouse Parallax
             meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, -state.pointer.x * 1.5, 0.1);
@@ -78,9 +81,9 @@ const TechLoop = () => {
 };
 
 // 2. EVENTS: Particle Flow (Galaxy Stream)
-const ParticleFlow = () => {
+const ParticleFlow = ({ isMobile }) => {
     const meshRef = useRef();
-    const count = 2000;
+    const count = isMobile ? 800 : 2000;
 
     // Initial positions
     const [positions, speeds] = useMemo(() => {
@@ -93,26 +96,26 @@ const ParticleFlow = () => {
             spd[i] = 0.5 + Math.random() * 2; // Random speed
         }
         return [pos, spd];
-    }, []);
+    }, [count]);
 
     useFrame((state, delta) => {
         if (!meshRef.current) return;
         const positions = meshRef.current.geometry.attributes.position.array;
+        const scrollOffset = window.scrollY * 0.01;
 
         for (let i = 0; i < count; i++) {
-            // Move left to right
-            positions[i * 3] += speeds[i] * delta;
+            // Move left to right + Scroll Speed Boost
+            positions[i * 3] += (speeds[i] + scrollOffset * 0.05) * delta;
 
             // Reset if out of bounds
             if (positions[i * 3] > 10) {
                 positions[i * 3] = -10;
             }
         }
-
         meshRef.current.geometry.attributes.position.needsUpdate = true;
 
-        // Interactive Sway
-        meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, state.pointer.x * 0.2, 0.05);
+        // Interactive Sway + Scroll Tilt
+        meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, state.pointer.x * 0.2 + window.scrollY * 0.0005, 0.05);
         meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, -state.pointer.y * 2, 0.05);
     });
 
@@ -127,9 +130,9 @@ const ParticleFlow = () => {
 }
 
 // 3. TEAM: Network (Nodes and Lines)
-const Network = () => {
+const Network = ({ isMobile }) => {
     const group = useRef();
-    const count = 30;
+    const count = isMobile ? 15 : 30;
 
     const nodes = useMemo(() => {
         return new Array(count).fill(0).map(() => ({
@@ -139,14 +142,15 @@ const Network = () => {
                 (Math.random() - 0.5) * 6
             ]
         }))
-    }, []);
+    }, [count]);
 
     useFrame((state) => {
         if (group.current) {
-            group.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+            const scrollY = window.scrollY;
+            group.current.rotation.y = state.clock.getElapsedTime() * 0.05 + scrollY * 0.0005;
 
             // Interactive Rotation
-            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.pointer.y * 0.2, 0.05);
+            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.pointer.y * 0.2 + scrollY * 0.0002, 0.05);
             group.current.rotation.y += state.pointer.x * 0.01; // accelerating spin
         }
     })
@@ -183,8 +187,9 @@ const Cubes = () => {
     const group = useRef();
     useFrame((state) => {
         if (group.current) {
-            group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, state.pointer.x * 0.5, 0.05);
-            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -state.pointer.y * 0.5, 0.05);
+            const scrollY = window.scrollY;
+            group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, state.pointer.x * 0.5 + scrollY * 0.001, 0.05);
+            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -state.pointer.y * 0.5 + scrollY * 0.0005, 0.05);
         }
     });
 
@@ -207,23 +212,24 @@ const Cubes = () => {
 }
 
 // 5. JOIN: Vortex
-const Vortex = () => {
+const Vortex = ({ isMobile }) => {
     const meshRef = useRef();
-    const count = 1000;
+    const count = isMobile ? 500 : 1000;
 
     const positions = useMemo(() => {
         const pos = new Float32Array(count * 3);
+        // ... same logic
+        // I will copy exact logic to be safe
         for (let i = 0; i < count; i++) {
             const angle = Math.random() * Math.PI * 2;
             const radius = 2 + Math.random() * 4;
             const z = (Math.random() - 0.5) * 20;
-
             pos[i * 3] = Math.cos(angle) * radius;
             pos[i * 3 + 1] = Math.sin(angle) * radius;
             pos[i * 3 + 2] = z;
         }
         return pos;
-    }, []);
+    }, [count]);
 
     useFrame((state, delta) => {
         if (meshRef.current) {
@@ -247,9 +253,9 @@ const Vortex = () => {
 }
 
 // 6. LEADERBOARD: Ascension (Golden)
-const Ascension = () => {
+const Ascension = ({ isMobile }) => {
     const meshRef = useRef();
-    const count = 200;
+    const count = isMobile ? 60 : 200;
 
     const dummy = useMemo(() => new THREE.Object3D(), []);
     const particles = useMemo(() => {
@@ -290,9 +296,11 @@ const Ascension = () => {
         });
         meshRef.current.instanceMatrix.needsUpdate = true;
 
-        // Interactive Tilt
-        meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -state.pointer.y * 0.1, 0.05);
+        // Interactive Tilt + Scroll Rise
+        const scrollY = window.scrollY;
+        meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -state.pointer.y * 0.1 - scrollY * 0.0005, 0.05);
         meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, state.pointer.x * 0.1, 0.05);
+        meshRef.current.position.y = scrollY * 0.005; // Rise with scroll
     });
 
     return (
@@ -305,6 +313,7 @@ const Ascension = () => {
 
 
 const ThreeBackground = ({ variant = 'home' }) => {
+    const isMobile = window.innerWidth < 768;
     return (
         <div style={{
             position: 'fixed',
@@ -324,31 +333,27 @@ const ThreeBackground = ({ variant = 'home' }) => {
                 {/* Fog adapts to variant slightly? */}
                 <fog attach="fog" args={['#050505', 5, 20]} />
 
-                {/* --- DYNAMIC SCENE CONTENT --- */}
                 {variant === 'home' && (
                     <>
                         <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
-                            <TechLoop />
+                            <TechLoop isMobile={isMobile} />
                         </Float>
                         <FloatingBits />
                     </>
                 )}
 
                 {variant === 'events' && (
-                    // Magenta/Purple Flow
-                    <ParticleFlow />
+                    <ParticleFlow isMobile={isMobile} />
                 )}
 
                 {variant === 'team' && (
-                    // Green Network
                     <>
-                        <Network />
-                        <Stars radius={50} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+                        <Network isMobile={isMobile} />
+                        <Stars radius={50} depth={50} count={isMobile ? 500 : 1000} factor={4} saturation={0} fade speed={1} />
                     </>
                 )}
 
                 {variant === 'projects' && (
-                    // Orange Cubes
                     <>
                         <Cubes />
                         <gridHelper args={[20, 20, 0x444444, 0x222222]} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -5]} />
@@ -356,13 +361,11 @@ const ThreeBackground = ({ variant = 'home' }) => {
                 )}
 
                 {variant === 'join' && (
-                    // Purple Vortex
-                    <Vortex />
+                    <Vortex isMobile={isMobile} />
                 )}
 
                 {variant === 'leaderboard' && (
-                    // Rising shapes
-                    <Ascension />
+                    <Ascension isMobile={isMobile} />
                 )}
 
 
