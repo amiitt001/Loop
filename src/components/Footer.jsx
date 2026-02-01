@@ -1,4 +1,5 @@
-import { Github, Instagram, Linkedin, Heart, Users } from 'lucide-react';
+import { Github, Instagram, Linkedin, Heart } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 
 const Footer = () => {
     return (
@@ -13,19 +14,17 @@ const Footer = () => {
                 <p style={{ color: 'var(--text-dim)', marginBottom: '2rem' }}>
                     Innovating the future, one line of code at a time.
                 </p>
-
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '3rem' }}>
-                    <SocialLink icon={Github} href="https://github.com/amiitt001/Loop-Technova" />
                     <SocialLink icon={Instagram} href="https://www.instagram.com/gcetloop" />
                     <SocialLink icon={Linkedin} href="https://www.linkedin.com/company/loopgcet/" />
-                    <SocialLink icon={Users} href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" />
+                    <SocialLink icon={WhatsAppIcon} href="https://chat.whatsapp.com/DorLpvdoaj69wPMnZWhz9N" />
                 </div>
 
                 <p style={{ color: '#555', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                     Built with <Heart size={14} color="var(--accent)" fill="var(--accent)" /> by Loop Team &copy; 2026
                 </p>
-            </div>
-        </footer>
+            </div >
+        </footer >
     );
 };
 
