@@ -21,9 +21,9 @@ const Counter = ({ from, to }) => {
 
 const STATS = [
     { label: 'Hackathons', value: 12 },
-    { label: 'Active Members', value: 85 },
+    { label: 'Active Members', value: 300 },
     { label: 'Projects Built', value: 40 },
-    { label: 'Years Active', value: 4 },
+    { label: 'Years Active', value: 10 },
 ];
 
 const CredibilityStrip = () => {
