@@ -16,6 +16,7 @@ const Join = () => {
         year: '1st Year',
         college: 'Galgotias College of Engineering and Technology',
         domain: 'Full Stack Development',
+        linkedin: '',
         reason: ''
     });
 
@@ -187,6 +188,7 @@ const Join = () => {
                 domain: formData.domain,
                 reason: formData.reason,
                 github: formData.github,
+                linkedin: formData.linkedin,
                 message: `New Application from ${formData.name} (${formData.branch}, ${formData.year})`
             };
 
@@ -201,6 +203,7 @@ const Join = () => {
                 year: '1st Year',
                 college: 'Galgotias College of Engineering and Technology',
                 domain: 'Full Stack Development',
+                linkedin: '',
                 reason: ''
             });
 
@@ -330,16 +333,30 @@ const Join = () => {
                         />
                     </div>
 
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>GitHub Profile URL (Optional)</label>
-                        <input
-                            type="url"
-                            name="github"
-                            value={formData.github}
-                            onChange={handleChange}
-                            className="input-field"
-                            placeholder="https://github.com/username"
-                        />
+                    <div style={{ marginBottom: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>GitHub Profile (Optional)</label>
+                            <input
+                                type="url"
+                                name="github"
+                                value={formData.github}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="https://github.com/username"
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>LinkedIn Profile *</label>
+                            <input
+                                type="url"
+                                name="linkedin"
+                                value={formData.linkedin}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="https://linkedin.com/in/username"
+                                required
+                            />
+                        </div>
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>

@@ -54,7 +54,7 @@ export default safeHandler(async function handler(req, res) {
         throw new ValidationError('Method Not Allowed'); // Technically 405, but simplified for now
     }
 
-    const { name, email, domain, reason, branch, year, college, github } = req.body;
+    const { name, email, domain, reason, branch, year, college, github, linkedin } = req.body;
 
     if (!email || !name) {
         throw new ValidationError('Missing required fields');
@@ -84,6 +84,7 @@ export default safeHandler(async function handler(req, res) {
         year,
         college,
         github,
+        linkedin,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         status: 'Pending'
     };
@@ -117,6 +118,7 @@ export default safeHandler(async function handler(req, res) {
                 year,
                 college,
                 github,
+                linkedin,
                 reply_to: "technova@galgotias.edu"
             };
 
