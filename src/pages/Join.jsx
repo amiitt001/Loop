@@ -7,6 +7,7 @@ import ThreeBackground from '../components/ThreeBackground';
 const Join = () => {
     const [formData, setFormData] = useState({
         name: '',
+        admissionNumber: '',
         email: '',
         github: '',
         branch: '',
@@ -143,7 +144,7 @@ const Join = () => {
 
         const finalDomain = formData.domain === 'Others' ? formData.customDomain : formData.domain;
 
-        if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college) {
+        if (!formData.name || !formData.email || !formData.admissionNumber || !formData.reason || !formData.branch || !formData.college) {
             alert("Please fill in all required fields.");
             return;
         }
@@ -153,6 +154,7 @@ const Join = () => {
             ...formData,
             email: formData.email.trim().toLowerCase(),
             name: formData.name.trim(),
+            admissionNumber: formData.admissionNumber.trim(),
             domain: finalDomain
         };
 
@@ -188,6 +190,7 @@ const Join = () => {
             setStatus('success');
             setFormData({
                 name: '',
+                admissionNumber: '',
                 email: '',
                 github: '',
                 branch: '',
@@ -266,6 +269,18 @@ const Join = () => {
                                 onChange={handleChange}
                                 className="input-field"
                                 placeholder="John Doe"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>Admission Number *</label>
+                            <input
+                                type="text"
+                                name="admissionNumber"
+                                value={formData.admissionNumber}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="123456"
                                 required
                             />
                         </div>

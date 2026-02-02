@@ -54,9 +54,9 @@ export default safeHandler(async function handler(req, res) {
         throw new ValidationError('Method Not Allowed'); // Technically 405, but simplified for now
     }
 
-    const { name, email, domain, reason, branch, year, college, github, linkedin } = req.body;
+    const { name, admissionNumber, email, domain, reason, branch, year, college, github, linkedin } = req.body;
 
-    if (!email || !name) {
+    if (!email || !name || !admissionNumber) {
         throw new ValidationError('Missing required fields');
     }
 
@@ -77,6 +77,7 @@ export default safeHandler(async function handler(req, res) {
     // 2. Save to Firestore (Secure Write)
     const newApp = {
         name,
+        admissionNumber,
         email,
         domain,
         reason,
@@ -112,6 +113,7 @@ export default safeHandler(async function handler(req, res) {
             const templateParams = {
                 to_name: "Admin",
                 name,
+                admissionNumber,
                 email,
                 domain,
                 reason,
@@ -120,7 +122,7 @@ export default safeHandler(async function handler(req, res) {
                 college,
                 github,
                 linkedin,
-                message: `New Application from ${name} (${branch}, ${year})`,
+                message: `New Application from ${name} (Admission No: ${admissionNumber}, ${branch}, ${year})`,
                 reply_to: "technova@galgotias.edu"
             };
 
