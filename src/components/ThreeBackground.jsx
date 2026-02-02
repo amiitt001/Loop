@@ -250,63 +250,13 @@ const Vortex = ({ isMobile }) => {
     })
 
     return (
-        <points ref={meshRef} rotation={[Math.PI / 2, 0, 0]}>
+        <points ref={meshRef}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
             </bufferGeometry>
-            <pointsMaterial size={0.05} color="#bd00ff" sizeAttenuation transparent opacity={0.8} />
+            {/* Bright Green/Cyan Tech Color */}
+            <pointsMaterial size={0.15} color="#00ff41" transparent opacity={0.8} sizeAttenuation blending={THREE.AdditiveBlending} />
         </points>
-    )
-}
-
-// 6. LEADERBOARD: CyberGrid (Tech Theme)
-const CyberGrid = () => {
-    const group = useRef();
-    const gridRef = useRef();
-
-    useFrame((state) => {
-        if (group.current) {
-            const t = state.clock.getElapsedTime();
-            const scrollY = window.scrollY;
-
-            // Move grid to simulate forward movement
-            // interactions
-            group.current.position.z = (t * 2) % 10;
-
-            // Subtle rotation based on mouse
-            group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.pointer.y * 0.05, 0.05);
-            group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, state.pointer.x * 0.05, 0.05);
-        }
-    });
-
-    return (
-        <group>
-            {/* Infinite Moving Grid Effect */}
-            <group ref={group}>
-                <gridHelper args={[60, 60, 0x00f3ff, 0x001133]} position={[0, -2, 0]} />
-                <gridHelper args={[60, 60, 0x00f3ff, 0x001133]} position={[0, -2, -60]} />
-            </group>
-
-            {/* Floating Tech Cubes */}
-            {Array.from({ length: 20 }).map((_, i) => (
-                <Float key={i} speed={1.5} rotationIntensity={1.5} floatIntensity={2} position={[
-                    (Math.random() - 0.5) * 30,
-                    (Math.random() - 0.5) * 15,
-                    (Math.random() - 0.5) * 20 - 10
-                ]}>
-                    <mesh rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
-                        <boxGeometry args={[Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5]} />
-                        <meshBasicMaterial color="#00f3ff" wireframe={true} transparent opacity={0.3} />
-                    </mesh>
-                </Float>
-            ))}
-
-            {/* Digital Horizon Glow */}
-            <mesh position={[0, 0, -40]}>
-                <planeGeometry args={[100, 50]} />
-                <meshBasicMaterial color="#000510" transparent opacity={0.8} />
-            </mesh>
-        </group>
     )
 }
 
@@ -364,7 +314,9 @@ const ThreeBackground = ({ variant = 'home' }) => {
                 )}
 
                 {variant === 'leaderboard' && (
-                    <CyberGrid />
+                    <>
+                        {/* <DigitalRain isMobile={isMobile} /> */}
+                    </>
                 )}
 
 

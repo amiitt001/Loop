@@ -219,7 +219,7 @@ const HomeTeam = () => {
     }, [isMobile, featuredMembers]);
 
     return (
-        <div style={{ padding: '6rem 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, #050505 100%)' }}>
+        <div style={{ padding: '6rem 0', background: 'transparent' }}>
             <div className="container" style={{ textAlign: 'center' }}>
                 <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>CORE <span style={{ color: 'var(--text-dim)' }}>TEAM</span></h2>
 

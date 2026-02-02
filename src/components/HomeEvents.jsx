@@ -44,7 +44,7 @@ const HomeEvents = () => {
     const secondaryEvents = events.length > 1 ? events.slice(1, 4) : [];
 
     return (
-        <div style={{ padding: '6rem 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-dim)' }}>
+        <div style={{ padding: '6rem 0', background: 'transparent', borderTop: '1px solid var(--border-dim)' }}>
             <div className="container">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '3rem' }}>
                     <div>

@@ -49,7 +49,7 @@ const HomeGallery = () => {
     }, []);
 
     return (
-        <div style={{ padding: '6rem 0', background: 'var(--bg-dark)', position: 'relative', zIndex: 2 }}>
+        <div style={{ padding: '6rem 0', background: 'transparent', position: 'relative', zIndex: 2 }}>
             <div className="container">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

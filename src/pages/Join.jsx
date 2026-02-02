@@ -159,6 +159,9 @@ const Join = () => {
         }
 
         setStatus('submitting');
+        setStatus('submitting');
+
+        // 1. Database Submission (Critical)
         try {
             // Check for duplicate application
             const q = query(collection(db, "applications"), where("email", "==", formData.email));
@@ -182,6 +185,15 @@ const Join = () => {
             // Google Sheets Submission (Non-blocking)
             submitToGoogleSheets({ ...formData, domain: finalDomain });
 
+        } catch (error) {
+            console.error("Database Submission Error:", error);
+            alert(`Application Failed: ${error.message}. Please try again or contact support.`);
+            setStatus('error');
+            return; // Stop execution if DB save fails
+        }
+
+        // 2. Email Notification (Non-Critical)
+        try {
             // Send Email Notification
             const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
             const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -203,25 +215,26 @@ const Join = () => {
 
             await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
-            setStatus('success');
-            setFormData({
-                name: '',
-                email: '',
-                github: '',
-                branch: '',
-                year: '1st Year',
-                college: 'Galgotias College of Engineering and Technology',
-                domain: 'Full Stack Development',
-                customDomain: '',
-                linkedin: '',
-                reason: ''
-            });
-
         } catch (error) {
-            console.error("Submission Error:", error);
-            alert("Application saved, but email notification failed. We have received your data.");
-            setStatus('success');
+            console.error("Email Submission Error:", error);
+            // Alert user but still show success screen since data is saved
+            alert("Application saved successfully, but the confirmation email could not be sent.");
         }
+
+        // 3. Success State
+        setStatus('success');
+        setFormData({
+            name: '',
+            email: '',
+            github: '',
+            branch: '',
+            year: '1st Year',
+            college: 'Galgotias College of Engineering and Technology',
+            domain: 'Full Stack Development',
+            customDomain: '',
+            linkedin: '',
+            reason: ''
+        });
     };
 
     return (
