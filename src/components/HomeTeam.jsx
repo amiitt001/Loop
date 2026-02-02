@@ -121,12 +121,8 @@ const HomeTeam = () => {
                 ['Head', 'President', 'Vice President', 'Lead'].some(role => m.role.includes(role))
             );
 
-            // Fallback: if no leadership, take top 4 sorted by points (already sorted by query)
-            let preview = leadership.slice(0, 4);
-            if (preview.length < 4) {
-                const others = allMembers.filter(m => !leadership.includes(m)).slice(0, 4 - preview.length);
-                preview = [...preview, ...others];
-            }
+            // Strict Filter: Only show Leadership (Heads/Leads) on Home Page
+            const preview = leadership.slice(0, 4);
 
             // Assign colors dynamically if needed or random neon colors?
             // The original had specific colors. Let's just cycle through neon colors.
@@ -137,11 +133,8 @@ const HomeTeam = () => {
                 color: neonColors[index % neonColors.length]
             }));
 
-            // Prepare featured members (leadership first). Fallback to first few if no explicit leadership.
-            let featured = leadership.slice(0, 6);
-            if (featured.length === 0) {
-                featured = allMembers.slice(0, Math.min(6, allMembers.length));
-            }
+            // Prepare featured members for mobile (strictly leadership)
+            const featured = leadership.slice(0, 6);
 
             const featuredWithColors = featured.map((member, index) => ({
                 ...member,
