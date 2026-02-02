@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Bot, User, Calendar, Trophy, Users, ChevronRight } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import ChatbotBackground from './ChatbotBackground';
 
 const QuickActionChip = ({ label, onClick }) => (
     <motion.button
@@ -204,16 +205,19 @@ const Chatbot = () => {
                             style={{
                                 width: '350px',
                                 height: '500px',
-                                background: 'rgba(10, 10, 10, 0.1)',
+                                background: 'rgba(10, 10, 10, 0.4)', // Slightly more opaque for readability
+                                backdropFilter: 'blur(10px)', // Glassmorphism
                                 borderRadius: '16px',
                                 border: '1px solid var(--accent)',
                                 boxShadow: '0 0 30px rgba(0, 243, 255, 0.15)',
                                 marginBottom: '20px',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                overflow: 'hidden'
+                                overflow: 'hidden',
+                                position: 'relative' // Essential for absolute background
                             }}
                         >
+                            <ChatbotBackground />
                             {/* Header */}
                             <div style={{
                                 padding: '1rem',
