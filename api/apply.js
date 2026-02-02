@@ -101,15 +101,17 @@ export default safeHandler(async function handler(req, res) {
             return;
         }
 
-        const serviceID = process.env.EMAILJS_SERVICE_ID;
-        const templateID = process.env.EMAILJS_TEMPLATE_ID;
-        const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-        const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+        // Support both standard and VITE_ prefixed env vars
+        const serviceID = process.env.EMAILJS_SERVICE_ID || process.env.VITE_EMAILJS_SERVICE_ID;
+        const templateID = process.env.EMAILJS_TEMPLATE_ID || process.env.VITE_EMAILJS_TEMPLATE_ID;
+        const publicKey = process.env.EMAILJS_PUBLIC_KEY || process.env.VITE_EMAILJS_PUBLIC_KEY;
+        const privateKey = process.env.EMAILJS_PRIVATE_KEY || process.env.VITE_EMAILJS_PRIVATE_KEY;
 
         if (serviceID && templateID && publicKey) {
             console.log("EmailJS Params Present: ServiceID, TemplateID, PublicKey");
 
             const templateParams = {
+                to_name: "Admin",
                 name,
                 email,
                 domain,
@@ -119,6 +121,7 @@ export default safeHandler(async function handler(req, res) {
                 college,
                 github,
                 linkedin,
+                message: `New Application from ${name} (${branch}, ${year})`,
                 reply_to: "technova@galgotias.edu"
             };
 
@@ -142,6 +145,8 @@ export default safeHandler(async function handler(req, res) {
             } else {
                 console.log('EmailJS Success: Email sent to', email);
             }
+        } else {
+            console.warn("EmailJS configuration missing. Email not sent.");
         }
     } catch (emailError) {
         // Critical: Do NOT throw here. Just log it.
