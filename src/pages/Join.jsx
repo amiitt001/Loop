@@ -163,17 +163,10 @@ const Join = () => {
 
         // 1. Database Submission (Critical)
         try {
-            // Check for duplicate application
-            const q = query(collection(db, "applications"), where("email", "==", sanitizedData.email));
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                alert("You have already submitted an application with this email address.");
-                setStatus('idle');
-                return;
-            }
-
             // Direct Firestore Submission matched by Email ID to prevent duplicates
+            // We removed the manual 'getDocs' duplicate check because public users cannot read the collection.
+            // setDoc will fail with 'permission-denied' if the document already exists (because allow update is admin-only),
+            // effectively acting as a duplicate check.
             // Rules allow create but deny update for non-admins, enforcing uniqueness
             await setDoc(doc(db, "applications", sanitizedData.email), {
                 ...sanitizedData,
@@ -186,7 +179,13 @@ const Join = () => {
 
         } catch (error) {
             console.error("Database Submission Error:", error);
-            alert(`Application Failed: ${error.message}. Please try again or contact support.`);
+            // If the write fails due to permission denied, it means the document already exists 
+            // (because we allow create but deny update for non-admins)
+            if (error.code === 'permission-denied' || error.message.includes('permission-denied')) {
+                alert("You have already submitted an application with this email address.");
+            } else {
+                alert(`Application Failed: ${error.message}. Please try again or contact support.`);
+            }
             setStatus('error');
             return; // Stop execution if DB save fails
         }
