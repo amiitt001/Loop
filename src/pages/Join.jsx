@@ -27,7 +27,7 @@ const Join = () => {
 
     // Spam Protection State
     const [startTime] = useState(Date.now());
-    const [honeypot, setHoneypot] = useState('');
+    const [botCheck, setBotCheck] = useState('');
 
     // Email Verification State
     const [verificationStatus, setVerificationStatus] = useState('idle'); // idle, sending, sent, verified
@@ -132,7 +132,7 @@ const Join = () => {
         e.preventDefault();
 
         // Spam Check 1: Honeypot (Bot Trap)
-        if (honeypot) {
+        if (botCheck) {
             console.log("Bot detected (honeypot)");
             return; // Silently fail
         }
@@ -146,25 +146,25 @@ const Join = () => {
 
         const finalDomain = formData.domain === 'Others' ? formData.customDomain : formData.domain;
 
-        if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college || !finalDomain) {
-            alert("Please fill in all required fields.");
-            return;
-        }
-
-
-
         if (!formData.name || !formData.email || !formData.reason || !formData.branch || !formData.college) {
             alert("Please fill in all required fields.");
             return;
         }
 
-        setStatus('submitting');
+        // Sanitize Inputs
+        const sanitizedData = {
+            ...formData,
+            email: formData.email.trim().toLowerCase(),
+            name: formData.name.trim(),
+            domain: finalDomain
+        };
+
         setStatus('submitting');
 
         // 1. Database Submission (Critical)
         try {
             // Check for duplicate application
-            const q = query(collection(db, "applications"), where("email", "==", formData.email));
+            const q = query(collection(db, "applications"), where("email", "==", sanitizedData.email));
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
@@ -175,15 +175,14 @@ const Join = () => {
 
             // Direct Firestore Submission matched by Email ID to prevent duplicates
             // Rules allow create but deny update for non-admins, enforcing uniqueness
-            await setDoc(doc(db, "applications", formData.email), {
-                ...formData,
-                domain: finalDomain,
+            await setDoc(doc(db, "applications", sanitizedData.email), {
+                ...sanitizedData,
                 createdAt: serverTimestamp(),
                 status: 'Pending'
             });
 
             // Google Sheets Submission (Non-blocking)
-            submitToGoogleSheets({ ...formData, domain: finalDomain });
+            submitToGoogleSheets(sanitizedData);
 
         } catch (error) {
             console.error("Database Submission Error:", error);
@@ -201,16 +200,16 @@ const Join = () => {
 
             const templateParams = {
                 to_name: "Admin",
-                name: formData.name,
-                email: formData.email,
-                branch: formData.branch,
-                year: formData.year,
-                college: formData.college,
-                domain: finalDomain,
-                reason: formData.reason,
-                github: formData.github,
-                linkedin: formData.linkedin,
-                message: `New Application from ${formData.name} (${formData.branch}, ${formData.year})`
+                name: sanitizedData.name,
+                email: sanitizedData.email,
+                branch: sanitizedData.branch,
+                year: sanitizedData.year,
+                college: sanitizedData.college,
+                domain: sanitizedData.domain,
+                reason: sanitizedData.reason,
+                github: sanitizedData.github,
+                linkedin: sanitizedData.linkedin,
+                message: `New Application from ${sanitizedData.name} (${sanitizedData.branch}, ${sanitizedData.year})`
             };
 
             await emailjs.send(serviceId, templateId, templateParams, publicKey);
@@ -495,12 +494,12 @@ const Join = () => {
                         {status === 'submitting' ? 'SENDING...' : 'SUBMIT APPLICATION'} <Send size={18} />
                     </button>
 
-                    {/* Honeypot Field (Hidden) */}
+                    {/* Honeypot Field (Hidden) - Renamed to avoid autofill */}
                     <input
                         type="text"
-                        name="website_url_check"
-                        value={honeypot}
-                        onChange={(e) => setHoneypot(e.target.value)}
+                        name="fax_number_check"
+                        value={botCheck}
+                        onChange={(e) => setBotCheck(e.target.value)}
                         style={{ display: 'none', tabindex: '-1', autocomplete: 'off' }}
                     />
 
