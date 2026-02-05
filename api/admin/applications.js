@@ -1,15 +1,17 @@
 
 import admin from 'firebase-admin';
 import { safeHandler } from '../utils/wrapper.js';
-import { checkMethod, ValidationError } from '../utils/errors.js';
 import { verifyAdmin } from '../utils/auth.js';
 import { ValidationError as CustomValidationError } from '../utils/errors.js';
 
-const db = admin.firestore();
+// Note: db initialization moved inside handler to prevent cold-start crashes
 
 export default safeHandler(async function handler(req, res) {
     // 1. Verify Admin Auth
     await verifyAdmin(req);
+
+    // Initialize DB lazily to prevent cold-start crashes if init fails top-level
+    const db = admin.firestore();
 
     const { id } = req.query;
     if (!id) {
@@ -28,7 +30,12 @@ export default safeHandler(async function handler(req, res) {
 
     // Helper to sync to sheet
     const syncToSheet = async (params) => {
-        if (!sheetURL || !appData.email) return;
+        if (!sheetURL) {
+            console.warn("GOOGLE_SHEET_URL not set, skipping sync.");
+            return;
+        }
+        if (!appData.email) return;
+
         try {
             const formParams = new URLSearchParams();
             formParams.append('email', appData.email);
@@ -36,6 +43,8 @@ export default safeHandler(async function handler(req, res) {
                 formParams.append(key, value);
             }
 
+            // Do not await fetch to prevent blocking/failing the main request
+            // We verify specific success/fail only via logs
             await fetch(sheetURL, {
                 method: 'POST',
                 body: formParams,
@@ -50,9 +59,9 @@ export default safeHandler(async function handler(req, res) {
     if (req.method === 'DELETE') {
         await appsRef.delete();
 
-        // Fire and forget sync
+        // Sync
         if (appData.email) {
-            syncToSheet({ action: 'delete' });
+            await syncToSheet({ action: 'delete' });
         }
 
         return res.status(200).json({ message: 'Application deleted successfully' });
@@ -60,7 +69,9 @@ export default safeHandler(async function handler(req, res) {
 
     // UPDATE Action (PATCH)
     if (req.method === 'PATCH') {
-        const { status } = req.body;
+        const body = req.body || {};
+        const { status } = body;
+
         if (!status) {
             throw new CustomValidationError('Missing status field');
         }
@@ -68,9 +79,9 @@ export default safeHandler(async function handler(req, res) {
         // validate status allowed values if needed
         await appsRef.update({ status });
 
-        // Fire and forget sync
+        // Sync
         if (appData.email) {
-            syncToSheet({ action: 'updateStatus', status });
+            await syncToSheet({ action: 'updateStatus', status });
         }
 
         return res.status(200).json({ message: 'Application status updated' });
