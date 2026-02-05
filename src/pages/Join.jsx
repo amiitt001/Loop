@@ -99,33 +99,6 @@ const Join = () => {
         }
     };
 
-    const submitToGoogleSheets = async (data) => {
-        const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL;
-        if (!scriptURL) {
-            console.warn("Google Sheet URL not found in env variables.");
-            return;
-        }
-
-        try {
-            const formParams = new URLSearchParams();
-            for (const key in data) {
-                formParams.append(key, data[key]);
-            }
-
-            await fetch(scriptURL, {
-                method: 'POST',
-                body: formParams,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                mode: 'no-cors'
-            });
-            console.log("Submitted to Google Sheets");
-        } catch (error) {
-            console.error("Google Sheets Error:", error);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -161,7 +134,7 @@ const Join = () => {
         setStatus('submitting');
 
         try {
-            // 1. Backend Submission (Validation + DB + Email)
+            // 1. Backend Submission (Validation + DB + Email + Google Sheet)
             const response = await fetch('/api/apply', {
                 method: 'POST',
                 headers: {
@@ -183,10 +156,7 @@ const Join = () => {
                 return;
             }
 
-            // 2. Google Sheets Submission (Non-blocking redundancy)
-            submitToGoogleSheets(sanitizedData);
-
-            // 3. Success State
+            // 2. Success State
             setStatus('success');
             setFormData({
                 name: '',

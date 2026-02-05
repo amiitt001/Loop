@@ -191,6 +191,43 @@ export default safeHandler(async function handler(req, res) {
         console.error("Email subsystem failed gracefully:", emailError);
     }
 
+    // 3.5. Submit to Google Sheets (Hidden from Client)
+    try {
+        const sheetURL = process.env.GOOGLE_SHEET_URL || process.env.VITE_GOOGLE_SHEET_URL;
+        if (sheetURL) {
+            const formParams = new URLSearchParams();
+            formParams.append('name', name);
+            formParams.append('admissionNumber', admissionNumber);
+            formParams.append('email', email);
+            formParams.append('branch', branch);
+            formParams.append('year', year);
+            formParams.append('college', college);
+            formParams.append('domain', domain);
+            formParams.append('github', github || '');
+            formParams.append('linkedin', linkedin || '');
+            formParams.append('reason', reason);
+            formParams.append('status', 'Pending');
+
+            const sheetResponse = await fetch(sheetURL, {
+                method: 'POST',
+                body: formParams,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+
+            if (!sheetResponse.ok) {
+                console.error('Google Sheet Error:', await sheetResponse.text());
+            } else {
+                console.log('Google Sheet Submission Success');
+            }
+        } else {
+            console.warn('Google Sheet URL not configured (Skipping Sheet Submission)');
+        }
+    } catch (sheetError) {
+        console.error('Google Sheet Submission Failed:', sheetError);
+    }
+
     // 4. Return Success
     return res.status(200).json({ message: 'Application received successfully!' });
 });

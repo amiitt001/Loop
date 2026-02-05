@@ -52,6 +52,13 @@ describe('api/apply.js', () => {
     beforeEach(() => {
         vi.clearAllMocks();
 
+        // Setup Env Vars for Test
+        process.env.EMAILJS_SERVICE_ID = 'service_test';
+        process.env.EMAILJS_TEMPLATE_ID = 'template_test';
+        process.env.EMAILJS_PUBLIC_KEY = 'public_test';
+        process.env.GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/TEST/exec';
+        process.env.EMAIL_TEST_MODE = 'false';
+
         // Default Mock Behavior for Firestore
         mockWhere.mockReturnValue({
             get: mockGet
@@ -84,10 +91,22 @@ describe('api/apply.js', () => {
         };
     });
 
-    it('should accept valid application', async () => {
+    it('should accept valid application and submit to Google Sheets', async () => {
         await handler(req, res);
         expect(res.status).toHaveBeenCalledWith(200);
         expect(mockAdd).toHaveBeenCalled();
+
+        // Check fetches (1 for EmailJS, 1 for Google Sheets)
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+
+        // Verify Google Sheets call
+        expect(global.fetch).toHaveBeenCalledWith(
+            'https://script.google.com/macros/s/TEST/exec',
+            expect.objectContaining({
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+        );
     });
 
     it('should reject non-POST requests', async () => {
