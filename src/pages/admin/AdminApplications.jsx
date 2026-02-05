@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { RefreshCw, Search, Check, X, Trash2, Mail, Github, Linkedin, GraduationCap, ExternalLink } from 'lucide-react';
 import { safeRender, safeHref } from '../../utils/security';
 import { db } from '../../firebase';
@@ -34,60 +35,52 @@ const AdminApplications = () => {
         app.domain.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const { currentUser } = useAuth(); // Destructure currentUser from useAuth
+
     const handleDelete = async (id) => {
         if (!window.confirm("Delete this application?")) return;
 
-        const appToDelete = applications.find(a => a.id === id);
-
         try {
-            // 1. Delete from Firestore
-            await deleteDoc(doc(db, "applications", id));
+            const token = await currentUser.getIdToken();
+            const response = await fetch(`/api/admin/applications?id=${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-            // 2. Delete from Google Sheet (Fire and Forget)
-            if (appToDelete && appToDelete.email && import.meta.env.VITE_GOOGLE_SHEET_URL) {
-                const params = new URLSearchParams();
-                params.append('action', 'delete');
-                params.append('email', appToDelete.email);
-
-                fetch(import.meta.env.VITE_GOOGLE_SHEET_URL, {
-                    method: 'POST',
-                    body: params,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    mode: 'no-cors'
-                }).catch(err => console.error("Sheet delete error:", err));
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to delete');
             }
 
-            // No need to alert success, the real-time listener will update the UI
+            // Real-time listener will update UI
         } catch (error) {
             console.error("Error deleting application:", error);
-            alert("Failed to delete application. Check your permissions.");
+            alert(`Failed to delete application: ${error.message}`);
         }
     };
 
     const handleStatusUpdate = async (id, newStatus) => {
         try {
-            await updateDoc(doc(db, "applications", id), {
-                status: newStatus
+            const token = await currentUser.getIdToken();
+            const response = await fetch(`/api/admin/applications?id=${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status: newStatus })
             });
 
-            // Sync Status to Google Sheet (Fire and Forget)
-            const app = applications.find(a => a.id === id);
-            if (app && app.email && import.meta.env.VITE_GOOGLE_SHEET_URL) {
-                const params = new URLSearchParams();
-                params.append('action', 'updateStatus');
-                params.append('email', app.email);
-                params.append('status', newStatus);
-
-                fetch(import.meta.env.VITE_GOOGLE_SHEET_URL, {
-                    method: 'POST',
-                    body: params,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    mode: 'no-cors'
-                }).catch(err => console.error("Sheet status sync error:", err));
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to update status');
             }
 
-            // If approved, add to members collection
+            // If approved, add to members collection (Client-side trigger for now, could be moved to backend too but acceptable here for Member logic separation)
             if (newStatus === 'Approved') {
+                const app = applications.find(a => a.id === id);
                 if (app) {
                     await addDoc(collection(db, "members"), {
                         name: app.name,
@@ -108,7 +101,7 @@ const AdminApplications = () => {
             }
         } catch (error) {
             console.error("Error updating status:", error);
-            alert("Failed to update status. Check your permissions.");
+            alert(`Failed to update status: ${error.message}`);
         }
     };
 
