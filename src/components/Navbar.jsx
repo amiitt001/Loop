@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Terminal, Trophy, Users, Calendar, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
 
     const toggleMenu = () => setIsOpen(!isOpen);
     const closeMenu = () => setIsOpen(false);
+
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            // If scrolling down AND passed 100px threshold -> Hide
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                setIsVisible(false);
+            } else {
+                // If scrolling up -> Show
+                setIsVisible(true);
+            }
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <nav style={{
@@ -16,10 +37,17 @@ const Navbar = () => {
             left: 0,
             width: '100%',
             zIndex: 1000,
+            // Add background only when scrolled? Or keep transparent? 
+            // Existing was transparent. Let's keep it but maybe add blur if scrolled?
+            // For now, adhere to visibility logic.
             background: 'transparent',
+            // backdropFilter: 'blur(10px)', // Removed as per user request for transparency
             height: '70px',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            transition: 'transform 0.3s ease-in-out',
+            transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+            borderBottom: '1px solid rgba(255,255,255,0.05)'
         }}>
             <div style={{
                 display: 'flex',

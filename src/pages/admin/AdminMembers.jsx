@@ -57,6 +57,28 @@ const AdminMembers = () => {
     const core = filteredMembers.filter(m => /Core/i.test(m.role) && !/Mentor/i.test(m.role));
     const generalMembers = filteredMembers.filter(m => !/Head|Lead|President|Vice|Coordinator|Core|Mentor/i.test(m.role));
 
+    // Helper Component for Avatar
+    const MemberAvatar = ({ member }) => {
+        const [error, setError] = useState(false);
+
+        if (member.img && !error) {
+            return (
+                <img
+                    src={member.img}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    onError={() => setError(true)}
+                />
+            );
+        }
+
+        return (
+            <div className="w-full h-full flex items-center justify-center text-zinc-600 text-3xl font-bold">
+                {member.name.charAt(0)}
+            </div>
+        );
+    };
+
     const renderMemberSection = (title, membersList) => {
         if (membersList.length === 0) return null;
         return (
@@ -67,13 +89,7 @@ const AdminMembers = () => {
                         <div key={member.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-colors flex flex-col">
                             <div className="p-6 flex flex-col items-center text-center border-b border-zinc-800">
                                 <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 mb-4 border-2 border-[var(--accent)]/30">
-                                    {member.img ? (
-                                        <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-zinc-600 text-3xl font-bold">
-                                            {member.name.charAt(0)}
-                                        </div>
-                                    )}
+                                    <MemberAvatar member={member} />
                                 </div>
                                 <h3 className="text-xl font-bold text-main mb-1">{member.name}</h3>
                                 <p className="text-[var(--accent)] text-sm font-medium uppercase tracking-wider">{member.role}</p>

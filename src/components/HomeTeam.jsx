@@ -9,6 +9,7 @@ import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 const HomeTeamCard = ({ member, index }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
+    const [imgError, setImgError] = useState(false);
 
     const rotateX = useTransform(y, [-100, 100], [10, -10]);
     const rotateY = useTransform(x, [-100, 100], [-10, 10]);
@@ -70,8 +71,13 @@ const HomeTeamCard = ({ member, index }) => {
                 overflow: 'hidden',
                 pointerEvents: 'none' // Let hover pass through
             }}>
-                {member.img ? (
-                    <img src={member.img} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {member.img && !imgError ? (
+                    <img
+                        src={member.img}
+                        alt={member.name}
+                        onError={() => setImgError(true)}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                 ) : (
                     <span style={{ fontSize: '2rem' }}>{member.name.charAt(0)}</span>
                 )}
@@ -117,9 +123,9 @@ const HomeTeam = () => {
                 ...doc.data()
             }));
 
-            // Filter for Core/Leadership roles first
+            // Filter for Core/Leadership roles first (Case Insensitive)
             const leadership = allMembers.filter(m =>
-                ['Head', 'President', 'Vice President', 'Lead'].some(role => m.role.includes(role))
+                ['head', 'president', 'vice president', 'lead'].some(role => m.role.toLowerCase().includes(role))
             );
 
             // Strict Filter: Only show Leadership (Heads/Leads) on Home Page
@@ -144,8 +150,8 @@ const HomeTeam = () => {
 
             setFeaturedMembers(featuredWithColors);
 
-            // Filter for Mentors
-            const mentorsList = allMembers.filter(m => m.role.includes('Mentor'));
+            // Filter for Mentors (Case Insensitive)
+            const mentorsList = allMembers.filter(m => m.role.toLowerCase().includes('mentor'));
             const mentorsWithColors = mentorsList.map((m, i) => ({
                 ...m,
                 color: neonColors[i % neonColors.length]
