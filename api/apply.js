@@ -23,7 +23,8 @@ const resolveMx = promisify(dns.resolveMx);
 
 const BLOCKED_DOMAINS = ['example.com', 'test.com', 'dummy.com', 'mailinator.com', 'yopmail.com'];
 const BLOCKED_PREFIXES = ['test', 'admin', 'user', 'no-reply', 'noreply'];
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+// Strict Regex: prevents starting with +, -, = (Formula Injection prevention)
+const EMAIL_REGEX = /^[a-zA-Z0-9._%][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 async function validateEmail(email) {
     if (!email || !EMAIL_REGEX.test(email)) return { valid: false, reason: 'Invalid email format' };
@@ -47,6 +48,7 @@ async function validateEmail(email) {
 
 import { safeHandler } from './utils/wrapper.js';
 import { ValidationError, ConflictError } from './utils/errors.js';
+import { sanitizeForSheets } from './utils/sanitizers.js';
 
 function validateInput(data) {
     const rules = {
@@ -196,16 +198,16 @@ export default safeHandler(async function handler(req, res) {
         const sheetURL = process.env.GOOGLE_SHEET_URL || process.env.VITE_GOOGLE_SHEET_URL;
         if (sheetURL) {
             const formParams = new URLSearchParams();
-            formParams.append('name', name);
-            formParams.append('admissionNumber', admissionNumber);
-            formParams.append('email', email);
-            formParams.append('branch', branch);
-            formParams.append('year', year);
-            formParams.append('college', college);
-            formParams.append('domain', domain);
-            formParams.append('github', github || '');
-            formParams.append('linkedin', linkedin || '');
-            formParams.append('reason', reason);
+            formParams.append('name', sanitizeForSheets(name));
+            formParams.append('admissionNumber', sanitizeForSheets(admissionNumber));
+            formParams.append('email', email); // Validated to be safe
+            formParams.append('branch', sanitizeForSheets(branch));
+            formParams.append('year', sanitizeForSheets(year));
+            formParams.append('college', sanitizeForSheets(college));
+            formParams.append('domain', sanitizeForSheets(domain));
+            formParams.append('github', sanitizeForSheets(github || ''));
+            formParams.append('linkedin', sanitizeForSheets(linkedin || ''));
+            formParams.append('reason', sanitizeForSheets(reason));
             formParams.append('status', 'Pending');
 
             const sheetResponse = await fetch(sheetURL, {

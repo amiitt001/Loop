@@ -3,6 +3,7 @@ import admin from 'firebase-admin';
 import { safeHandler } from '../utils/wrapper.js';
 import { verifyAdmin } from '../utils/auth.js';
 import { ValidationError as CustomValidationError } from '../utils/errors.js';
+import { sanitizeForSheets } from '../utils/sanitizers.js';
 
 // Note: db initialization moved inside handler to prevent cold-start crashes
 
@@ -40,7 +41,7 @@ export default safeHandler(async function handler(req, res) {
             const formParams = new URLSearchParams();
             formParams.append('email', appData.email);
             for (const [key, value] of Object.entries(params)) {
-                formParams.append(key, value);
+                formParams.append(key, sanitizeForSheets(value));
             }
 
             // Do not await fetch to prevent blocking/failing the main request

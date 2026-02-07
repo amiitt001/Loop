@@ -153,4 +153,27 @@ describe('api/apply.js', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('must be a string') }));
     });
+
+    it('should reject email starting with +', async () => {
+        req.body.email = '+malicious@example.com';
+        await handler(req, res);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('Invalid email') }));
+    });
+
+    it('should sanitize formula injection attempts in Google Sheets', async () => {
+        req.body.name = '=HYPERLINK("http://evil.com")';
+        req.body.reason = '+12345';
+
+        await handler(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        // Inspect the body passed to fetch
+        const fetchCall = global.fetch.mock.calls.find(call => call[0] === 'https://script.google.com/macros/s/TEST/exec');
+        const body = fetchCall[1].body;
+        // body is URLSearchParams object
+        expect(body.get('name')).toBe("'=HYPERLINK(\"http://evil.com\")");
+        expect(body.get('reason')).toBe("'+12345");
+    });
 });
