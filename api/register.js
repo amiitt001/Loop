@@ -124,6 +124,7 @@ export default safeHandler(async function handler(req, res) {
 
                 const userParams = {
                     name: name,
+                    to_name: name, // Added for email header compatibility
                     email: email,
                     eventName: eventTitle,
                     eventDate: eventDetails.date,
