@@ -75,32 +75,62 @@ export default safeHandler(async function handler(req, res) {
         const privateKey = process.env.EMAILJS_PRIVATE_KEY || process.env.VITE_EMAILJS_PRIVATE_KEY;
 
         if (serviceID && publicKey) {
-            const templateParams = {
-                to_name: "Admin", // Or User if we have a user template
+            // 1. Admin Notification
+            const adminParams = {
+                to_name: "Admin",
                 name,
                 email,
                 message: `New Registration for ${eventTitle} by ${name} (${email})`,
                 reply_to: "technova@galgotias.edu"
             };
 
-            const data = {
+            const adminData = {
                 service_id: serviceID,
                 template_id: templateID,
                 user_id: publicKey,
-                template_params: templateParams
+                template_params: adminParams
             };
 
-            if (privateKey) data.accessToken = privateKey;
+            if (privateKey) adminData.accessToken = privateKey;
 
-            // Fire and forget (await but catch error)
-            const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+            await fetch('https://api.emailjs.com/api/v1.0/email/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify(adminData),
             });
 
-            if (!emailResponse.ok) {
-                console.error('EmailJS Error (Silent Fail):', await emailResponse.text());
+            // 2. User Confirmation Email
+            const confirmTemplateID = process.env.EMAILJS_CONFIRM_TEMPLATE_ID || process.env.VITE_EMAILJS_CONFIRM_TEMPLATE_ID || "template_mzmcp88";
+
+            if (confirmTemplateID) {
+                const userParams = {
+                    to_name: name,
+                    email: email, // Critical: Ensure template uses this to send TO the user
+                    event_name: eventTitle,
+                    message: `You have successfully registered for ${eventTitle}.`,
+                    reply_to: "technova@galgotias.edu"
+                };
+
+                const userData = {
+                    service_id: serviceID,
+                    template_id: confirmTemplateID,
+                    user_id: publicKey,
+                    template_params: userParams
+                };
+
+                if (privateKey) userData.accessToken = privateKey;
+
+                const userEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
+
+                if (!userEmailResponse.ok) {
+                    console.error('User Confirmation Email Failed:', await userEmailResponse.text());
+                } else {
+                    console.log('User Confirmation Email Sent');
+                }
             }
         }
     } catch (emailError) {
