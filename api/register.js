@@ -103,12 +103,33 @@ export default safeHandler(async function handler(req, res) {
             const confirmTemplateID = process.env.EMAILJS_CONFIRM_TEMPLATE_ID || process.env.VITE_EMAILJS_CONFIRM_TEMPLATE_ID || "template_mzmcp88";
 
             if (confirmTemplateID) {
+                // Fetch Event Details for Email
+                let eventDetails = {
+                    date: 'TBA',
+                    time: 'TBA',
+                    venue: 'TBA'
+                };
+
+                try {
+                    const eventDoc = await db.collection('events').doc(eventId).get();
+                    if (eventDoc.exists) {
+                        const evt = eventDoc.data();
+                        eventDetails.date = evt.date || 'TBA';
+                        eventDetails.time = evt.time || 'TBA';
+                        eventDetails.venue = evt.location || evt.venue || 'TBA';
+                    }
+                } catch (fetchErr) {
+                    console.error("Failed to fetch event details for email:", fetchErr);
+                }
+
                 const userParams = {
-                    to_name: name,
-                    email: email, // Critical: Ensure template uses this to send TO the user
-                    event_name: eventTitle,
-                    message: `You have successfully registered for ${eventTitle}.`,
-                    reply_to: "technova@galgotias.edu"
+                    name: name,
+                    email: email,
+                    eventName: eventTitle,
+                    eventDate: eventDetails.date,
+                    eventTime: eventDetails.time,
+                    eventVenue: eventDetails.venue,
+                    reply_to: "loop.gcetclub@gmail.com"
                 };
 
                 const userData = {
@@ -136,6 +157,7 @@ export default safeHandler(async function handler(req, res) {
     } catch (emailError) {
         console.error("Email subsystem failed gracefully:", emailError);
     }
+
 
     // 3.5. Submit to Google Sheets (Hidden from Client)
     try {
