@@ -2,6 +2,7 @@
 import admin from 'firebase-admin';
 import { safeHandler } from './_utils/wrapper.js';
 import { ValidationError, ConflictError } from './_utils/errors.js';
+import { sanitizeForSheets } from './_utils/sanitizers.js';
 
 // prevent re-initialization ensuring singleton
 if (!admin.apps.length) {
@@ -21,6 +22,23 @@ function validateInput(data) {
     if (!data.eventId || !data.name || !data.email) {
         return { valid: false, reason: 'Missing required fields (eventId, name, email)' };
     }
+
+    // Max length validation to prevent DoS/Storage Exhaustion
+    const MAX_LENGTHS = {
+        name: 100,
+        email: 100,
+        eventTitle: 200,
+        enrollmentId: 50,
+        department: 100,
+        teamName: 100
+    };
+
+    for (const [key, max] of Object.entries(MAX_LENGTHS)) {
+        if (data[key] && typeof data[key] === 'string' && data[key].length > max) {
+            return { valid: false, reason: `${key} exceeds maximum length of ${max}` };
+        }
+    }
+
     return { valid: true };
 }
 
@@ -154,13 +172,16 @@ export default safeHandler(async function handler(req, res) {
                 formParams.append('action', 'register');
                 formParams.append('eventTitle', eventTitle);
                 formParams.append('eventId', eventId);
-                formParams.append('name', name);
-                formParams.append('email', email);
-                formParams.append('mobile', mobile);
-                formParams.append('year', year);
-                formParams.append('branch', branch);
-                formParams.append('enrollmentId', enrollmentId);
-                formParams.append('teamName', teamName);
+
+                // Secure: Sanitize inputs to prevent Formula Injection
+                formParams.append('name', sanitizeForSheets(name));
+                formParams.append('email', sanitizeForSheets(email));
+                formParams.append('mobile', sanitizeForSheets(mobile));
+                formParams.append('year', sanitizeForSheets(year));
+                formParams.append('branch', sanitizeForSheets(branch));
+                formParams.append('enrollmentId', sanitizeForSheets(enrollmentId));
+                formParams.append('teamName', sanitizeForSheets(teamName));
+
                 if (responses) formParams.append('responses', JSON.stringify(responses));
                 formParams.append('timestamp', new Date().toISOString());
 
