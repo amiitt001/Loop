@@ -162,4 +162,39 @@ describe('api/register.js', () => {
         expect(body.get('mobile')).toBe("'=1+1");
         expect(body.get('year')).toBe("'@cmd");
     });
+
+    it('should REJECT huge responses payload (responses not an array)', async () => {
+        req.body.responses = "A".repeat(100000);
+        try {
+            await handler(req, res);
+        } catch (e) {}
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('Invalid input') }));
+        expect(mockAdd).not.toHaveBeenCalled();
+    });
+
+    it('should REJECT responses array exceeding max length', async () => {
+        req.body.responses = new Array(51).fill({ question: 'q', answer: 'a' });
+
+        try {
+            await handler(req, res);
+        } catch (e) {}
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('responses exceeds maximum count') }));
+        expect(mockAdd).not.toHaveBeenCalled();
+    });
+
+    it('should REJECT responses with invalid item structure', async () => {
+        req.body.responses = ["invalid_string"];
+
+        try {
+            await handler(req, res);
+        } catch (e) {}
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('Each response must be an object') }));
+        expect(mockAdd).not.toHaveBeenCalled();
+    });
 });

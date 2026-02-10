@@ -39,6 +39,27 @@ function validateInput(data) {
         }
     }
 
+    // Validate responses (Array of objects)
+    if (data.responses) {
+        if (!Array.isArray(data.responses)) {
+            return { valid: false, reason: 'responses must be an array' };
+        }
+        if (data.responses.length > 50) { // Limit number of responses
+            return { valid: false, reason: 'responses exceeds maximum count of 50' };
+        }
+        for (const resp of data.responses) {
+            if (typeof resp !== 'object' || resp === null) {
+                return { valid: false, reason: 'Each response must be an object' };
+            }
+            if (resp.question && typeof resp.question === 'string' && resp.question.length > 200) {
+                 return { valid: false, reason: 'Response question exceeds maximum length' };
+            }
+            if (resp.answer && typeof resp.answer === 'string' && resp.answer.length > 1000) {
+                 return { valid: false, reason: 'Response answer exceeds maximum length' };
+            }
+        }
+    }
+
     return { valid: true };
 }
 
