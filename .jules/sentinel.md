@@ -12,3 +12,8 @@
 **Vulnerability:** The Google Apps Script URL was exposed in the client-side code (`VITE_GOOGLE_SHEET_URL`), allowing unauthenticated users to trigger arbitrary actions (including deletion) defined in the script.
 **Learning:** External integrations often lack granular permissions (like "append-only"). Exposing their direct URLs to the client grants the client full permissions over that integration.
 **Prevention:** Proxy all external integrations through the backend. This allows the backend to enforce authentication, validation, and rate limiting before forwarding the request to the external service.
+
+## 2025-02-17 - Unbounded JSON Array Input
+**Vulnerability:** The `responses` field in the registration API accepted arbitrary JSON input without type checking or length limits, allowing potential Denial of Service (DoS) via huge payloads or application crashes due to unexpected data types.
+**Learning:** `JSON.parse` (implicit in body parsing) allows deeply nested or massive structures that simple top-level key validation misses. Developers often assume the shape of the data matches the frontend form.
+**Prevention:** Explicitly validate the structure, type, and size of all complex objects (arrays/nested objects) in API inputs. Use schema validation or rigorous manual checks.
