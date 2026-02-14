@@ -162,4 +162,31 @@ describe('api/register.js', () => {
         expect(body.get('mobile')).toBe("'=1+1");
         expect(body.get('year')).toBe("'@cmd");
     });
+
+    it('should reject a massive responses payload (DoS Protection)', async () => {
+        // Construct a massive payload
+        const hugeString = 'A'.repeat(2000); // > 1000
+        const manyResponses = Array(60).fill({ // > 50
+            question: 'What is your favorite color?',
+            answer: 'Blue'
+        });
+
+        // Test Max Responses Limit
+        req.body.responses = manyResponses;
+        await handler(req, res);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            error: expect.stringMatching(/Too many responses/)
+        }));
+
+        // Reset
+        req.body.responses = [{ question: 'Q', answer: hugeString }];
+
+        // Test Max Answer Length
+        await handler(req, res);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            error: expect.stringMatching(/Answer too long/)
+        }));
+    });
 });
